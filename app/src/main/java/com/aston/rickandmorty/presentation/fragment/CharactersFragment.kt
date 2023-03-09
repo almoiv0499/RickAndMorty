@@ -1,4 +1,4 @@
-package com.aston.rickandmorty.fragment
+package com.aston.rickandmorty.presentation.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

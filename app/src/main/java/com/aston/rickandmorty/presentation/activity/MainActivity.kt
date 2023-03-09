@@ -1,4 +1,4 @@
-package com.aston.rickandmorty.activity
+package com.aston.rickandmorty.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
