@@ -16,7 +16,11 @@ class CharactersFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CharacterAdapter()
+        CharacterAdapter().apply {
+            onCharacterClickListener = {
+
+            }
+        }
     }
 
     private val viewModel by viewModels<CharactersViewModel>()

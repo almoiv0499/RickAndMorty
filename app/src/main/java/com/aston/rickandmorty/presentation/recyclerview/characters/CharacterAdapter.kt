@@ -7,7 +7,11 @@ import com.aston.rickandmorty.databinding.CharacterItemBinding
 import com.aston.rickandmorty.presentation.model.CharacterInfoView
 import com.aston.rickandmorty.presentation.recyclerview.characters.util.CharacterDiffUtil
 
+typealias OnCharacterClickListener = (CharacterInfoView) -> Unit
+
 class CharacterAdapter : ListAdapter<CharacterInfoView, CharacterViewHolder>(CharacterDiffUtil()) {
+
+    var onCharacterClickListener: OnCharacterClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val binding = CharacterItemBinding.inflate(
@@ -20,7 +24,7 @@ class CharacterAdapter : ListAdapter<CharacterInfoView, CharacterViewHolder>(Cha
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val character = currentList[position]
-        holder.populate(character)
+        holder.populate(character, onCharacterClickListener)
     }
 
 }

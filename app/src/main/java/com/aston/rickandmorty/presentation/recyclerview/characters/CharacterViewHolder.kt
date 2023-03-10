@@ -7,20 +7,25 @@ import com.aston.rickandmorty.presentation.model.CharacterInfoView
 import com.bumptech.glide.Glide
 
 class CharacterViewHolder(
-    private val binding: CharacterItemBinding
+    private val binding: CharacterItemBinding,
 ) : ViewHolder(binding.root) {
 
-    fun populate(character: CharacterInfoView) {
+    fun populate(
+        character: CharacterInfoView,
+        onCharacterClickListener: OnCharacterClickListener?,
+    ) {
         with(binding) {
             characterName.text = character.name
             characterSpecies.text = character.species
             characterStatus.text = character.status
             characterGender.text = character.gender
 
-            Glide.with(root)
-                .load(character.image)
-                .placeholder(R.drawable.ic_launcher_foreground)
+            Glide.with(root).load(character.image).placeholder(R.drawable.ic_launcher_foreground)
                 .into(characterImage)
+
+            characterCardView.setOnClickListener {
+                onCharacterClickListener?.invoke(character)
+            }
         }
     }
 
