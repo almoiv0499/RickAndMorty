@@ -1,8 +1,10 @@
 package com.aston.rickandmorty.presentation.recyclerview.characters
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.aston.rickandmorty.R
 import com.aston.rickandmorty.databinding.CharacterItemBinding
 import com.aston.rickandmorty.presentation.model.CharacterInfoView
+import com.bumptech.glide.Glide
 
 class CharacterViewHolder(
     private val binding: CharacterItemBinding
@@ -15,7 +17,10 @@ class CharacterViewHolder(
             characterStatus.text = character.status
             characterGender.text = character.gender
 
-
+            Glide.with(root)
+                .load(character.image)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(characterImage)
         }
     }
 

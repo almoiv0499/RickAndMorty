@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
@@ -18,6 +19,8 @@ class CharactersFragment : Fragment() {
         CharacterAdapter()
     }
 
+    private val viewModel by viewModels<CharactersViewModel>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -30,12 +33,19 @@ class CharactersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
+            characterAdapter.submitList(characters.characterInfo)
+        }
     }
 
     private fun setupRecyclerView() {
         with(binding.characterRecyclerView) {
             adapter = characterAdapter
-            layoutManager= GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 2)
         }
     }
 
