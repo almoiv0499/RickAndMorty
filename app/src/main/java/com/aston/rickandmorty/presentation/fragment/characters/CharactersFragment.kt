@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.aston.rickandmorty.R
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
+import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 
 class CharactersFragment : Fragment() {
@@ -17,8 +20,15 @@ class CharactersFragment : Fragment() {
 
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharacterAdapter().apply {
-            onCharacterClickListener = {
+            onCharacterClickListener = { character ->
+                val fragment = CharacterDetailsFragment.newInstance(character)
 
+                activity?.let { activity ->
+                    activity.supportFragmentManager.commit {
+                        replace(R.id.fragment_container, fragment)
+                        addToBackStack(null)
+                    }
+                }
             }
         }
     }
