@@ -18,8 +18,7 @@ class MapperData {
         return Info(
             count = infoData.count,
             next = infoData.next,
-            pages = infoData.pages,
-            prev = infoData.prev
+            pages = infoData.pages
         )
     }
 
