@@ -2,8 +2,9 @@ package com.aston.rickandmorty.presentation.mapper
 
 import com.aston.domain.model.*
 import com.aston.rickandmorty.presentation.model.*
+import javax.inject.Inject
 
-class MapperView {
+class MapperView @Inject constructor() {
 
     fun mapToAllCharactersView(allCharacters: AllCharacters): AllCharactersView {
         return AllCharactersView(

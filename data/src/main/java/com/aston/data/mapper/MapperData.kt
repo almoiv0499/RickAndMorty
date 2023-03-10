@@ -2,8 +2,9 @@ package com.aston.data.mapper
 
 import com.aston.data.model.*
 import com.aston.domain.model.*
+import javax.inject.Inject
 
-class MapperData {
+class MapperData @Inject constructor() {
 
     fun mapToAllCharacters(allCharactersData: AllCharactersData): AllCharacters {
         return AllCharacters(

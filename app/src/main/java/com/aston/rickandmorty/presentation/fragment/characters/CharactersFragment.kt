@@ -1,5 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
+import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
+import com.aston.rickandmorty.presentation.fragment.view_model_factory.CharacterViewModelFactory
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
+import javax.inject.Inject
 
 class CharactersFragment : Fragment() {
 
@@ -33,7 +38,21 @@ class CharactersFragment : Fragment() {
         }
     }
 
-    private val viewModel by viewModels<CharactersViewModel>()
+    @Inject
+    lateinit var viewModelFactory: CharacterViewModelFactory
+
+    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
+        ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
+    }
+
+    private val component by lazy(LazyThreadSafetyMode.NONE) {
+        (activity?.applicationContext as App).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
