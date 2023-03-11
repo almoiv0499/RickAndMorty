@@ -1,4 +1,4 @@
-package com.aston.rickandmorty.presentation.activity
+package com.aston.rickandmorty.presentation.activity.splash
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.aston.rickandmorty.R
+import com.aston.rickandmorty.presentation.activity.main.MainActivity
 
 private const val SPLASH_SCREEN_LOADING_TIME = 2000L
 

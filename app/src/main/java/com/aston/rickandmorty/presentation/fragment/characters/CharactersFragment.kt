@@ -5,21 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
-import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
-import com.aston.rickandmorty.presentation.fragment.view_model_factory.CharacterViewModelFactory
+import com.aston.rickandmorty.presentation.fragment.base.BaseFragment
+import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import javax.inject.Inject
 
-class CharactersFragment : Fragment(), TitleToolbar {
+class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
+
+    companion object {
+        fun newInstance(): CharactersFragment = CharactersFragment()
+    }
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
@@ -27,22 +28,15 @@ class CharactersFragment : Fragment(), TitleToolbar {
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharacterAdapter().apply {
             onCharacterClickListener = { character ->
-                val fragment = CharacterDetailsFragment.newInstance(character)
-
-                activity?.let { activity ->
-                    activity.supportFragmentManager.commit {
-                        replace(R.id.fragment_container, fragment)
-                        addToBackStack(null)
-                    }
-                }
+                viewModel.navigateToCharacterDetailsFragment(character)
             }
         }
     }
 
     @Inject
-    lateinit var viewModelFactory: CharacterViewModelFactory
+    lateinit var viewModelFactory: FactoryForViewModels
 
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
+    override val viewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
     }
 

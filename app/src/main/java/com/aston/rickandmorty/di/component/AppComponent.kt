@@ -2,10 +2,11 @@ package com.aston.rickandmorty.di.component
 
 import android.app.Application
 import com.aston.rickandmorty.di.annotation.AppScope
-import com.aston.rickandmorty.di.module.CharacterViewModelModule
+import com.aston.rickandmorty.di.module.ViewModelModule
 import com.aston.rickandmorty.di.module.DataModule
 import com.aston.rickandmorty.di.module.DomainModule
 import com.aston.rickandmorty.di.module.PresentationModule
+import com.aston.rickandmorty.presentation.activity.main.MainActivity
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -16,12 +17,14 @@ import dagger.Component
         DomainModule::class,
         DataModule::class,
         PresentationModule::class,
-        CharacterViewModelModule::class
+        ViewModelModule::class
     ]
 )
 interface AppComponent {
 
     fun inject(fragment: CharactersFragment)
+
+    fun inject(activity: MainActivity)
 
     @Component.Factory
     interface Factory {
