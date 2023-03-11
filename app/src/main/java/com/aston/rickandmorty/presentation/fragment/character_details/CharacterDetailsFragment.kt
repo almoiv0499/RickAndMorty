@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.aston.rickandmorty.presentation.model.CharacterInfoView
+import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.bumptech.glide.Glide
 
-class CharacterDetailsFragment : Fragment() {
+class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
 
     companion object {
         private const val CHARACTER_ARGS_KEY = "character_args_key"
@@ -53,10 +54,8 @@ class CharacterDetailsFragment : Fragment() {
                 characterDetailsGender.text = character.gender
                 characterDetailsSpecies.text = character.species
 
-                Glide.with(this@CharacterDetailsFragment)
-                    .load(character.image)
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .into(characterDetailsImage)
+                Glide.with(this@CharacterDetailsFragment).load(character.image)
+                    .placeholder(R.drawable.ic_launcher_foreground).into(characterDetailsImage)
             }
         }
     }
@@ -70,6 +69,10 @@ class CharacterDetailsFragment : Fragment() {
         _binding = null
     }
 
+    override fun setToolbarTitle(): String {
+        val character = getCharacterArguments()
+        return character?.name ?: getString(R.string.characters_screen_name)
+    }
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {

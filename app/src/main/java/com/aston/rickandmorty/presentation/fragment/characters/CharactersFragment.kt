@@ -16,9 +16,10 @@ import com.aston.rickandmorty.databinding.FragmentCharactersBinding
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.view_model_factory.CharacterViewModelFactory
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
+import com.aston.rickandmorty.presentation.util.TitleToolbar
 import javax.inject.Inject
 
-class CharactersFragment : Fragment() {
+class CharactersFragment : Fragment(), TitleToolbar {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
@@ -87,4 +88,5 @@ class CharactersFragment : Fragment() {
         _binding = null
     }
 
+    override fun setToolbarTitle(): Int = R.string.characters_screen_name
 }

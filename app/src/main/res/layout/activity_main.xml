@@ -9,6 +9,8 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_app"
         android:layout_width="0dp"
+        app:titleCentered="true"
+        app:title="@string/characters_screen_name"
         android:layout_height="?android:attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
