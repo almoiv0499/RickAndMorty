@@ -2,8 +2,11 @@ package com.aston.rickandmorty.presentation.activity.main
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -99,7 +102,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.toolbar, menu)
         optionsMenu = menu
         return true
     }
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         val filter = menu?.findItem(R.id.filter)
 
         when {
-            isCharacterDetailsFragment() -> {
+            isTitleToolbarDetails() -> {
                 search?.isVisible = false
                 filter?.isVisible = false
             }
@@ -136,6 +138,7 @@ class MainActivity : AppCompatActivity() {
                 binding.toolbarApp.setNavigationOnClickListener {
                     viewModel.navigateBack()
                 }
+
             }
             else -> {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -144,6 +147,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isCharacterDetailsFragment() = currentFragment is CharacterDetailsFragment
+    private fun isTitleToolbarDetails() = currentFragment is TitleToolbarDetails
 
 }

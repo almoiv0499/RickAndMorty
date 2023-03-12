@@ -20,6 +20,9 @@ class CharactersViewModel @Inject constructor(
     private val _charactersLiveData = MutableLiveData<AllCharactersView>()
     val charactersLiveData: LiveData<AllCharactersView> = _charactersLiveData
 
+    private val _statusLiveData = MutableLiveData<String>()
+    val statusLiveData: LiveData<String> = _statusLiveData
+
     init {
         fetchCharacters()
     }
@@ -32,6 +35,10 @@ class CharactersViewModel @Inject constructor(
 
     fun navigateToCharacterDetailsFragment(character: CharacterInfoView) {
         navigateTo(CharacterDetailsFragment.newInstance(character))
+    }
+
+    fun saveStatus(status: String) {
+        _statusLiveData.value = status
     }
 
 }
