@@ -1,8 +1,9 @@
 package com.aston.rickandmorty.di.module
 
-import com.aston.data.mapper.MapperData
 import com.aston.data.remote.CharactersService
 import com.aston.data.repository.CharactersRemoteRepositoryImpl
+import com.aston.data.util.mapper.MapperCharacterData
+import com.aston.data.util.mapper.MapperEpisodeData
 import com.aston.domain.repository.CharactersRemoteRepository
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,7 @@ class DataModule {
 
     @Provides
     fun provideRetrofitInstance(): Retrofit {
-        return Retrofit.Builder().baseUrl("https://rickandmortyapi.com")
+        return Retrofit.Builder().baseUrl("https://rickandmortyapi.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
@@ -23,12 +24,20 @@ class DataModule {
         retrofit.create(CharactersService::class.java)
 
     @Provides
-    fun provideMapperData(): MapperData = MapperData()
+    fun provideMapperData(): MapperCharacterData = MapperCharacterData()
+
+    @Provides
+    fun provideMapperEpisode(): MapperEpisodeData = MapperEpisodeData()
 
     @Provides
     fun provideCharacterRemoteRepository(
         charactersService: CharactersService,
-        mapper: MapperData
-    ): CharactersRemoteRepository = CharactersRemoteRepositoryImpl(charactersService, mapper)
+        mapperCharacter: MapperCharacterData,
+        mapperEpisode: MapperEpisodeData
+    ): CharactersRemoteRepository = CharactersRemoteRepositoryImpl(
+        charactersService = charactersService,
+        mapperCharacter = mapperCharacter,
+        mapperEpisode = mapperEpisode
+    )
 
 }

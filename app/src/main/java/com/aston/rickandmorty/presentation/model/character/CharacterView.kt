@@ -1,10 +1,10 @@
-package com.aston.rickandmorty.presentation.model
+package com.aston.rickandmorty.presentation.model.character
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CharacterInfoView(
+data class CharacterView(
     val created: String,
     val episode: List<String>,
     val gender: String,

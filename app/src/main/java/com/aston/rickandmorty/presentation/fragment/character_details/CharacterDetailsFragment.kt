@@ -1,5 +1,7 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
+import android.app.Application
+import android.content.Context
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
@@ -7,18 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.aston.rickandmorty.R
+import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
-import com.aston.rickandmorty.presentation.model.CharacterInfoView
+import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
+import com.aston.rickandmorty.presentation.model.character.CharacterView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeView
+import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.bumptech.glide.Glide
+import javax.inject.Inject
 
 class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
 
     companion object {
         private const val CHARACTER_ARGS_KEY = "character_args_key"
 
-        fun newInstance(character: CharacterInfoView): CharacterDetailsFragment {
+        fun newInstance(character: CharacterView): CharacterDetailsFragment {
             val fragment = CharacterDetailsFragment()
             val args = Bundle().apply {
                 putParcelable(CHARACTER_ARGS_KEY, character)
@@ -31,6 +39,26 @@ class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
     private var _binding: FragmentCharacterDetailsBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var viewModelFactory: FactoryForViewModels
+
+    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
+        ViewModelProvider(this, viewModelFactory)[CharacterDetailsViewModel::class.java]
+    }
+
+    private val component by lazy(LazyThreadSafetyMode.NONE) {
+        (activity?.applicationContext as App).component
+    }
+
+    private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        EpisodeAdapter()
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -42,7 +70,25 @@ class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecyclerView()
         setupArguments()
+        observeEpisodes()
+    }
+
+    private fun observeEpisodes() {
+        val character = getCharacterArguments()
+        if (character != null) {
+            viewModel.fetchEpisodesForCharacterByUrl(character.episode)
+        }
+        viewModel.characterDetailsLiveData.observe(viewLifecycleOwner) { episodes ->
+            episodeAdapter.submitList(episodes)
+        }
+    }
+
+    private fun initRecyclerView() {
+        with(binding.characterEpisodeRecyclerView) {
+            adapter = episodeAdapter
+        }
     }
 
     private fun setupArguments() {
@@ -60,7 +106,7 @@ class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
         }
     }
 
-    private fun getCharacterArguments(): CharacterInfoView? {
+    private fun getCharacterArguments(): CharacterView? {
         return arguments?.parcelable(CHARACTER_ARGS_KEY)
     }
 

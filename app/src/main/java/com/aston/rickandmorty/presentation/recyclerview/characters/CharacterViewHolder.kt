@@ -3,7 +3,7 @@ package com.aston.rickandmorty.presentation.recyclerview.characters
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.databinding.CharacterItemBinding
-import com.aston.rickandmorty.presentation.model.CharacterInfoView
+import com.aston.rickandmorty.presentation.model.character.CharacterView
 import com.bumptech.glide.Glide
 
 class CharacterViewHolder(
@@ -11,7 +11,7 @@ class CharacterViewHolder(
 ) : ViewHolder(binding.root) {
 
     fun populate(
-        character: CharacterInfoView,
+        character: CharacterView,
         onCharacterClickListener: OnCharacterClickListener?,
     ) {
         with(binding) {

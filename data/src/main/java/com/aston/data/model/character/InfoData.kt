@@ -1,4 +1,4 @@
-package com.aston.data.model
+package com.aston.data.model.character
 
 data class InfoData(
     val count: Int,

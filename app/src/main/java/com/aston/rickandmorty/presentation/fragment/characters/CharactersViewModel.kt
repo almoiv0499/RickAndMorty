@@ -6,19 +6,19 @@ import androidx.lifecycle.viewModelScope
 import com.aston.domain.usecase.GetAllCharactersUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
-import com.aston.rickandmorty.presentation.mapper.MapperView
-import com.aston.rickandmorty.presentation.model.AllCharactersView
-import com.aston.rickandmorty.presentation.model.CharacterInfoView
+import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
+import com.aston.rickandmorty.presentation.model.character.CharactersResultView
+import com.aston.rickandmorty.presentation.model.character.CharacterView
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
-    private val mapper: MapperView,
+    private val mapper: MapperCharacterView,
     private val getAllCharactersUseCase: GetAllCharactersUseCase
 ) : BaseViewModel() {
 
-    private val _charactersLiveData = MutableLiveData<AllCharactersView>()
-    val charactersLiveData: LiveData<AllCharactersView> = _charactersLiveData
+    private val _charactersLiveData = MutableLiveData<CharactersResultView>()
+    val charactersLiveData: LiveData<CharactersResultView> = _charactersLiveData
 
     private val _statusLiveData = MutableLiveData<String>()
     val statusLiveData: LiveData<String> = _statusLiveData
@@ -29,11 +29,11 @@ class CharactersViewModel @Inject constructor(
 
     private fun fetchCharacters() {
         viewModelScope.launch {
-            _charactersLiveData.value = mapper.mapToAllCharactersView(getAllCharactersUseCase())
+            _charactersLiveData.value = mapper.mapToCharacterResultView(getAllCharactersUseCase())
         }
     }
 
-    fun navigateToCharacterDetailsFragment(character: CharacterInfoView) {
+    fun navigateToCharacterDetailsFragment(character: CharacterView) {
         navigateTo(CharacterDetailsFragment.newInstance(character))
     }
 

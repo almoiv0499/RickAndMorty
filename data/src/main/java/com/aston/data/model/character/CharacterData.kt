@@ -1,14 +1,14 @@
-package com.aston.domain.model
+package com.aston.data.model.character
 
-data class CharacterInfo(
+data class CharacterData(
     val created: String,
     val episode: List<String>,
     val gender: String,
     val id: Int,
     val image: String,
-    val location: Location,
+    val location: LocationData,
     val name: String,
-    val origin: Origin,
+    val origin: OriginData,
     val species: String,
     val status: String
 )

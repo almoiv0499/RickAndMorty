@@ -1,4 +1,4 @@
-package com.aston.data.model
+package com.aston.data.model.character
 
 import com.google.gson.annotations.SerializedName
 

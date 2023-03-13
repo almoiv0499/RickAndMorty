@@ -49,4 +49,17 @@
         android:src="@drawable/ic_launcher_background"
         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/character_episode_recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/character_details_image"
+        tools:listitem="@layout/episode_item"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

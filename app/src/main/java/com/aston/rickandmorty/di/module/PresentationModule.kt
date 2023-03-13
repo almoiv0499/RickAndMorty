@@ -1,7 +1,7 @@
 package com.aston.rickandmorty.di.module
 
 import com.aston.rickandmorty.presentation.activity.router.RouterMainActivity
-import com.aston.rickandmorty.presentation.mapper.MapperView
+import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import dagger.Module
 import dagger.Provides
 
@@ -9,7 +9,7 @@ import dagger.Provides
 class PresentationModule {
 
     @Provides
-    fun provideMapperView(): MapperView = MapperView()
+    fun provideMapperView(): MapperCharacterView = MapperCharacterView()
 
     @Provides
     fun provideRouter(): RouterMainActivity = RouterMainActivity

@@ -6,20 +6,20 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.ListAdapter
 import com.aston.rickandmorty.databinding.CharacterItemBinding
-import com.aston.rickandmorty.presentation.model.CharacterInfoView
+import com.aston.rickandmorty.presentation.model.character.CharacterView
 import com.aston.rickandmorty.presentation.recyclerview.characters.util.CharacterDiffUtil
 import com.aston.rickandmorty.presentation.util.FilterClass
 
-typealias OnCharacterClickListener = (CharacterInfoView) -> Unit
+typealias OnCharacterClickListener = (CharacterView) -> Unit
 
-class CharacterAdapter : ListAdapter<CharacterInfoView, CharacterViewHolder>(CharacterDiffUtil()),
+class CharacterAdapter : ListAdapter<CharacterView, CharacterViewHolder>(CharacterDiffUtil()),
     Filterable {
 
     var onCharacterClickListener: OnCharacterClickListener? = null
 
-    private var filteredCharacters = mutableListOf<CharacterInfoView>()
+    private var filteredCharacters = mutableListOf<CharacterView>()
 
-    fun setFilteredCharacters(filtered: List<CharacterInfoView>) {
+    fun setFilteredCharacters(filtered: List<CharacterView>) {
         submitList(filtered)
         filteredCharacters = ArrayList(filtered)
     }
