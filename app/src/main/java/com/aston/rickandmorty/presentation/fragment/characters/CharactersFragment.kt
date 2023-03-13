@@ -14,20 +14,14 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseFragment
-import com.aston.rickandmorty.presentation.fragment.filter.FilterCharacterFragment
 import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import javax.inject.Inject
-import kotlin.properties.Delegates
-import kotlin.properties.Delegates.notNull
 
 class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
 
     companion object {
-        private const val KEY_STATUS = "key status"
-        private const val STATUS_EMPTY_VALUE = "status empty value"
-
         fun newInstance(): CharactersFragment = CharactersFragment()
     }
 
@@ -72,7 +66,6 @@ class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
         setupRecyclerView()
         observeViewModel()
         handleToolbarItem()
-        setupDialogFragmentListener()
     }
 
     private fun handleToolbarItem() {
@@ -97,9 +90,6 @@ class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
                             }
                         })
                     }
-                    R.id.filter -> {
-                        showDialogFragment()
-                    }
                 }
                 return true
             }
@@ -122,20 +112,6 @@ class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showDialogFragment() {
-        activity?.let { activity ->
-            FilterCharacterFragment.show(activity.supportFragmentManager, "")
-        }
-    }
-
-    private fun setupDialogFragmentListener() {
-        activity?.let { activity ->
-            FilterCharacterFragment.setupListener(activity.supportFragmentManager, this) { status ->
-                characterAdapter.filter.filter(status)
-            }
-        }
     }
 
     override fun setToolbarTitle(): Int = R.string.characters_screen_name

@@ -18,11 +18,7 @@ class FilterClass {
                 } else {
                     val pattern = constraint.toString().lowercase().trim()
                     for (item in filteredVacancies) {
-                        if (item.name.lowercase().contains(pattern)
-                            || item.species.lowercase().contains(pattern)
-                            || item.status.lowercase().contains(pattern)
-                            || item.gender.lowercase().contains(pattern)
-                        ) {
+                        if (isContains(item, pattern)) {
                             temp.add(item)
                         }
                     }
@@ -35,6 +31,13 @@ class FilterClass {
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 adapter.submitList(results?.values as List<CharacterView>)
             }
+        }
+
+        private fun isContains(item: CharacterView, pattern: String): Boolean {
+            return item.name.lowercase().contains(pattern)
+                    || item.species.lowercase().contains(pattern)
+                    || item.status.lowercase().contains(pattern)
+                    || item.gender.lowercase().contains(pattern)
         }
     }
 }

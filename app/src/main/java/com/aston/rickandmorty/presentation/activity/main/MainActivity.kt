@@ -2,18 +2,14 @@ package com.aston.rickandmorty.presentation.activity.main
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.ActivityMainBinding
-import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
@@ -116,16 +112,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideToolbarItem(menu: Menu?) {
         val search = menu?.findItem(R.id.search)
-        val filter = menu?.findItem(R.id.filter)
-
         when {
             isTitleToolbarDetails() -> {
                 search?.isVisible = false
-                filter?.isVisible = false
             }
             else -> {
                 search?.isVisible = true
-                filter?.isVisible = true
             }
         }
     }
