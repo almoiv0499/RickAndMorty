@@ -2,12 +2,9 @@ package com.aston.rickandmorty.presentation.fragment.characters
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
-import androidx.lifecycle.Lifecycle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
@@ -64,49 +61,21 @@ class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        observeViewModel()
-        handleToolbarItem()
-    }
-
-    private fun handleToolbarItem() {
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.toolbar, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.search -> {
-                        val search = menuItem.actionView as SearchView
-                        search.setOnQueryTextListener(object : OnQueryTextListener {
-                            override fun onQueryTextSubmit(query: String?): Boolean {
-                                return false
-                            }
-
-                            override fun onQueryTextChange(newText: String?): Boolean {
-                                characterAdapter.filter.filter(newText)
-                                return true
-                            }
-                        })
-                    }
-                }
-                return true
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun observeViewModel() {
-        viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
-            characterAdapter.setFilteredCharacters(characters.characterInfo)
-        }
+        observe()
     }
 
     private fun setupRecyclerView() {
+        val mLayoutManager = GridLayoutManager(context, 2)
         with(binding.characterRecyclerView) {
             adapter = characterAdapter
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = mLayoutManager
         }
+    }
+
+    private fun observe() {
+            viewModel.charactersLiveData().observe(viewLifecycleOwner) { pagingData ->
+                characterAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
+            }
     }
 
     override fun onDestroyView() {

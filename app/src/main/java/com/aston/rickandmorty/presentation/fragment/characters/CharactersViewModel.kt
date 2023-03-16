@@ -1,44 +1,69 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
+import android.app.Application
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.aston.domain.usecase.GetAllCharactersUseCase
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.aston.data.repository.CharactersRemoteRepositoryImpl
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
-import com.aston.rickandmorty.presentation.model.character.CharactersResultView
 import com.aston.rickandmorty.presentation.model.character.CharacterView
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
+    private val application: Application,
+    charactersRemoteRepositoryImpl: CharactersRemoteRepositoryImpl,
     private val mapper: MapperCharacterView,
-    private val getAllCharactersUseCase: GetAllCharactersUseCase
 ) : BaseViewModel() {
 
-    private val _charactersLiveData = MutableLiveData<CharactersResultView>()
-    val charactersLiveData: LiveData<CharactersResultView> = _charactersLiveData
-
-    private val _statusLiveData = MutableLiveData<String>()
-    val statusLiveData: LiveData<String> = _statusLiveData
-
-    init {
-        fetchCharacters()
+    fun charactersLiveData(): LiveData<PagingData<CharacterView>> {
+        return if (hasInternetConnection()) {
+            characters
+        } else {
+            charactersDatabase
+        }
     }
 
-    private fun fetchCharacters() {
-        viewModelScope.launch {
-            _charactersLiveData.value = mapper.mapToCharacterResultView(getAllCharactersUseCase())
+    private val characters: LiveData<PagingData<CharacterView>> =
+        charactersRemoteRepositoryImpl.fetchCharactersByApiWithPaging().asLiveData().map { paging ->
+            paging.map {
+                mapper.mapToCharacterView(it)
+            }
+        }.cachedIn(viewModelScope)
+
+    private val charactersDatabase: LiveData<PagingData<CharacterView>> =
+        charactersRemoteRepositoryImpl.fetchCharactersByDatabaseWithPaging().asLiveData()
+            .map { paging ->
+                paging.map {
+                    mapper.mapToCharacterView(it)
+                }
+            }.cachedIn(viewModelScope)
+
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = application.getSystemService(ConnectivityManager::class.java)
+        val network = connectivityManager.activeNetwork ?: return false
+        val capability = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
+                NetworkCapabilities.TRANSPORT_CELLULAR
+            ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+
+            else -> false
         }
     }
 
     fun navigateToCharacterDetailsFragment(character: CharacterView) {
-        navigateTo(CharacterDetailsFragment.newInstance(character))
-    }
-
-    fun saveStatus(status: String) {
-        _statusLiveData.value = status
+        viewModelScope.launch {
+            navigateTo(CharacterDetailsFragment.newInstance(character))
+        }
     }
 
 }

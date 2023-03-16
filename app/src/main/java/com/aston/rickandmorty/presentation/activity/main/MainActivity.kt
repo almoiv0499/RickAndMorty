@@ -6,11 +6,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.ActivityMainBinding
-import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
+import com.aston.rickandmorty.presentation.activity.router.RouterMainActivity
+import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import javax.inject.Inject
@@ -21,12 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private var optionsMenu: Menu? = null
 
-    @Inject
-    lateinit var viewModelFactory: FactoryForViewModels
-
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
-    }
+    @Inject lateinit var router: RouterMainActivity
 
     private val component by lazy(LazyThreadSafetyMode.NONE) {
         (applicationContext as App).component
@@ -67,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationApp.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.characters -> {
-                    viewModel.navigateToCharactersFragment()
+                    router.navigateToCharactersFragment(CharactersFragment.newInstance())
                 }
                 R.id.locations -> {
 
@@ -81,12 +76,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun register() {
-        viewModel.onCreateRouter(this)
+        router.onCreate(this)
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
     }
 
     private fun unregister() {
-        viewModel.onDestroyRouter()
+        router.onDestroy()
         supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentListener)
     }
 
@@ -128,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
                 supportActionBar?.setDisplayShowHomeEnabled(true)
                 binding.toolbarApp.setNavigationOnClickListener {
-                    viewModel.navigateBack()
+                    router.navigateBack()
                 }
 
             }

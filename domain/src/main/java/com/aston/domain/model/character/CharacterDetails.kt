@@ -1,6 +1,6 @@
 package com.aston.domain.model.character
 
-data class Character(
+data class CharacterDetails(
     val created: String,
     val episode: List<String>,
     val gender: String,

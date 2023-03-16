@@ -29,7 +29,7 @@ class FilterClass {
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                adapter.submitList(results?.values as List<CharacterView>)
+//                adapter.submitList(results?.values as List<CharacterView>)
             }
         }
 

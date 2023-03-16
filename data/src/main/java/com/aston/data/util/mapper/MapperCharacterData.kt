@@ -23,8 +23,8 @@ class MapperCharacterData @Inject constructor() {
         )
     }
 
-    private fun mapToCharacter(characterData: CharacterData): Character {
-        return Character(
+    private fun mapToCharacter(characterData: CharacterData): CharacterDetails {
+        return CharacterDetails(
             created = characterData.created,
             episode = characterData.episode,
             gender = characterData.gender,

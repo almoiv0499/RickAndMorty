@@ -2,10 +2,10 @@ package com.aston.rickandmorty.di.component
 
 import android.app.Application
 import com.aston.rickandmorty.di.annotation.AppScope
-import com.aston.rickandmorty.di.module.ViewModelModule
 import com.aston.rickandmorty.di.module.DataModule
 import com.aston.rickandmorty.di.module.DomainModule
 import com.aston.rickandmorty.di.module.PresentationModule
+import com.aston.rickandmorty.di.module.ViewModelModule
 import com.aston.rickandmorty.presentation.activity.main.MainActivity
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment

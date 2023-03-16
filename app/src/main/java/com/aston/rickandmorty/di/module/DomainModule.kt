@@ -1,7 +1,8 @@
 package com.aston.rickandmorty.di.module
 
 import com.aston.domain.repository.CharactersRemoteRepository
-import com.aston.domain.usecase.GetAllCharactersUseCase
+import com.aston.domain.usecase.FetchAndCacheCharactersByPageUseCase
+import com.aston.domain.usecase.FetchCharactersUseCase
 import com.aston.domain.usecase.GetEpisodesForCharacterByUrlUseCase
 import dagger.Module
 import dagger.Provides
@@ -15,10 +16,9 @@ class DomainModule {
     fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
-    fun provideGetAllCharactersUseCase(
+    fun provideFetchCharactersUseCase(
         repository: CharactersRemoteRepository,
-        ioDispatcher: CoroutineDispatcher,
-    ): GetAllCharactersUseCase = GetAllCharactersUseCase(repository, ioDispatcher)
+    ): FetchCharactersUseCase = FetchCharactersUseCase(repository)
 
     @Provides
     fun provideGetEpisodesForCharactersByUrl(
@@ -26,5 +26,10 @@ class DomainModule {
         ioDispatcher: CoroutineDispatcher,
     ): GetEpisodesForCharacterByUrlUseCase =
         GetEpisodesForCharacterByUrlUseCase(repository, ioDispatcher)
+
+    @Provides
+    fun provideFetchAndCacheCharactersByPageUseCase(
+        repository: CharactersRemoteRepository,
+    ): FetchAndCacheCharactersByPageUseCase = FetchAndCacheCharactersByPageUseCase(repository)
 
 }
