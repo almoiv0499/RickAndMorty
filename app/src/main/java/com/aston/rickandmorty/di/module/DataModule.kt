@@ -30,7 +30,7 @@ class DataModule {
     @AppScope
     @Provides
     fun provideCharacterDatabase(application: Application): CharacterDatabase =
-        Room.databaseBuilder(application, CharacterDatabase::class.java, "character_database")
+        Room.databaseBuilder(application, CharacterDatabase::class.java, "database")
             .build()
 
     @Provides
@@ -49,16 +49,20 @@ class DataModule {
     @Provides
     fun provideCharactersRemoteRepositoryImpl(
         service: CharactersService,
-        database: CharacterDatabase
+        database: CharacterDatabase,
+        mapperEpisodeData: MapperEpisodeData,
+        mapperCharacterData: MapperCharacterData
     ): CharactersRemoteRepositoryImpl =
-        CharactersRemoteRepositoryImpl(service, database)
+        CharactersRemoteRepositoryImpl(service, database, mapperEpisodeData, mapperCharacterData)
 
     @Provides
     fun provideCharacterRemoteRepository(
         service: CharactersService,
-        database: CharacterDatabase
+        database: CharacterDatabase,
+        mapperEpisodeData: MapperEpisodeData,
+        mapperCharacterData: MapperCharacterData
     ): CharactersRemoteRepository = CharactersRemoteRepositoryImpl(
-        service, database
+        service, database, mapperEpisodeData, mapperCharacterData
     )
 
 }

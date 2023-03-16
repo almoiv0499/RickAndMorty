@@ -1,9 +1,9 @@
 package com.aston.rickandmorty.di.module
 
 import com.aston.domain.repository.CharactersRemoteRepository
-import com.aston.domain.usecase.FetchAndCacheCharactersByPageUseCase
-import com.aston.domain.usecase.FetchCharactersUseCase
-import com.aston.domain.usecase.GetEpisodesForCharacterByUrlUseCase
+import com.aston.domain.usecase.FetchCharactersThoughDatabaseUseCase
+import com.aston.domain.usecase.FetchCharactersThoughServiceUseCase
+import com.aston.domain.usecase.FetchEpisodesByIdsUseCase
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,20 +16,19 @@ class DomainModule {
     fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
-    fun provideFetchCharactersUseCase(
+    fun provideFetchCharactersThoughDatabaseUseCase(
         repository: CharactersRemoteRepository,
-    ): FetchCharactersUseCase = FetchCharactersUseCase(repository)
+    ): FetchCharactersThoughDatabaseUseCase = FetchCharactersThoughDatabaseUseCase(repository)
+
+    @Provides
+    fun provideFetchCharactersServiceUseCase(
+        repository: CharactersRemoteRepository
+    ): FetchCharactersThoughServiceUseCase = FetchCharactersThoughServiceUseCase(repository)
 
     @Provides
     fun provideGetEpisodesForCharactersByUrl(
-        repository: CharactersRemoteRepository,
-        ioDispatcher: CoroutineDispatcher,
-    ): GetEpisodesForCharacterByUrlUseCase =
-        GetEpisodesForCharacterByUrlUseCase(repository, ioDispatcher)
-
-    @Provides
-    fun provideFetchAndCacheCharactersByPageUseCase(
-        repository: CharactersRemoteRepository,
-    ): FetchAndCacheCharactersByPageUseCase = FetchAndCacheCharactersByPageUseCase(repository)
+        repository: CharactersRemoteRepository
+    ): FetchEpisodesByIdsUseCase =
+        FetchEpisodesByIdsUseCase(repository)
 
 }

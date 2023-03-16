@@ -10,7 +10,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.aston.data.repository.CharactersRemoteRepositoryImpl
+import com.aston.domain.usecase.FetchCharactersThoughDatabaseUseCase
+import com.aston.domain.usecase.FetchCharactersThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
     private val application: Application,
-    charactersRemoteRepositoryImpl: CharactersRemoteRepositoryImpl,
+    fetchCharactersThoughServiceUseCase: FetchCharactersThoughServiceUseCase,
+    fetchCharactersThoughDatabaseUseCase: FetchCharactersThoughDatabaseUseCase,
     private val mapper: MapperCharacterView,
 ) : BaseViewModel() {
 
@@ -33,15 +35,14 @@ class CharactersViewModel @Inject constructor(
     }
 
     private val characters: LiveData<PagingData<CharacterView>> =
-        charactersRemoteRepositoryImpl.fetchCharactersByApiWithPaging().asLiveData().map { paging ->
-            paging.map {
-                mapper.mapToCharacterView(it)
+        fetchCharactersThoughServiceUseCase().asLiveData().map { paging ->
+            paging.map { character ->
+                mapper.mapToCharacterView(character)
             }
         }.cachedIn(viewModelScope)
 
     private val charactersDatabase: LiveData<PagingData<CharacterView>> =
-        charactersRemoteRepositoryImpl.fetchCharactersByDatabaseWithPaging().asLiveData()
-            .map { paging ->
+        fetchCharactersThoughDatabaseUseCase().asLiveData().map { paging ->
                 paging.map {
                     mapper.mapToCharacterView(it)
                 }

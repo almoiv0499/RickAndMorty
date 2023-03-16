@@ -1,6 +1,5 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
-import android.app.Application
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
@@ -15,7 +14,6 @@ import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
 import com.aston.rickandmorty.presentation.model.character.CharacterView
-import com.aston.rickandmorty.presentation.model.episode.EpisodeView
 import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.bumptech.glide.Glide
@@ -78,10 +76,9 @@ class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
     private fun observeEpisodes() {
         val character = getCharacterArguments()
         if (character != null) {
-            viewModel.fetchEpisodesForCharacterByUrl(character.episode)
-        }
-        viewModel.characterDetailsLiveData.observe(viewLifecycleOwner) { episodes ->
-            episodeAdapter.submitList(episodes)
+            viewModel.episodeLiveData(character.episode).observe(viewLifecycleOwner) { episodes ->
+                episodeAdapter.submitList(episodes)
+            }
         }
     }
 
