@@ -19,9 +19,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var optionsMenu: Menu? = null
-
-    @Inject lateinit var router: RouterMainActivity
+    @Inject
+    lateinit var router: RouterMainActivity
 
     private val component by lazy(LazyThreadSafetyMode.NONE) {
         (applicationContext as App).component
@@ -45,17 +44,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         component.inject(this)
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        router.onCreate(this, fragmentListener)
+
         setSupportActionBar(binding.toolbarApp)
 
-        register()
         setBottomNavigation()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregister()
+
+        router.onDestroy(fragmentListener)
     }
 
     private fun setBottomNavigation() {
@@ -75,45 +78,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun register() {
-        router.onCreate(this)
-        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
-    }
-
-    private fun unregister() {
-        router.onDestroy()
-        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentListener)
-    }
-
     private fun updateUI() {
         val fragment = currentFragment
-        hideToolbarItem(optionsMenu)
         setupToolbar()
         setupBackPressed(fragment)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        optionsMenu = menu
-        return true
     }
 
     private fun setupToolbar() {
         when (val fragment = currentFragment) {
             is TitleToolbar -> binding.toolbarApp.title = getString(fragment.setToolbarTitle())
-            is TitleToolbarDetails -> binding.toolbarApp.title = fragment.setToolbarTitle()
+            is TitleToolbarDetails -> {
+                binding.toolbarApp.title = fragment.setToolbarTitle()
+            }
             else -> binding.toolbarApp.title = getString(R.string.app_name)
-        }
-    }
-
-    private fun hideToolbarItem(menu: Menu?) {
-        val search = menu?.findItem(R.id.search)
-        when {
-            isTitleToolbarDetails() -> {
-                search?.isVisible = false
-            }
-            else -> {
-                search?.isVisible = true
-            }
         }
     }
 
@@ -125,7 +102,6 @@ class MainActivity : AppCompatActivity() {
                 binding.toolbarApp.setNavigationOnClickListener {
                     router.navigateBack()
                 }
-
             }
             else -> {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -133,7 +109,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun isTitleToolbarDetails() = currentFragment is TitleToolbarDetails
 
 }

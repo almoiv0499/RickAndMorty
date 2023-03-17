@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.aston.rickandmorty.databinding.EpisodeItemBinding
-import com.aston.rickandmorty.presentation.model.episode.EpisodeView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 
-class EpisodeAdapter : ListAdapter<EpisodeView, EpisodeViewHolder>(EpisodeDiffUtil()) {
+class EpisodeAdapter : ListAdapter<EpisodeInfoView, EpisodeViewHolder>(EpisodeDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
         val binding = EpisodeItemBinding.inflate(

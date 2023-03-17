@@ -6,18 +6,13 @@ import com.aston.domain.usecase.FetchCharactersThoughServiceUseCase
 import com.aston.domain.usecase.FetchEpisodesByIdsUseCase
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
 @Module
 class DomainModule {
 
     @Provides
-    fun provideDispatchers(): CoroutineDispatcher = Dispatchers.IO
-
-    @Provides
     fun provideFetchCharactersThoughDatabaseUseCase(
-        repository: CharactersRemoteRepository,
+        repository: CharactersRemoteRepository
     ): FetchCharactersThoughDatabaseUseCase = FetchCharactersThoughDatabaseUseCase(repository)
 
     @Provides
@@ -26,9 +21,8 @@ class DomainModule {
     ): FetchCharactersThoughServiceUseCase = FetchCharactersThoughServiceUseCase(repository)
 
     @Provides
-    fun provideGetEpisodesForCharactersByUrl(
+    fun provideFetchEpisodesForCharactersByIds(
         repository: CharactersRemoteRepository
-    ): FetchEpisodesByIdsUseCase =
-        FetchEpisodesByIdsUseCase(repository)
+    ): FetchEpisodesByIdsUseCase = FetchEpisodesByIdsUseCase(repository)
 
 }

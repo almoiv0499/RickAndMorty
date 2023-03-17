@@ -1,30 +1,28 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
-import android.content.Context
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
-import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
-import com.aston.rickandmorty.presentation.model.character.CharacterView
+import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.bumptech.glide.Glide
-import javax.inject.Inject
 
-class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
+private const val CHARACTER_ARGS_KEY = "character_args_key"
+
+class CharacterDetailsFragment :
+    BaseViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
+        R.layout.fragment_character_details,
+        FragmentCharacterDetailsBinding::inflate,
+        CharacterDetailsViewModel::class.java
+    ), TitleToolbarDetails {
 
     companion object {
-        private const val CHARACTER_ARGS_KEY = "character_args_key"
-
-        fun newInstance(character: CharacterView): CharacterDetailsFragment {
+        fun newInstance(character: CharacterInfoView): CharacterDetailsFragment {
             val fragment = CharacterDetailsFragment()
             val args = Bundle().apply {
                 putParcelable(CHARACTER_ARGS_KEY, character)
@@ -34,49 +32,33 @@ class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
         }
     }
 
-    private var _binding: FragmentCharacterDetailsBinding? = null
-    private val binding get() = _binding!!
-
-    @Inject
-    lateinit var viewModelFactory: FactoryForViewModels
-
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(this, viewModelFactory)[CharacterDetailsViewModel::class.java]
-    }
-
-    private val component by lazy(LazyThreadSafetyMode.NONE) {
-        (activity?.applicationContext as App).component
-    }
-
     private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
         EpisodeAdapter()
     }
 
-    override fun onAttach(context: Context) {
-        component.inject(this)
-        super.onAttach(context)
+    private fun getCharacterArguments(): CharacterInfoView? {
+        return arguments?.parcelable(CHARACTER_ARGS_KEY)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentCharacterDetailsBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun injectDependencies() {
+        (activity?.applicationContext as App).component.inject(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setUI() {
         initRecyclerView()
         setupArguments()
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
+
         observeEpisodes()
     }
 
     private fun observeEpisodes() {
         val character = getCharacterArguments()
         if (character != null) {
-            viewModel.episodeLiveData(character.episode).observe(viewLifecycleOwner) { episodes ->
+            viewModel.episodeLiveData(character.episodes).observe(viewLifecycleOwner) { episodes ->
                 episodeAdapter.submitList(episodes)
             }
         }
@@ -101,15 +83,6 @@ class CharacterDetailsFragment : Fragment(), TitleToolbarDetails {
                     .placeholder(R.drawable.ic_launcher_foreground).into(characterDetailsImage)
             }
         }
-    }
-
-    private fun getCharacterArguments(): CharacterView? {
-        return arguments?.parcelable(CHARACTER_ARGS_KEY)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun setToolbarTitle(): String {

@@ -1,29 +1,22 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
-import android.content.Context
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
-import com.aston.rickandmorty.presentation.fragment.base.BaseFragment
-import com.aston.rickandmorty.presentation.fragment.view_model_factory.FactoryForViewModels
+import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
-import javax.inject.Inject
 
-class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
+class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, CharactersViewModel>(
+    R.layout.fragment_characters,
+    FragmentCharactersBinding::inflate,
+    CharactersViewModel::class.java
+), TitleToolbar {
 
     companion object {
         fun newInstance(): CharactersFragment = CharactersFragment()
     }
-
-    private var _binding: FragmentCharactersBinding? = null
-    private val binding get() = _binding!!
 
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharacterAdapter().apply {
@@ -33,54 +26,27 @@ class CharactersFragment : BaseFragment<CharactersViewModel>(), TitleToolbar {
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: FactoryForViewModels
-
-    override val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
+    override fun injectDependencies() {
+        (activity?.applicationContext as App).component.inject(this)
     }
 
-    private val component by lazy(LazyThreadSafetyMode.NONE) {
-        (activity?.applicationContext as App).component
-    }
-
-    override fun onAttach(context: Context) {
-        component.inject(this)
-        super.onAttach(context)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setUI() {
         setupRecyclerView()
-        observe()
     }
 
-    private fun setupRecyclerView() {
-        val mLayoutManager = GridLayoutManager(context, 2)
-        with(binding.characterRecyclerView) {
-            adapter = characterAdapter
-            layoutManager = mLayoutManager
+    override fun setupObservers() {
+        super.setupObservers()
+
+        viewModel.charactersLiveData().observe(viewLifecycleOwner) { pagingData ->
+            characterAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
         }
     }
 
-    private fun observe() {
-            viewModel.charactersLiveData().observe(viewLifecycleOwner) { pagingData ->
-                characterAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
-            }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun setupRecyclerView() {
+        with(binding.characterRecyclerView) {
+            adapter = characterAdapter
+            layoutManager = GridLayoutManager(context, 2)
+        }
     }
 
     override fun setToolbarTitle(): Int = R.string.characters_screen_name

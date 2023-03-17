@@ -1,30 +1,17 @@
 package com.aston.data.util.mapper
 
-import com.aston.data.model.character.*
-import com.aston.domain.model.character.*
+import com.aston.data.model.character.CharacterInfoData
+import com.aston.data.model.character.LocationData
+import com.aston.data.model.character.OriginData
+import com.aston.domain.model.character.CharacterInfo
+import com.aston.domain.model.character.Location
+import com.aston.domain.model.character.Origin
 import javax.inject.Inject
 
 class MapperCharacterData @Inject constructor() {
 
-    fun mapToCharactersResult(characterResultData: CharactersResultData): CharactersResult {
-        return CharactersResult(
-            info = mapToInfo(characterResultData.info),
-            characterInfo = characterResultData.characterInfo.map { characterInfoData ->
-                mapToCharacter(characterInfoData)
-            }
-        )
-    }
-
-    private fun mapToInfo(infoData: InfoData): Info {
-        return Info(
-            count = infoData.count,
-            next = infoData.next,
-            pages = infoData.pages
-        )
-    }
-
-    fun mapToCharacter(characterData: CharacterData): CharacterDetails {
-        return CharacterDetails(
+    fun mapToCharacter(characterData: CharacterInfoData): CharacterInfo {
+        return CharacterInfo(
             created = characterData.created,
             episode = characterData.episode,
             gender = characterData.gender,

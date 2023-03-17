@@ -3,26 +3,27 @@ package com.aston.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.room.withTransaction
-import com.aston.data.database.CharacterDatabase
-import com.aston.data.model.character.CharacterData
+import com.aston.data.database.ApplicationDatabase
+import com.aston.data.model.character.CharacterInfoData
 import com.aston.data.remote.CharactersService
 import javax.inject.Inject
 
-class CharactersPagingSource @Inject constructor(
-    private val database: CharacterDatabase,
-    private val service: CharactersService
-) : PagingSource<Int, CharacterData>() {
+private const val BY_ONE = 1
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterData>): Int? {
+class CharactersPagingSource @Inject constructor(
+    private val database: ApplicationDatabase,
+    private val service: CharactersService,
+) : PagingSource<Int, CharacterInfoData>() {
+
+    override fun getRefreshKey(state: PagingState<Int, CharacterInfoData>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+            anchorPage?.prevKey?.plus(BY_ONE) ?: anchorPage?.nextKey?.minus(BY_ONE)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterData> {
-
-        val currentPage = params.key ?: 1
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterInfoData> {
+        val currentPage = params.key ?: BY_ONE
 
         return try {
 
@@ -30,16 +31,14 @@ class CharactersPagingSource @Inject constructor(
             val data = response.characterInfo
 
             database.withTransaction {
-                database.characterDao().insertCharacters(data)
+                database.charactersDao().insertCharacters(data)
             }
 
-            val prevKey = if (currentPage == 1) null else currentPage.minus(1)
-            val nextKey = if (data.isEmpty()) null else currentPage.plus(1)
+            val prevKey = if (currentPage == BY_ONE) null else currentPage.minus(BY_ONE)
+            val nextKey = if (data.isEmpty()) null else currentPage.plus(BY_ONE)
 
             LoadResult.Page(
-                data = data,
-                prevKey = prevKey,
-                nextKey = nextKey
+                data = data, prevKey = prevKey, nextKey = nextKey
             )
         } catch (exception: Exception) {
             LoadResult.Error(exception)

@@ -2,7 +2,7 @@ package com.aston.rickandmorty.di.module
 
 import android.app.Application
 import androidx.room.Room
-import com.aston.data.database.CharacterDatabase
+import com.aston.data.database.ApplicationDatabase
 import com.aston.data.database.CharactersDao
 import com.aston.data.remote.CharactersService
 import com.aston.data.repository.CharactersRemoteRepositoryImpl
@@ -29,40 +29,28 @@ class DataModule {
 
     @AppScope
     @Provides
-    fun provideCharacterDatabase(application: Application): CharacterDatabase =
-        Room.databaseBuilder(application, CharacterDatabase::class.java, "database")
+    fun provideApplicationDatabase(application: Application): ApplicationDatabase =
+        Room.databaseBuilder(application, ApplicationDatabase::class.java, "database")
             .build()
 
+    @AppScope
     @Provides
-    fun provideCharactersDao(database: CharacterDatabase): CharactersDao = database.characterDao()
+    fun provideCharactersDao(applicationDatabase: ApplicationDatabase): CharactersDao =
+        applicationDatabase.charactersDao()
 
+    @AppScope
     @Provides
-    fun provideCharacterService(retrofit: Retrofit): CharactersService =
+    fun provideCharactersService(retrofit: Retrofit): CharactersService =
         retrofit.create(CharactersService::class.java)
-
-    @Provides
-    fun provideMapperData(): MapperCharacterData = MapperCharacterData()
-
-    @Provides
-    fun provideMapperEpisode(): MapperEpisodeData = MapperEpisodeData()
-
-    @Provides
-    fun provideCharactersRemoteRepositoryImpl(
-        service: CharactersService,
-        database: CharacterDatabase,
-        mapperEpisodeData: MapperEpisodeData,
-        mapperCharacterData: MapperCharacterData
-    ): CharactersRemoteRepositoryImpl =
-        CharactersRemoteRepositoryImpl(service, database, mapperEpisodeData, mapperCharacterData)
 
     @Provides
     fun provideCharacterRemoteRepository(
         service: CharactersService,
-        database: CharacterDatabase,
-        mapperEpisodeData: MapperEpisodeData,
-        mapperCharacterData: MapperCharacterData
+        database: ApplicationDatabase,
+        mapperEpisode: MapperEpisodeData,
+        mapperCharacter: MapperCharacterData,
     ): CharactersRemoteRepository = CharactersRemoteRepositoryImpl(
-        service, database, mapperEpisodeData, mapperCharacterData
+        service, database, mapperEpisode, mapperCharacter
     )
 
 }

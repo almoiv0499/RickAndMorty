@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CharactersResultView(
     val info: InfoView,
-    val characterInfo: List<CharacterView>
+    val characters: List<CharacterInfoView>
 ) : Parcelable

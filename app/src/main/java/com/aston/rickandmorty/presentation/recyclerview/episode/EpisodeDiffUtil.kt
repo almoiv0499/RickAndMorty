@@ -1,14 +1,14 @@
 package com.aston.rickandmorty.presentation.recyclerview.episode
 
 import androidx.recyclerview.widget.DiffUtil
-import com.aston.rickandmorty.presentation.model.episode.EpisodeView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 
-class EpisodeDiffUtil : DiffUtil.ItemCallback<EpisodeView>() {
+class EpisodeDiffUtil : DiffUtil.ItemCallback<EpisodeInfoView>() {
 
-    override fun areItemsTheSame(oldItem: EpisodeView, newItem: EpisodeView): Boolean =
-        oldItem.id == newItem.id
+    override fun areItemsTheSame(oldItem: EpisodeInfoView, newItem: EpisodeInfoView): Boolean =
+        oldItem.episodeId == newItem.episodeId
 
-    override fun areContentsTheSame(oldItem: EpisodeView, newItem: EpisodeView): Boolean =
+    override fun areContentsTheSame(oldItem: EpisodeInfoView, newItem: EpisodeInfoView): Boolean =
         oldItem == newItem
 
 }

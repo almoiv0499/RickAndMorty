@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "characters_table")
-data class CharacterData(
+data class CharacterInfoData(
     val created: String,
     val episode: List<String>,
     val gender: String,

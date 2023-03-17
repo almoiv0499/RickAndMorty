@@ -1,48 +1,46 @@
 package com.aston.rickandmorty.presentation.fragment.base
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import com.aston.rickandmorty.R
-import com.aston.rickandmorty.presentation.util.Navigator
+import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
+private const val BINDING_EXCEPTION_MASSAGE = "Binding cannot be null"
 
-    protected abstract val viewModel: VM
+abstract class BaseFragment<VB : ViewBinding>(
+    @LayoutRes private val layoutRes: Int,
+    private val bindingInflater: (inflater: LayoutInflater) -> VB,
+) : Fragment(layoutRes) {
+
+    private var _binding: VB? = null
+    protected val binding: VB
+        get() = _binding ?: throw java.lang.IllegalArgumentException(BINDING_EXCEPTION_MASSAGE)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+
+        _binding = bindingInflater.invoke(inflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeNavigation()
+        setUI()
     }
 
-    private fun observeNavigation() {
-        viewModel.navigationToLiveData.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { navigator ->
-                handleNavigation(navigator)
-            }
-        }
-    }
+    protected abstract fun setUI()
 
-    private fun handleNavigation(navigator: Navigator) {
-        when (navigator) {
-            is Navigator.NavigateTo -> navigateTo(navigator.fragment)
-            is Navigator.NavigateBack -> navigateBack()
-        }
-    }
+    override fun onDestroyView() {
+        super.onDestroyView()
 
-    private fun navigateBack() {
-        activity?.supportFragmentManager?.popBackStack()
-    }
-
-    private fun navigateTo(fragment: Fragment) {
-        activity?.let { activity ->
-            activity.supportFragmentManager.commit {
-                replace(R.id.fragment_container, fragment)
-                addToBackStack(null)
-            }
-        }
+        _binding = null
     }
 
 }

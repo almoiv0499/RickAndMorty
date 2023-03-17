@@ -15,8 +15,7 @@ import com.aston.domain.usecase.FetchCharactersThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
-import com.aston.rickandmorty.presentation.model.character.CharacterView
-import kotlinx.coroutines.launch
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
@@ -26,7 +25,7 @@ class CharactersViewModel @Inject constructor(
     private val mapper: MapperCharacterView,
 ) : BaseViewModel() {
 
-    fun charactersLiveData(): LiveData<PagingData<CharacterView>> {
+    fun charactersLiveData(): LiveData<PagingData<CharacterInfoView>> {
         return if (hasInternetConnection()) {
             characters
         } else {
@@ -34,24 +33,24 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
-    private val characters: LiveData<PagingData<CharacterView>> =
+    private val characters: LiveData<PagingData<CharacterInfoView>> =
         fetchCharactersThoughServiceUseCase().asLiveData().map { paging ->
             paging.map { character ->
-                mapper.mapToCharacterView(character)
+                mapper.mapToCharacterInfoView(character)
             }
         }.cachedIn(viewModelScope)
 
-    private val charactersDatabase: LiveData<PagingData<CharacterView>> =
+    private val charactersDatabase: LiveData<PagingData<CharacterInfoView>> =
         fetchCharactersThoughDatabaseUseCase().asLiveData().map { paging ->
                 paging.map {
-                    mapper.mapToCharacterView(it)
+                    mapper.mapToCharacterInfoView(it)
                 }
             }.cachedIn(viewModelScope)
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = application.getSystemService(ConnectivityManager::class.java)
-        val network = connectivityManager.activeNetwork ?: return false
-        val capability = connectivityManager.getNetworkCapabilities(network) ?: return false
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
         return when {
             capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
                 NetworkCapabilities.TRANSPORT_CELLULAR
@@ -61,10 +60,8 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
-    fun navigateToCharacterDetailsFragment(character: CharacterView) {
-        viewModelScope.launch {
-            navigateTo(CharacterDetailsFragment.newInstance(character))
-        }
+    fun navigateToCharacterDetailsFragment(character: CharacterInfoView) {
+        navigateTo(CharacterDetailsFragment.newInstance(character))
     }
 
 }

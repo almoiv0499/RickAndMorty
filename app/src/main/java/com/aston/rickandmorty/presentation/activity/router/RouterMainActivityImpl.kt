@@ -10,8 +10,14 @@ object RouterMainActivityImpl : RouterMainActivity {
 
     private var activity: MainActivity? = null
 
-    override fun onCreate(mainActivity: MainActivity) {
+    override fun onCreate(
+        mainActivity: MainActivity,
+        fragmentListener: FragmentManager.FragmentLifecycleCallbacks,
+    ) {
         activity = mainActivity
+        activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
+            fragmentListener, false
+        )
     }
 
     override fun navigateToCharactersFragment(fragment: Fragment) {
@@ -28,7 +34,8 @@ object RouterMainActivityImpl : RouterMainActivity {
         activity?.supportFragmentManager?.popBackStack()
     }
 
-    override fun onDestroy() {
+    override fun onDestroy(fragmentListener: FragmentManager.FragmentLifecycleCallbacks) {
+        activity?.supportFragmentManager?.unregisterFragmentLifecycleCallbacks(fragmentListener)
         activity = null
     }
 

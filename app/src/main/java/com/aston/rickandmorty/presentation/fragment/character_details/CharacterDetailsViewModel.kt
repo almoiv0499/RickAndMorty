@@ -5,18 +5,20 @@ import androidx.lifecycle.asLiveData
 import com.aston.domain.usecase.FetchEpisodesByIdsUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
-import com.aston.rickandmorty.presentation.model.episode.EpisodeView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+private const val SPLIT = "/"
+
 class CharacterDetailsViewModel @Inject constructor(
-    private val mapperEpisode: MapperEpisodeView,
     private val fetchEpisodesByIdsUseCase: FetchEpisodesByIdsUseCase,
+    private val mapperEpisode: MapperEpisodeView
 ) : BaseViewModel() {
 
-    fun episodeLiveData(episodesUrl: List<String>): LiveData<List<EpisodeView>> {
+    fun episodeLiveData(episodesUrl: List<String>): LiveData<List<EpisodeInfoView>> {
         val episodesIds = episodesUrl.map { episodeUrl ->
-            episodeUrl.split("/").last().toInt()
+            episodeUrl.split(SPLIT).last().toInt()
         }
         return fetchEpisodesByIdsUseCase(episodesIds).map { episodes ->
             episodes.map { episode ->

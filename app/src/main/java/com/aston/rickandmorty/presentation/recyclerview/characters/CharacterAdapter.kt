@@ -4,23 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.aston.rickandmorty.databinding.CharacterItemBinding
-import com.aston.rickandmorty.presentation.model.character.CharacterView
-import com.aston.rickandmorty.presentation.recyclerview.characters.util.CharacterDiffUtil
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 
-typealias OnCharacterClickListener = (CharacterView) -> Unit
+typealias OnCharacterClickListener = (CharacterInfoView) -> Unit
 
 class CharacterAdapter :
-    PagingDataAdapter<CharacterView, CharacterViewHolder>(CharacterDiffUtil()) {
+    PagingDataAdapter<CharacterInfoView, CharacterViewHolder>(CharacterDiffUtil()) {
 
     var onCharacterClickListener: OnCharacterClickListener? = null
-
-    // Доработаю позже
-//    private var filteredCharacters = mutableListOf<CharacterView>()
-//
-//    fun setFilteredCharacters(filtered: List<CharacterView>) {
-//        submitList(filtered)
-//        filteredCharacters = ArrayList(filtered)
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val binding = CharacterItemBinding.inflate(
@@ -35,7 +26,4 @@ class CharacterAdapter :
             holder.populate(character, onCharacterClickListener)
         }
     }
-
-    // Доработаю позже
-//    override fun getFilter(): Filter = FilterClass.filter(filteredCharacters, this)
 }
