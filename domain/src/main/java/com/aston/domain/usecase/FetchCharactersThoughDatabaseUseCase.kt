@@ -10,7 +10,11 @@ class FetchCharactersThoughDatabaseUseCase @Inject constructor(
     private val repository: CharactersRemoteRepository,
 ) {
 
-    operator fun invoke(): Flow<PagingData<CharacterInfo>> =
-        repository.fetchCharactersThoughDatabase()
+    operator fun invoke(
+        characterName: String, characterStatus: String,
+        characterSpecies: String, characterGender: String,
+    ): Flow<PagingData<CharacterInfo>> = repository.fetchCharactersThoughDatabase(
+        characterName, characterStatus, characterSpecies, characterGender
+    )
 
 }

@@ -9,7 +9,13 @@ import retrofit2.http.Query
 interface CharactersService {
 
     @GET("api/character")
-    suspend fun fetchCharactersByPage(@Query("page") page: Int): CharactersResultData
+    suspend fun fetchCharactersByPage(
+        @Query("page") page: Int,
+        @Query("name") characterName: String,
+        @Query("status") characterStatus: String,
+        @Query("species") characterSpecies: String,
+        @Query("gender") characterGender: String
+    ): CharactersResultData
 
     @GET("api/episode/{episodeIds}")
     suspend fun getEpisodesForCharacterByUrl(

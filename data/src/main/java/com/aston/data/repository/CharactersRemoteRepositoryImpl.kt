@@ -26,9 +26,14 @@ class CharactersRemoteRepositoryImpl @Inject constructor(
     private val mapperCharacter: MapperCharacterData,
 ) : CharactersRemoteRepository {
 
-    override fun fetchCharactersThoughService(): Flow<PagingData<CharacterInfo>> {
+    override fun fetchCharactersThoughService(
+        characterName: String, characterStatus: String,
+        characterSpecies: String, characterGender: String,
+    ): Flow<PagingData<CharacterInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            CharactersPagingSource(database, service)
+            CharactersPagingSource(
+                characterName, characterStatus, characterSpecies, characterGender, database, service
+            )
         }).flow.map { paging ->
             paging.map { character ->
                 mapperCharacter.mapToCharacter(character)
@@ -36,9 +41,13 @@ class CharactersRemoteRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun fetchCharactersThoughDatabase(): Flow<PagingData<CharacterInfo>> {
+    override fun fetchCharactersThoughDatabase(
+        characterName: String, characterStatus: String,
+        characterSpecies: String, characterGender: String,
+    ): Flow<PagingData<CharacterInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            database.charactersDao().fetchCharacters()
+            database.charactersDao()
+                .fetchCharacters(characterName, characterStatus, characterSpecies, characterGender)
         }).flow.map { paging ->
             paging.map { character ->
                 mapperCharacter.mapToCharacter(character)

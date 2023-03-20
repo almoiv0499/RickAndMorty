@@ -11,15 +11,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.viewmodel_factory.ViewModelFactory
-import com.aston.rickandmorty.presentation.util.Navigator
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.aston.rickandmorty.presentation.util.NavigatorBottomSheetDialogFragment
 import javax.inject.Inject
 
-abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
+abstract class BaseBottomSheetDialogViewModelFragment<VB : ViewBinding, VM : BaseBottomSheetDialogViewModel>(
     @LayoutRes layoutRes: Int,
     bindingInflater: (inflater: LayoutInflater) -> VB,
     private val viewModelClass: Class<VM>,
-) : BaseFragment<VB>(layoutRes, bindingInflater) {
+) : BaseBottomSheetDialogFragment<VB>(layoutRes, bindingInflater) {
+
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -47,42 +47,21 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
     }
 
     private fun observeNavigation() {
-        viewModel.navigationToLiveData.observe(viewLifecycleOwner) { event ->
+        viewModel.navigationToFilteredFragment.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { navigator ->
                 handleNavigation(navigator)
             }
         }
     }
 
-    private fun handleNavigation(navigator: Navigator) {
-        when (navigator) {
-            is Navigator.NavigateTo -> navigateTo(navigator.fragment)
-            is Navigator.ShowBottomSheetDialogFragment -> showBottomSheetDialogFragment(
-                navigator.fragment, navigator.fragmentTag
-            )
-            is Navigator.NavigateBack -> navigateBack()
+    private fun handleNavigation(navigator: NavigatorBottomSheetDialogFragment) {
+        returnToFilteredFragment(navigator.fragment)
+    }
+
+    private fun returnToFilteredFragment(fragment: Fragment) {
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fragment_container, fragment)
         }
-    }
-
-    private fun navigateBack() {
-        activity?.supportFragmentManager?.popBackStack()
-    }
-
-    private fun navigateTo(fragment: Fragment) {
-        activity?.let { activity ->
-            activity.supportFragmentManager.commit {
-                replace(R.id.fragment_container, fragment)
-                addToBackStack(null)
-            }
-        }
-    }
-
-    private fun showBottomSheetDialogFragment(
-        fragment: BottomSheetDialogFragment,
-        fragmentTag: String,
-    ) {
-        val fragmentManager = activity?.supportFragmentManager!!
-        fragment.show(fragmentManager, fragmentTag)
     }
 
 }

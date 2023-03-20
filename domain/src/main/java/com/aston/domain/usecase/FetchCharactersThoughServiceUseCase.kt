@@ -8,6 +8,11 @@ class FetchCharactersThoughServiceUseCase @Inject constructor(
     private val repository: CharactersRemoteRepository,
 ) {
 
-    operator fun invoke() = repository.fetchCharactersThoughService()
+    operator fun invoke(
+        characterName: String, characterStatus: String,
+        characterSpecies: String, characterGender: String,
+    ) = repository.fetchCharactersThoughService(
+        characterName, characterStatus, characterSpecies, characterGender
+    )
 
 }

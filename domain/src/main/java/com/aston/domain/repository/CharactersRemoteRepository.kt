@@ -7,9 +7,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharactersRemoteRepository {
 
-    fun fetchCharactersThoughService(): Flow<PagingData<CharacterInfo>>
+    fun fetchCharactersThoughService(
+        characterName: String, characterStatus: String,
+        characterSpecies: String, characterGender: String,
+    ): Flow<PagingData<CharacterInfo>>
 
-    fun fetchCharactersThoughDatabase(): Flow<PagingData<CharacterInfo>>
+    fun fetchCharactersThoughDatabase(
+        characterName: String, characterStatus: String,
+        characterSpecies: String, characterGender: String,
+    ): Flow<PagingData<CharacterInfo>>
 
     fun fetchEpisodesByIdsUseCase(episodeIds: List<Int>): Flow<List<Episode>>
 

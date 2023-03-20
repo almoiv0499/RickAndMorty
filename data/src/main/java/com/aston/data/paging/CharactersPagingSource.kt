@@ -10,7 +10,11 @@ import javax.inject.Inject
 
 private const val BY_ONE = 1
 
-class CharactersPagingSource @Inject constructor(
+class CharactersPagingSource(
+    private val characterName: String,
+    private val characterStatus: String,
+    private val characterSpecies: String,
+    private val characterGender: String,
     private val database: ApplicationDatabase,
     private val service: CharactersService,
 ) : PagingSource<Int, CharacterInfoData>() {
@@ -27,7 +31,9 @@ class CharactersPagingSource @Inject constructor(
 
         return try {
 
-            val response = service.fetchCharactersByPage(currentPage)
+            val response = service.fetchCharactersByPage(
+                currentPage, characterName, characterStatus, characterSpecies, characterGender
+            )
             val data = response.characterInfo
 
             database.withTransaction {
