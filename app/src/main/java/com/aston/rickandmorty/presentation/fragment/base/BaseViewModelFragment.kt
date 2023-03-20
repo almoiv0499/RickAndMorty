@@ -47,7 +47,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
     }
 
     private fun observeNavigation() {
-        viewModel.navigationToLiveData.observe(viewLifecycleOwner) { event ->
+        viewModel.launchFragmentLiveData.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { navigator ->
                 handleNavigation(navigator)
             }
@@ -56,8 +56,8 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
 
     private fun handleNavigation(navigator: Navigator) {
         when (navigator) {
-            is Navigator.NavigateTo -> navigateTo(navigator.fragment)
-            is Navigator.ShowBottomSheetDialogFragment -> showBottomSheetDialogFragment(
+            is Navigator.LaunchFragment -> launchFragment(navigator.fragment)
+            is Navigator.LaunchDialogFragment -> launchDialogFragment(
                 navigator.fragment, navigator.fragmentTag
             )
             is Navigator.NavigateBack -> navigateBack()
@@ -68,7 +68,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         activity?.supportFragmentManager?.popBackStack()
     }
 
-    private fun navigateTo(fragment: Fragment) {
+    private fun launchFragment(fragment: Fragment) {
         activity?.let { activity ->
             activity.supportFragmentManager.commit {
                 replace(R.id.fragment_container, fragment)
@@ -77,7 +77,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         }
     }
 
-    private fun showBottomSheetDialogFragment(
+    private fun launchDialogFragment(
         fragment: BottomSheetDialogFragment,
         fragmentTag: String,
     ) {

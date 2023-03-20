@@ -55,7 +55,7 @@ class CharactersRemoteRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun fetchEpisodesByIdsUseCase(episodeIds: List<Int>): Flow<List<Episode>> {
+    override fun fetchEpisodesByIds(episodeIds: List<Int>): Flow<List<Episode>> {
         return networkBoundResource(query = {
             database.episodeDao().fetchEpisodes(episodeIds).map { episodes ->
                 episodes.map { episode ->

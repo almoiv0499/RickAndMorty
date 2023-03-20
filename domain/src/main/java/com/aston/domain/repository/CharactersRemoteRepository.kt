@@ -17,6 +17,6 @@ interface CharactersRemoteRepository {
         characterSpecies: String, characterGender: String,
     ): Flow<PagingData<CharacterInfo>>
 
-    fun fetchEpisodesByIdsUseCase(episodeIds: List<Int>): Flow<List<Episode>>
+    fun fetchEpisodesByIds(episodeIds: List<Int>): Flow<List<Episode>>
 
 }

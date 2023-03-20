@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.viewmodel_factory.ViewModelFactory
-import com.aston.rickandmorty.presentation.util.NavigatorBottomSheetDialogFragment
+import com.aston.rickandmorty.presentation.util.NavigatorForDialogFragment
 import javax.inject.Inject
 
 abstract class BaseBottomSheetDialogViewModelFragment<VB : ViewBinding, VM : BaseBottomSheetDialogViewModel>(
@@ -47,18 +47,18 @@ abstract class BaseBottomSheetDialogViewModelFragment<VB : ViewBinding, VM : Bas
     }
 
     private fun observeNavigation() {
-        viewModel.navigationToFilteredFragment.observe(viewLifecycleOwner) { event ->
+        viewModel.launchFilteredFragmentLiveData.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { navigator ->
                 handleNavigation(navigator)
             }
         }
     }
 
-    private fun handleNavigation(navigator: NavigatorBottomSheetDialogFragment) {
-        returnToFilteredFragment(navigator.fragment)
+    private fun handleNavigation(navigator: NavigatorForDialogFragment) {
+        launchFilteredFragment(navigator.fragment)
     }
 
-    private fun returnToFilteredFragment(fragment: Fragment) {
+    private fun launchFilteredFragment(fragment: Fragment) {
         activity?.supportFragmentManager?.commit {
             replace(R.id.fragment_container, fragment)
         }

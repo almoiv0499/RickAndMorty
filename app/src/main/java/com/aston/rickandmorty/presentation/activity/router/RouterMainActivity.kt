@@ -1,6 +1,5 @@
 package com.aston.rickandmorty.presentation.activity.router
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.aston.rickandmorty.presentation.activity.main.MainActivity
 
@@ -13,7 +12,7 @@ interface RouterMainActivity {
 
     fun onDestroy(fragmentListener: FragmentManager.FragmentLifecycleCallbacks)
 
-    fun navigateToCharactersFragment(fragment: Fragment)
+    fun launchCharactersFragment()
 
     fun navigateBack()
 

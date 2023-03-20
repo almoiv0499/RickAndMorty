@@ -1,6 +1,7 @@
 package com.aston.rickandmorty.di.module
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.aston.data.database.ApplicationDatabase
 import com.aston.data.database.CharactersDao
@@ -29,8 +30,8 @@ class DataModule {
 
     @AppScope
     @Provides
-    fun provideApplicationDatabase(application: Application): ApplicationDatabase =
-        Room.databaseBuilder(application, ApplicationDatabase::class.java, "database")
+    fun provideApplicationDatabase(context: Context): ApplicationDatabase =
+        Room.databaseBuilder(context, ApplicationDatabase::class.java, "database1")
             .build()
 
     @AppScope

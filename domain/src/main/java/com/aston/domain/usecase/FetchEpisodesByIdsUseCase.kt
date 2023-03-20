@@ -10,6 +10,6 @@ class FetchEpisodesByIdsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(episodeIds: List<Int>): Flow<List<Episode>> =
-        repository.fetchEpisodesByIdsUseCase(episodeIds)
+        repository.fetchEpisodesByIds(episodeIds)
 
 }

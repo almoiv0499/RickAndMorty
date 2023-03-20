@@ -16,7 +16,7 @@ class CharacterDetailsViewModel @Inject constructor(
     private val mapperEpisode: MapperEpisodeView
 ) : BaseViewModel() {
 
-    fun episodeLiveData(episodesUrl: List<String>): LiveData<List<EpisodeInfoView>> {
+    fun fetchEpisodeLiveData(episodesUrl: List<String>): LiveData<List<EpisodeInfoView>> {
         val episodesIds = episodesUrl.map { episodeUrl ->
             episodeUrl.split(SPLIT).last().toInt()
         }

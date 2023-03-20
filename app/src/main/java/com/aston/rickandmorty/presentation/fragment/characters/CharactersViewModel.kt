@@ -1,6 +1,5 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -22,7 +21,7 @@ import javax.inject.Inject
 private const val FRAGMENT_FILTER_TAG = "CharacterFragmentFilter"
 
 class CharactersViewModel @Inject constructor(
-    private val application: Application,
+    private val context: Context,
     private val fetchCharactersThoughServiceUseCase: FetchCharactersThoughServiceUseCase,
     private val fetchCharactersThoughDatabaseUseCase: FetchCharactersThoughDatabaseUseCase,
     private val mapper: MapperCharacterView,
@@ -33,13 +32,13 @@ class CharactersViewModel @Inject constructor(
         characterSpecies: String, characterGender: String,
     ): Flow<PagingData<CharacterInfoView>> {
         return if (hasInternetConnection()) {
-            characters(characterName, characterStatus, characterSpecies, characterGender)
+            fetchCharactersThoughService(characterName, characterStatus, characterSpecies, characterGender)
         } else {
-            charactersDatabase(characterName, characterStatus, characterSpecies, characterGender)
+            fetchCharactersThoughDatabase(characterName, characterStatus, characterSpecies, characterGender)
         }
     }
 
-    private fun characters(
+    private fun fetchCharactersThoughService(
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
     ): Flow<PagingData<CharacterInfoView>> = fetchCharactersThoughServiceUseCase(
@@ -50,7 +49,7 @@ class CharactersViewModel @Inject constructor(
         }
     }.cachedIn(viewModelScope)
 
-    private fun charactersDatabase(
+    private fun fetchCharactersThoughDatabase(
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
     ): Flow<PagingData<CharacterInfoView>> = fetchCharactersThoughDatabaseUseCase(
@@ -62,24 +61,23 @@ class CharactersViewModel @Inject constructor(
     }.cachedIn(viewModelScope)
 
     private fun hasInternetConnection(): Boolean {
-        val connectivityManager = application.getSystemService(ConnectivityManager::class.java)
+        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
         val activeNetwork = connectivityManager.activeNetwork ?: return false
         val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
         return when {
             capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
                 NetworkCapabilities.TRANSPORT_CELLULAR
             ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-
             else -> false
         }
     }
 
-    fun showCharactersFilterFragment() {
-        showBottomSheetDialogFragment(CharactersFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
+    fun launchDialogFragment() {
+        launchDialogFragment(CharactersFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
     }
 
-    fun navigateToCharacterDetailsFragment(character: CharacterInfoView) {
-        navigateTo(CharacterDetailsFragment.newInstance(character))
+    fun launchCharactersFilterFragment(character: CharacterInfoView) {
+        launchFragment(CharacterDetailsFragment.newInstance(character))
     }
 
 }

@@ -11,13 +11,13 @@
     <item
         android:id="@+id/locations"
         android:icon="@drawable/ic_locations"
-        android:title="Characters"
+        android:title="Locations"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/episodes"
         android:icon="@drawable/ic_episodes"
-        android:title="Characters"
+        android:title="Episodes"
         app:showAsAction="ifRoom" />
 
 </menu>

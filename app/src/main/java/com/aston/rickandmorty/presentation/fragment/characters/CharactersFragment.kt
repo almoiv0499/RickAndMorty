@@ -7,7 +7,6 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
-import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import kotlinx.coroutines.flow.collectLatest
@@ -50,7 +49,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharacterAdapter().apply {
             onCharacterClickListener = { character ->
-                viewModel.navigateToCharacterDetailsFragment(character)
+                viewModel.launchCharactersFilterFragment(character)
             }
         }
     }
@@ -63,7 +62,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         setupRecyclerView()
 
         binding.characterFilter.setOnClickListener {
-            viewModel.showCharactersFilterFragment()
+            viewModel.launchDialogFragment()
         }
     }
 

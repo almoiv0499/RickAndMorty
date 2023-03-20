@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.activity.main.MainActivity
+import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 
 object RouterMainActivityImpl : RouterMainActivity {
 
@@ -20,14 +21,9 @@ object RouterMainActivityImpl : RouterMainActivity {
         )
     }
 
-    override fun navigateToCharactersFragment(fragment: Fragment) {
-        activity?.supportFragmentManager?.popBackStack(
-            null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-        activity?.supportFragmentManager?.commit {
-            replace(R.id.fragment_container, fragment)
-            addToBackStack(null)
-        }
+    override fun launchCharactersFragment() {
+        val fragment = CharactersFragment.newInstance()
+        launchFragmentWithPopBackStack(fragment)
     }
 
     override fun navigateBack() {
@@ -37,6 +33,16 @@ object RouterMainActivityImpl : RouterMainActivity {
     override fun onDestroy(fragmentListener: FragmentManager.FragmentLifecycleCallbacks) {
         activity?.supportFragmentManager?.unregisterFragmentLifecycleCallbacks(fragmentListener)
         activity = null
+    }
+
+    private fun launchFragmentWithPopBackStack(fragment: Fragment) {
+        activity?.supportFragmentManager?.popBackStack(
+            null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fragment_container, fragment)
+            addToBackStack(null)
+        }
     }
 
 }

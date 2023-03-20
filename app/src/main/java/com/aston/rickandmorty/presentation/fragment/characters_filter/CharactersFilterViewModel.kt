@@ -10,7 +10,7 @@ class CharactersFilterViewModel @Inject constructor() : BaseBottomSheetDialogVie
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
     ) {
-        navigateToFilteredFragment(
+        launchFilteredFragment(
             CharactersFragment.newInstance(
                 characterName, characterStatus, characterSpecies, characterGender
             )

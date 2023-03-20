@@ -1,8 +1,8 @@
 package com.aston.rickandmorty.presentation.activity.main
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -10,7 +10,6 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.ActivityMainBinding
 import com.aston.rickandmorty.presentation.activity.router.RouterMainActivity
-import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import javax.inject.Inject
@@ -53,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarApp)
 
         setBottomNavigation()
+        handleBackPressed()
     }
 
     override fun onDestroy() {
@@ -63,9 +63,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBottomNavigation() {
         binding.bottomNavigationApp.setOnItemSelectedListener { menuItem ->
-            when(menuItem.itemId) {
+            when (menuItem.itemId) {
                 R.id.characters -> {
-                    router.navigateToCharactersFragment(CharactersFragment.newInstance())
+                    router.launchCharactersFragment()
                 }
                 R.id.locations -> {
 
@@ -109,5 +109,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun handleBackPressed() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                when {
+                    isCharactersFragment() -> finish()
+                    isTitleToolbarDetails() -> router.navigateBack()
+                    else -> binding.bottomNavigationApp.selectedItemId = R.id.characters
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    private fun isCharactersFragment(): Boolean =
+        binding.bottomNavigationApp.selectedItemId == R.id.characters
+
+    private fun isTitleToolbarDetails(): Boolean = currentFragment is TitleToolbarDetails
 
 }

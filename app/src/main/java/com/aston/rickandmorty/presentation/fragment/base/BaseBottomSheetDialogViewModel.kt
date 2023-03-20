@@ -5,17 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.aston.rickandmorty.presentation.util.Event
-import com.aston.rickandmorty.presentation.util.NavigatorBottomSheetDialogFragment
+import com.aston.rickandmorty.presentation.util.NavigatorForDialogFragment
 
 abstract class BaseBottomSheetDialogViewModel : ViewModel() {
 
-    private val _navigationToFilteredFragment =
-        MutableLiveData<Event<NavigatorBottomSheetDialogFragment>>()
-    val navigationToFilteredFragment: LiveData<Event<NavigatorBottomSheetDialogFragment>> =
-        _navigationToFilteredFragment
+    private val _launchFilteredFragmentLiveData =
+        MutableLiveData<Event<NavigatorForDialogFragment>>()
+    val launchFilteredFragmentLiveData: LiveData<Event<NavigatorForDialogFragment>> =
+        _launchFilteredFragmentLiveData
 
-    fun navigateToFilteredFragment(fragment: Fragment) {
-        _navigationToFilteredFragment.value = Event(NavigatorBottomSheetDialogFragment(fragment))
+    fun launchFilteredFragment(fragment: Fragment) {
+        _launchFilteredFragmentLiveData.value = Event(NavigatorForDialogFragment(fragment))
     }
 
 }

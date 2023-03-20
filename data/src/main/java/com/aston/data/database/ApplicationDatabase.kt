@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.aston.data.model.character.CharacterInfoData
 import com.aston.data.model.episode.EpisodeInfoData
 
-@Database(entities = [CharacterInfoData::class, EpisodeInfoData::class], version = 2, exportSchema = false)
+@Database(entities = [CharacterInfoData::class, EpisodeInfoData::class], version = 1, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class ApplicationDatabase : RoomDatabase() {
 

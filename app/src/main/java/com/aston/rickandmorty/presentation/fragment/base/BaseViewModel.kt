@@ -10,19 +10,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val _navigationToLiveData = MutableLiveData<Event<Navigator>>()
-    val navigationToLiveData: LiveData<Event<Navigator>> = _navigationToLiveData
+    private val _launchFragmentLiveData = MutableLiveData<Event<Navigator>>()
+    val launchFragmentLiveData: LiveData<Event<Navigator>> = _launchFragmentLiveData
 
-    fun navigateTo(fragment: Fragment) {
-        _navigationToLiveData.value = Event(Navigator.NavigateTo(fragment))
+    fun launchFragment(fragment: Fragment) {
+        _launchFragmentLiveData.value = Event(Navigator.LaunchFragment(fragment))
     }
 
-    fun showBottomSheetDialogFragment(fragment: BottomSheetDialogFragment, fragmentTag: String) {
-        _navigationToLiveData.value =
-            Event(Navigator.ShowBottomSheetDialogFragment(fragment, fragmentTag))
+    fun launchDialogFragment(fragment: BottomSheetDialogFragment, fragmentTag: String) {
+        _launchFragmentLiveData.value =
+            Event(Navigator.LaunchDialogFragment(fragment, fragmentTag))
     }
 
     fun navigateBack() {
-        _navigationToLiveData.value = Event(Navigator.NavigateBack)
+        _launchFragmentLiveData.value = Event(Navigator.NavigateBack)
     }
 }
