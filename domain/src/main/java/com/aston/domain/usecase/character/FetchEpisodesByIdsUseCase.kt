@@ -1,12 +1,12 @@
-package com.aston.domain.usecase
+package com.aston.domain.usecase.character
 
 import com.aston.domain.model.episode.Episode
-import com.aston.domain.repository.CharactersRemoteRepository
+import com.aston.domain.repository.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class FetchEpisodesByIdsUseCase @Inject constructor(
-    private val repository: CharactersRemoteRepository
+    private val repository: CharactersRepository
 ) {
 
     operator fun invoke(episodeIds: List<Int>): Flow<List<Episode>> =

@@ -5,7 +5,7 @@ import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.episode.Episode
 import kotlinx.coroutines.flow.Flow
 
-interface CharactersRemoteRepository {
+interface CharactersRepository {
 
     fun fetchCharactersThoughService(
         characterName: String, characterStatus: String,

@@ -1,11 +1,11 @@
-package com.aston.domain.usecase
+package com.aston.domain.usecase.character
 
-import com.aston.domain.repository.CharactersRemoteRepository
+import com.aston.domain.repository.CharactersRepository
 import javax.inject.Inject
 
 
 class FetchCharactersThoughServiceUseCase @Inject constructor(
-    private val repository: CharactersRemoteRepository,
+    private val repository: CharactersRepository,
 ) {
 
     operator fun invoke(

@@ -1,15 +1,19 @@
 package com.aston.rickandmorty.di.module
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.aston.data.database.ApplicationDatabase
 import com.aston.data.database.CharactersDao
+import com.aston.data.database.LocationDao
 import com.aston.data.remote.CharactersService
-import com.aston.data.repository.CharactersRemoteRepositoryImpl
+import com.aston.data.remote.LocationsService
+import com.aston.data.repository.CharactersRepositoryImpl
+import com.aston.data.repository.LocationsRepositoryImpl
 import com.aston.data.util.mapper.MapperCharacterData
 import com.aston.data.util.mapper.MapperEpisodeData
-import com.aston.domain.repository.CharactersRemoteRepository
+import com.aston.data.util.mapper.MapperLocationData
+import com.aston.domain.repository.CharactersRepository
+import com.aston.domain.repository.LocationRepository
 import com.aston.rickandmorty.di.annotation.AppScope
 import dagger.Module
 import dagger.Provides
@@ -31,8 +35,7 @@ class DataModule {
     @AppScope
     @Provides
     fun provideApplicationDatabase(context: Context): ApplicationDatabase =
-        Room.databaseBuilder(context, ApplicationDatabase::class.java, "database1")
-            .build()
+        Room.databaseBuilder(context, ApplicationDatabase::class.java, "database2").build()
 
     @AppScope
     @Provides
@@ -44,14 +47,32 @@ class DataModule {
     fun provideCharactersService(retrofit: Retrofit): CharactersService =
         retrofit.create(CharactersService::class.java)
 
+    @AppScope
     @Provides
-    fun provideCharacterRemoteRepository(
+    fun provideLocationsDao(applicationDatabase: ApplicationDatabase): LocationDao =
+        applicationDatabase.locationDao()
+
+    @AppScope
+    @Provides
+    fun provideLocationsService(retrofit: Retrofit): LocationsService =
+        retrofit.create(LocationsService::class.java)
+
+    @Provides
+    fun provideCharacterRepository(
         service: CharactersService,
         database: ApplicationDatabase,
         mapperEpisode: MapperEpisodeData,
         mapperCharacter: MapperCharacterData,
-    ): CharactersRemoteRepository = CharactersRemoteRepositoryImpl(
+    ): CharactersRepository = CharactersRepositoryImpl(
         service, database, mapperEpisode, mapperCharacter
     )
+
+    @Provides
+    fun provideLocationRepository(
+        service: LocationsService,
+        database: ApplicationDatabase,
+        mapper: MapperLocationData,
+    ): LocationRepository = LocationsRepositoryImpl(database, service, mapper)
+
 
 }

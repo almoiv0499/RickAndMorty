@@ -5,5 +5,5 @@ import com.aston.domain.model.location.LocationInfo
 
 data class LocationResultData(
     val info: Info,
-    val results: List<LocationInfo>
+    val results: List<LocationInfoData>
 )

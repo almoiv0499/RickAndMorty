@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.aston.domain.usecase.FetchCharactersThoughDatabaseUseCase
-import com.aston.domain.usecase.FetchCharactersThoughServiceUseCase
+import com.aston.domain.usecase.character.FetchCharactersThoughDatabaseUseCase
+import com.aston.domain.usecase.character.FetchCharactersThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment

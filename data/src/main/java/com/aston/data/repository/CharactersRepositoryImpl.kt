@@ -12,19 +12,19 @@ import com.aston.data.util.mapper.MapperEpisodeData
 import com.aston.data.util.resource.networkBoundResource
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.episode.Episode
-import com.aston.domain.repository.CharactersRemoteRepository
+import com.aston.domain.repository.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 private const val PAGE_SIZE = 1
 
-class CharactersRemoteRepositoryImpl @Inject constructor(
+class CharactersRepositoryImpl @Inject constructor(
     private val service: CharactersService,
     private val database: ApplicationDatabase,
     private val mapperEpisode: MapperEpisodeData,
     private val mapperCharacter: MapperCharacterData,
-) : CharactersRemoteRepository {
+) : CharactersRepository {
 
     override fun fetchCharactersThoughService(
         characterName: String, characterStatus: String,
