@@ -27,8 +27,8 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     private val locationAdapter by lazy(LazyThreadSafetyMode.NONE) {
         LocationAdapter().apply {
-            onLocationClickListener = {
-
+            onLocationClickListener = { location ->
+                viewModel.launchLocationDetailsFragment(location)
             }
         }
     }

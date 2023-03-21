@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import com.aston.domain.usecase.location.FetchLocationsThoughDatabaseUseCase
 import com.aston.domain.usecase.location.FetchLocationsThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
+import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperLocationView
 import com.aston.rickandmorty.presentation.model.location.LocationInfoView
 import kotlinx.coroutines.flow.Flow
@@ -65,6 +66,10 @@ class LocationsViewModel @Inject constructor(
             ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
             else -> false
         }
+    }
+
+    fun launchLocationDetailsFragment(location: LocationInfoView) {
+        launchFragment(LocationDetailsFragment.newInstance(location))
     }
 
 }

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.aston.data.model.character.CharacterInfoData
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharactersDao {
@@ -18,6 +19,9 @@ interface CharactersDao {
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String
     ): PagingSource<Int, CharacterInfoData>
+
+    @Query("SELECT * FROM characters_table WHERE id IN (:characterIds)")
+    fun fetchCharactersById(characterIds: List<Int>): Flow<List<CharacterInfoData>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacters(characters: List<CharacterInfoData>)

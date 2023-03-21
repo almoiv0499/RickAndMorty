@@ -71,8 +71,10 @@ class DataModule {
     fun provideLocationRepository(
         service: LocationsService,
         database: ApplicationDatabase,
-        mapper: MapperLocationData,
-    ): LocationRepository = LocationsRepositoryImpl(database, service, mapper)
+        mapperLocation: MapperLocationData,
+        mapperCharacter: MapperCharacterData,
+    ): LocationRepository =
+        LocationsRepositoryImpl(database, service, mapperLocation, mapperCharacter)
 
 
 }
