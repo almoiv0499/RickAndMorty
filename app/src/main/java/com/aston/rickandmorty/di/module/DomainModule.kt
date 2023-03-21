@@ -1,6 +1,6 @@
 package com.aston.rickandmorty.di.module
 
-import com.aston.domain.repository.CharactersRemoteRepository
+import com.aston.domain.repository.CharactersRepository
 import com.aston.domain.usecase.FetchCharactersThoughDatabaseUseCase
 import com.aston.domain.usecase.FetchCharactersThoughServiceUseCase
 import com.aston.domain.usecase.FetchEpisodesByIdsUseCase
@@ -12,17 +12,17 @@ class DomainModule {
 
     @Provides
     fun provideFetchCharactersThoughDatabaseUseCase(
-        repository: CharactersRemoteRepository
+        repository: CharactersRepository
     ): FetchCharactersThoughDatabaseUseCase = FetchCharactersThoughDatabaseUseCase(repository)
 
     @Provides
     fun provideFetchCharactersServiceUseCase(
-        repository: CharactersRemoteRepository
+        repository: CharactersRepository
     ): FetchCharactersThoughServiceUseCase = FetchCharactersThoughServiceUseCase(repository)
 
     @Provides
     fun provideFetchEpisodesForCharactersByIds(
-        repository: CharactersRemoteRepository
+        repository: CharactersRepository
     ): FetchEpisodesByIdsUseCase = FetchEpisodesByIdsUseCase(repository)
 
 }

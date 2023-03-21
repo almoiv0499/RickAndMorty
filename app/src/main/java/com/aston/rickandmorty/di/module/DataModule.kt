@@ -1,15 +1,14 @@
 package com.aston.rickandmorty.di.module
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.aston.data.database.ApplicationDatabase
 import com.aston.data.database.CharactersDao
 import com.aston.data.remote.CharactersService
-import com.aston.data.repository.CharactersRemoteRepositoryImpl
+import com.aston.data.repository.CharactersRepositoryImpl
 import com.aston.data.util.mapper.MapperCharacterData
 import com.aston.data.util.mapper.MapperEpisodeData
-import com.aston.domain.repository.CharactersRemoteRepository
+import com.aston.domain.repository.CharactersRepository
 import com.aston.rickandmorty.di.annotation.AppScope
 import dagger.Module
 import dagger.Provides
@@ -45,12 +44,12 @@ class DataModule {
         retrofit.create(CharactersService::class.java)
 
     @Provides
-    fun provideCharacterRemoteRepository(
+    fun provideCharacterRepository(
         service: CharactersService,
         database: ApplicationDatabase,
         mapperEpisode: MapperEpisodeData,
         mapperCharacter: MapperCharacterData,
-    ): CharactersRemoteRepository = CharactersRemoteRepositoryImpl(
+    ): CharactersRepository = CharactersRepositoryImpl(
         service, database, mapperEpisode, mapperCharacter
     )
 
