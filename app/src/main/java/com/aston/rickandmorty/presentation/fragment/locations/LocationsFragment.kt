@@ -1,5 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.locations
 
+import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
@@ -23,6 +24,20 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     companion object {
         fun newInstance() = LocationsFragment()
+
+        fun newInstance(
+            locationName: String,
+            locationType: String,
+            locationDimension: String,
+        ): LocationsFragment {
+            val fragment = LocationsFragment()
+            fragment.arguments = Bundle().apply {
+                putString(LOCATION_NAME, locationName)
+                putString(LOCATION_TYPE, locationType)
+                putString(LOCATION_DIMENSION, locationDimension)
+            }
+            return fragment
+        }
     }
 
     private val locationAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -39,6 +54,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     override fun setUI() {
         setupRecyclerView()
+        launchFilterFragment()
     }
 
     override fun setupObservers() {
@@ -53,6 +69,12 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         with(binding.locationsRecyclerView) {
             adapter = locationAdapter
             layoutManager = GridLayoutManager(context, SPAN_COUNT)
+        }
+    }
+
+    private fun launchFilterFragment() {
+        binding.locationFilter.setOnClickListener {
+            viewModel.launchFilterFragment()
         }
     }
 

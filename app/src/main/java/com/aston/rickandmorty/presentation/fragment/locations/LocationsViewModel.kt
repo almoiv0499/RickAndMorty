@@ -8,10 +8,13 @@ import com.aston.domain.usecase.location.FetchLocationsThoughDatabaseUseCase
 import com.aston.domain.usecase.location.FetchLocationsThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
+import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperLocationView
 import com.aston.rickandmorty.presentation.model.location.LocationInfoView
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+
+private const val FRAGMENT_FILTER_TAG = "LocationFragmentFilter"
 
 class LocationsViewModel @Inject constructor(
     private val context: Context,
@@ -66,6 +69,10 @@ class LocationsViewModel @Inject constructor(
             ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
             else -> false
         }
+    }
+
+    fun launchFilterFragment() {
+        launchDialogFragment(LocationsFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
     }
 
     fun launchLocationDetailsFragment(location: LocationInfoView) {

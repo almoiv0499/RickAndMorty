@@ -11,6 +11,7 @@ import com.aston.rickandmorty.presentation.fragment.character_details.CharacterD
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
+import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
 import com.aston.rickandmorty.presentation.fragment.locations.LocationsFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -31,6 +32,7 @@ interface AppComponent {
     fun inject(fragment: CharacterDetailsFragment)
 
     fun inject(fragment: LocationsFragment)
+    fun inject(fragment: LocationsFilterFragment)
     fun inject(fragment: LocationDetailsFragment)
 
     fun inject(activity: MainActivity)

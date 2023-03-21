@@ -6,6 +6,7 @@ import com.aston.rickandmorty.presentation.fragment.character_details.CharacterD
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersViewModel
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterViewModel
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsViewModel
+import com.aston.rickandmorty.presentation.fragment.location_filter.LocationFilterViewModel
 import com.aston.rickandmorty.presentation.fragment.locations.LocationsViewModel
 import dagger.Binds
 import dagger.Module
@@ -33,5 +34,9 @@ interface ViewModelModule {
     @Binds
     @[IntoMap ViewModelKey(LocationDetailsViewModel::class)]
     fun bindLocationDetailsViewModel(viewModel: LocationDetailsViewModel): ViewModel
+
+    @Binds
+    @[IntoMap ViewModelKey(LocationFilterViewModel::class)]
+    fun bindLocationFilterViewModel(viewModel: LocationFilterViewModel): ViewModel
 
 }
