@@ -82,6 +82,14 @@ class MainActivity : AppCompatActivity() {
         val fragment = currentFragment
         setupToolbar()
         setupBackPressed(fragment)
+        setBottomNavigationVisibility(fragment)
+    }
+
+    private fun setBottomNavigationVisibility(fragment: Fragment) {
+        when (fragment) {
+            is TitleToolbarDetails -> binding.bottomNavigationApp.visibility = View.GONE
+            else -> binding.bottomNavigationApp.visibility = View.VISIBLE
+        }
     }
 
     private fun setupToolbar() {

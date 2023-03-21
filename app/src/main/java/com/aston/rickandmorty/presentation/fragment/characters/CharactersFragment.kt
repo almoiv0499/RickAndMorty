@@ -49,7 +49,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharacterAdapter().apply {
             onCharacterClickListener = { character ->
-                viewModel.launchCharactersFilterFragment(character)
+                viewModel.launchCharacterDetailsFragment(character)
             }
         }
     }
@@ -82,10 +82,10 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     }
 
     private fun observeCharactersFlow() {
-        val characterName = arguments?.getString(CHARACTER_NAME) ?: EMPTY_VALUE
-        val characterSpecies = arguments?.getString(CHARACTER_SPECIES) ?: EMPTY_VALUE
-        val characterGender = arguments?.getString(CHARACTER_GENDER) ?: EMPTY_VALUE
-        val characterStatus = arguments?.getString(CHARACTER_STATUS) ?: EMPTY_VALUE
+        val characterName = fetchFilterData(CHARACTER_NAME)
+        val characterSpecies = fetchFilterData(CHARACTER_SPECIES)
+        val characterGender = fetchFilterData(CHARACTER_GENDER)
+        val characterStatus = fetchFilterData(CHARACTER_STATUS)
 
         lifecycleScope.launch {
             viewModel.charactersFlow(
@@ -94,5 +94,9 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
                 characterAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
             }
         }
+    }
+
+    private fun fetchFilterData(key: String): String {
+        return arguments?.getString(key) ?: EMPTY_VALUE
     }
 }
