@@ -3,10 +3,12 @@ package com.aston.rickandmorty.presentation.fragment.characters
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
+import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.usecase.character.FetchCharactersThoughDatabaseUseCase
 import com.aston.domain.usecase.character.FetchCharactersThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
@@ -14,8 +16,11 @@ import com.aston.rickandmorty.presentation.fragment.character_details.CharacterD
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 private const val FRAGMENT_FILTER_TAG = "CharacterFragmentFilter"
@@ -27,38 +32,35 @@ class CharactersViewModel @Inject constructor(
     private val mapper: MapperCharacterView,
 ) : BaseViewModel() {
 
+    private val _charactersLiveData = MutableLiveData<PagingData<CharacterInfoView>>()
+    val charactersLiveData: LiveData<PagingData<CharacterInfoView>> = _charactersLiveData
+
     fun charactersFlow(
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
-    ): Flow<PagingData<CharacterInfoView>> {
-        return if (hasInternetConnection()) {
-            fetchCharactersThoughService(characterName, characterStatus, characterSpecies, characterGender)
+    ) {
+        if (hasInternetConnection()) {
+            fetchCharacters(
+                fetchCharactersThoughServiceUseCase(
+                    characterName, characterStatus, characterSpecies, characterGender
+                )
+            )
         } else {
-            fetchCharactersThoughDatabase(characterName, characterStatus, characterSpecies, characterGender)
+            fetchCharacters(
+                fetchCharactersThoughDatabaseUseCase(
+                    characterName, characterStatus, characterSpecies, characterGender
+                )
+            )
         }
     }
 
-    private fun fetchCharactersThoughService(
-        characterName: String, characterStatus: String,
-        characterSpecies: String, characterGender: String,
-    ): Flow<PagingData<CharacterInfoView>> = fetchCharactersThoughServiceUseCase(
-        characterName, characterStatus, characterSpecies, characterGender
-    ).map { paging ->
-        paging.map { character ->
-            mapper.mapToCharacterInfoView(character)
-        }
-    }.cachedIn(viewModelScope)
-
-    private fun fetchCharactersThoughDatabase(
-        characterName: String, characterStatus: String,
-        characterSpecies: String, characterGender: String,
-    ): Flow<PagingData<CharacterInfoView>> = fetchCharactersThoughDatabaseUseCase(
-        characterName, characterStatus, characterSpecies, characterGender
-    ).map { paging ->
-        paging.map {
-            mapper.mapToCharacterInfoView(it)
-        }
-    }.cachedIn(viewModelScope)
+    private fun fetchCharacters(
+        useCase: Flow<PagingData<CharacterInfo>>,
+    ) {
+        useCase.flowOn(Dispatchers.IO).cachedIn(viewModelScope).onEach { paging ->
+            _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
+        }.launchIn(viewModelScope)
+    }
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = context.getSystemService(ConnectivityManager::class.java)

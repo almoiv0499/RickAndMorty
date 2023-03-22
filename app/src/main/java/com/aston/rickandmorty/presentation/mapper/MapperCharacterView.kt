@@ -1,22 +1,20 @@
 package com.aston.rickandmorty.presentation.mapper
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.character.Location
 import com.aston.domain.model.character.Origin
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import com.aston.rickandmorty.presentation.model.character.LocationView
 import com.aston.rickandmorty.presentation.model.character.OriginView
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MapperCharacterView @Inject constructor() {
 
-    fun mapToFlowListView(flow: Flow<List<CharacterInfo>>): Flow<List<CharacterInfoView>> {
-        return flow.map { characters ->
-            characters.map { character ->
-                mapToCharacterInfoView(character)
-            }
+    fun mapToCharacterPagingView(paging: PagingData<CharacterInfo>): PagingData<CharacterInfoView> {
+        return paging.map { character ->
+            mapToCharacterInfoView(character)
         }
     }
 

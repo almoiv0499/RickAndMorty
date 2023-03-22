@@ -3,9 +3,12 @@ package com.aston.rickandmorty.presentation.fragment.locations
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.aston.domain.model.location.LocationInfo
 import com.aston.domain.usecase.location.FetchLocationsThoughDatabaseUseCase
 import com.aston.domain.usecase.location.FetchLocationsThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
@@ -13,7 +16,11 @@ import com.aston.rickandmorty.presentation.fragment.location_details.LocationDet
 import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperLocationView
 import com.aston.rickandmorty.presentation.model.location.LocationInfoView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 private const val FRAGMENT_FILTER_TAG = "LocationFragmentFilter"
@@ -25,40 +32,35 @@ class LocationsViewModel @Inject constructor(
     private val mapper: MapperLocationView,
 ) : BaseViewModel() {
 
+    private val _locationsLiveData = MutableLiveData<PagingData<LocationInfoView>>()
+    val locationsLiveData: LiveData<PagingData<LocationInfoView>> = _locationsLiveData
+
     fun locationsFlow(
         locationName: String,
         locationType: String,
         locationDimension: String,
-    ): Flow<PagingData<LocationInfoView>> {
-        return if (hasInternetConnection()) {
-            locationService(locationName, locationType, locationDimension)
+    ) {
+        if (hasInternetConnection()) {
+            fetchLocations(
+                fetchLocationsThoughServiceUseCase(
+                    locationName, locationType, locationDimension
+                )
+            )
         } else {
-            locationsDatabase(locationName, locationType, locationDimension)
+            fetchLocations(
+                fetchLocationsThoughDatabaseUseCase(
+                    locationName, locationType, locationDimension
+                )
+            )
         }
     }
 
-    private fun locationService(
-        locationName: String,
-        locationType: String,
-        locationDimension: String,
-    ): Flow<PagingData<LocationInfoView>> {
-        return mapper.mapToFlowView(
-            fetchLocationsThoughServiceUseCase(
-                locationName, locationType, locationDimension
-            )
-        ).cachedIn(viewModelScope)
-    }
-
-    private fun locationsDatabase(
-        locationName: String,
-        locationType: String,
-        locationDimension: String,
-    ): Flow<PagingData<LocationInfoView>> {
-        return mapper.mapToFlowView(
-            fetchLocationsThoughDatabaseUseCase(
-                locationName, locationType, locationDimension
-            )
-        ).cachedIn(viewModelScope)
+    private fun fetchLocations(
+        useCase: Flow<PagingData<LocationInfo>>,
+    ) {
+        useCase.flowOn(Dispatchers.IO).cachedIn(viewModelScope).onEach { paging ->
+            _locationsLiveData.value = mapper.mapToLocationPagingView(paging)
+        }.launchIn(viewModelScope)
     }
 
     private fun hasInternetConnection(): Boolean {

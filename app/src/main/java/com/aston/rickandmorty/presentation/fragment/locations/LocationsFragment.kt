@@ -1,7 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.locations
 
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -9,8 +8,6 @@ import com.aston.rickandmorty.databinding.FragmentLocationsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.location.LocationAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 private const val EMPTY_VALUE = ""
 private const val SPAN_COUNT = 2
@@ -54,6 +51,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     override fun setUI() {
         setupRecyclerView()
+        setArguments()
         launchFilterFragment()
     }
 
@@ -79,16 +77,17 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
     }
 
     private fun observeLocationFlow() {
+        viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
+            locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+        }
+    }
+
+    private fun setArguments() {
         val locationName = fetchFilteredData(LOCATION_NAME)
         val locationType = fetchFilteredData(LOCATION_TYPE)
         val locationDimension = fetchFilteredData(LOCATION_DIMENSION)
 
-        lifecycleScope.launch {
-            viewModel.locationsFlow(locationName, locationType, locationDimension)
-                .collectLatest { paging ->
-                    locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
-                }
-        }
+        viewModel.locationsFlow(locationName, locationType, locationDimension)
     }
 
     private fun fetchFilteredData(key: String): String {

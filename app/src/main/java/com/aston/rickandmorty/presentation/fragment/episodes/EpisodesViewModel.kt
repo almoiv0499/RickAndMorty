@@ -16,8 +16,10 @@ import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetai
 import com.aston.rickandmorty.presentation.fragment.episode_filter.EpisodesFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
 import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -48,9 +50,10 @@ class EpisodesViewModel @Inject constructor(
     private fun fetchEpisodes(
         useCase: Observable<PagingData<EpisodeInfo>>,
     ) {
-        compositeDisposable.add(useCase.cachedIn(viewModelScope).subscribe { paging ->
-            _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
-        })
+        compositeDisposable.add(useCase.cachedIn(viewModelScope).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe { paging ->
+                _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
+            })
     }
 
     override fun onCleared() {
