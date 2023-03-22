@@ -25,7 +25,7 @@ interface CharactersDao {
     fun fetchCharactersById(characterIds: List<Int>): Flow<List<CharacterInfoData>>
 
     @Query("SELECT * FROM characters_table WHERE id IN (:characterIds)")
-    fun fetchCharactersByIdObservable(characterIds: List<Int>): Observable<List<CharacterInfoData>>
+    fun fetchCharactersByIdForEpisode(characterIds: List<Int>): Observable<List<CharacterInfoData>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCharacters(characters: List<CharacterInfoData>)

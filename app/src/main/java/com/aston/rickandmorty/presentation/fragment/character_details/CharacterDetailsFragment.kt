@@ -32,7 +32,11 @@ class CharacterDetailsFragment :
     }
 
     private val episodesInCharacterAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        EpisodesInCharacterAdapter()
+        EpisodesInCharacterAdapter().apply {
+            onEpisodeClickListener = { episode ->
+                viewModel.launchEpisodeDetailsFragment(episode)
+            }
+        }
     }
 
     private fun getCharacterArguments(): CharacterInfoView? {
@@ -57,9 +61,10 @@ class CharacterDetailsFragment :
     private fun observeEpisodes() {
         val character = getCharacterArguments()
         if (character != null) {
-            viewModel.fetchEpisodeLiveData(character.episodes).observe(viewLifecycleOwner) { episodes ->
-                episodesInCharacterAdapter.submitList(episodes)
-            }
+            viewModel.fetchEpisodeLiveData(character.episodes)
+                .observe(viewLifecycleOwner) { episodes ->
+                    episodesInCharacterAdapter.submitList(episodes)
+                }
         }
     }
 

@@ -51,15 +51,23 @@ class EpisodeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun fetchCharactersById(characterIds: List<Int>): Observable<List<CharacterInfo>> {
+    override fun fetchCharactersByIdService(characterIds: List<Int>): Observable<List<CharacterInfo>> {
         return service.fetchCharactersById(characterIds).map { characters ->
             database.charactersDao().insertCharacters(characters)
-            database.charactersDao().fetchCharactersByIdObservable(characterIds)
+            database.charactersDao().fetchCharactersByIdForEpisode(characterIds)
         }.flatMap {
             it.map { characters ->
                 characters.map { character ->
                     mapperCharacter.mapToCharacter(character)
                 }
+            }
+        }
+    }
+
+    override fun fetchCharactersByIdDatabase(characterIds: List<Int>): Observable<List<CharacterInfo>> {
+        return database.charactersDao().fetchCharactersByIdForEpisode(characterIds).map { characters ->
+            characters.map { character ->
+                mapperCharacter.mapToCharacter(character)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.aston.rickandmorty.presentation.fragment.location_details
 
 import com.aston.domain.usecase.location.FetchCharactersByIdUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
+import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,10 @@ class LocationDetailsViewModel @Inject constructor(
             characterUrl.split(SPLIT).last().toInt()
         }
         return mapperCharacter.mapToFlowListView(fetchCharactersByIdUseCase(characterIds))
+    }
+
+    fun launchCharacterDetailsFragment(character: CharacterInfoView) {
+        launchFragment(CharacterDetailsFragment.newInstance(character))
     }
 
 }

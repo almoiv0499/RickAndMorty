@@ -32,7 +32,11 @@ class EpisodeDetailsFragment :
     }
 
     private val innerCharacterAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CharactersInLocationAdapter()
+        CharactersInLocationAdapter().apply {
+            onCharacterClickListener = {character ->
+                viewModel.launchCharacterDetailsFragment(character)
+            }
+        }
     }
 
     override fun injectDependencies() {

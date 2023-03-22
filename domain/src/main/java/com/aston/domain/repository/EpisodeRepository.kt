@@ -17,6 +17,8 @@ interface EpisodeRepository {
         episodeNumber: String,
     ): Observable<PagingData<EpisodeInfo>>
 
-    fun fetchCharactersById(characterIds: List<Int>): Observable<List<CharacterInfo>>
+    fun fetchCharactersByIdService(characterIds: List<Int>): Observable<List<CharacterInfo>>
+
+    fun fetchCharactersByIdDatabase(characterIds: List<Int>): Observable<List<CharacterInfo>>
 
 }

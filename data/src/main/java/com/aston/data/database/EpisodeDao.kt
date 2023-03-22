@@ -24,7 +24,4 @@ interface EpisodeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertEpisodes(episodes: List<EpisodeInfoData>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertEpisodesSingle(episodes: List<EpisodeInfoData>)
-
 }

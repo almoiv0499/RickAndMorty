@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.aston.domain.usecase.character.FetchEpisodesByIdsUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
+import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
 import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 import kotlinx.coroutines.flow.map
@@ -26,4 +27,9 @@ class CharacterDetailsViewModel @Inject constructor(
             }
         }.asLiveData()
     }
+
+    fun launchEpisodeDetailsFragment(episode: EpisodeInfoView) {
+        launchFragment(EpisodeDetailsFragment.newInstance(episode))
+    }
+
 }

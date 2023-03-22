@@ -35,7 +35,11 @@ class LocationDetailsFragment :
     }
 
     private val innerCharactersAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CharactersInLocationAdapter()
+        CharactersInLocationAdapter().apply {
+            onCharacterClickListener = { character ->
+                viewModel.launchCharacterDetailsFragment(character)
+            }
+        }
     }
 
     override fun injectDependencies() {
