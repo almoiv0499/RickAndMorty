@@ -10,6 +10,7 @@ import com.aston.rickandmorty.presentation.activity.main.MainActivity
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
+import com.aston.rickandmorty.presentation.fragment.episode_filter.EpisodesFilterFragment
 import com.aston.rickandmorty.presentation.fragment.episodes.EpisodesFragment
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
@@ -32,6 +33,7 @@ interface AppComponent {
     fun inject(fragment: LocationDetailsFragment)
 
     fun inject(fragment: EpisodesFragment)
+    fun inject(fragment: EpisodesFilterFragment)
 
     fun inject(activity: MainActivity)
 

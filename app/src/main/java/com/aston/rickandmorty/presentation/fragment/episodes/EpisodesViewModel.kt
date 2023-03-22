@@ -9,13 +9,15 @@ import androidx.paging.PagingData
 import com.aston.domain.usecase.episode.FetchEpisodeThoughDatabaseUseCase
 import com.aston.domain.usecase.episode.FetchEpisodeThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
+import com.aston.rickandmorty.presentation.fragment.episode_filter.EpisodesFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
 import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
+
+private const val FRAGMENT_FILTER_TAG = "EpisodeFragmentFilter"
 
 class EpisodesViewModel @Inject constructor(
     private val context: Context,
@@ -27,40 +29,27 @@ class EpisodesViewModel @Inject constructor(
     private val compositeDisposable by lazy(LazyThreadSafetyMode.NONE) {
         CompositeDisposable()
     }
-
-    // Нужен будет для фильтрации
-//    fun episodes(episodeName: String): Flowable<PagingData<EpisodeInfoView>> =
-//        fetchEpisodeThoughServiceUseCase(episodeName).map { paging ->
-//            mapperEpisode.mapToEpisodePaging(paging)
-//        }
-
     private val _episodesLD = MutableLiveData<PagingData<EpisodeInfoView>>()
     val episodesLD: LiveData<PagingData<EpisodeInfoView>> = _episodesLD
 
-    init {
-        fetch()
-    }
-
-    private fun fetch() {
+    fun fetch(episodeName: String, episodeNumber: String) {
         if (hasInternetConnection()) {
-        compositeDisposable.add(
-            fetchEpisodeThoughServiceUseCase(
-                ""
+            compositeDisposable.add(fetchEpisodeThoughServiceUseCase(
+                episodeName, episodeNumber
             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe { paging ->
                     _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
-                }
-        )
+                })
         } else {
-            compositeDisposable.add(
-                fetchEpisodeThoughDatabaseUseCase("")
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { paging ->
-                        _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
-                    }
-            )
+            compositeDisposable.add(fetchEpisodeThoughDatabaseUseCase(
+                episodeName, episodeNumber
+            ).subscribeOn(
+                Schedulers.io()
+            ).observeOn(AndroidSchedulers.mainThread()).subscribe { paging ->
+                _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
+            })
         }
-}
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -78,6 +67,10 @@ class EpisodesViewModel @Inject constructor(
             ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
             else -> false
         }
+    }
+
+    fun launchFilterFragment() {
+        launchDialogFragment(EpisodesFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
     }
 
 }

@@ -11,9 +11,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface EpisodeDao {
 
-    @Query("SELECT * FROM episodes_table WHERE name LIKE '%' || :episodeName || '%'")
+    @Query("SELECT * FROM episodes_table WHERE name LIKE '%' || :episodeName || '%' " +
+            "AND episode LIKE '%' || :episodeNumber || '%'")
     fun fetchEpisodes(
-        episodeName: String
+        episodeName: String,
+        episodeNumber: String
     ): PagingSource<Int, EpisodeInfoData>
 
     @Query("SELECT * FROM episodes_table WHERE id IN (:ids)")

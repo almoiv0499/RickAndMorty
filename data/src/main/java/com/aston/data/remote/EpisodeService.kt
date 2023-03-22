@@ -11,6 +11,7 @@ interface EpisodeService {
     fun fetchEpisodesByPage(
         @Query("page") page: Int,
         @Query("name") episodeName: String,
+        @Query("episode") episodeNumber: String
     ): Single<EpisodeResultData>
 
 }

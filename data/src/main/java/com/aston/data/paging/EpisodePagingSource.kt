@@ -12,6 +12,7 @@ private const val BY_ONE = 1
 
 class EpisodePagingSource(
     private val episodeName: String,
+    private val episodeNumber: String,
     private val database: ApplicationDatabase,
     private val service: EpisodeService,
 ) : RxPagingSource<Int, EpisodeInfoData>() {
@@ -26,9 +27,8 @@ class EpisodePagingSource(
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, EpisodeInfoData>> {
         val currentPage = params.key ?: BY_ONE
 
-        return service.fetchEpisodesByPage(currentPage, episodeName)
-            .subscribeOn(Schedulers.io())
-            .map { episodeResult ->
+        return service.fetchEpisodesByPage(currentPage, episodeName, episodeNumber)
+            .subscribeOn(Schedulers.io()).map { episodeResult ->
                 database.episodeDao().insertEpisodes(episodeResult.results)
                 LoadResult.Page(
                     data = episodeResult.results,

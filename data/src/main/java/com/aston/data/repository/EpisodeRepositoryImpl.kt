@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import androidx.paging.rxjava3.flowable
 import androidx.paging.rxjava3.observable
 import com.aston.data.database.ApplicationDatabase
 import com.aston.data.paging.EpisodePagingSource
@@ -12,7 +11,6 @@ import com.aston.data.remote.EpisodeService
 import com.aston.data.util.mapper.MapperEpisodeData
 import com.aston.domain.model.episode.EpisodeInfo
 import com.aston.domain.repository.EpisodeRepository
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -24,10 +22,13 @@ class EpisodeRepositoryImpl @Inject constructor(
     private val mapperEpisode: MapperEpisodeData,
 ) : EpisodeRepository {
 
-    override fun fetchEpisodesThoughService(episodeName: String): Flowable<PagingData<EpisodeInfo>> {
+    override fun fetchEpisodesThoughService(
+        episodeName: String,
+        episodeNumber: String,
+    ): Observable<PagingData<EpisodeInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            EpisodePagingSource(episodeName, database, service)
-        }).flowable.map { paging ->
+            EpisodePagingSource(episodeName, episodeNumber, database, service)
+        }).observable.map { paging ->
             paging.map { episode ->
                 mapperEpisode.mapToEpisode(episode)
             }
@@ -36,10 +37,11 @@ class EpisodeRepositoryImpl @Inject constructor(
 
     override fun fetchEpisodesThoughDatabase(
         episodeName: String,
-    ): Flowable<PagingData<EpisodeInfo>> {
+        episodeNumber: String,
+    ): Observable<PagingData<EpisodeInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            database.episodeDao().fetchEpisodes(episodeName)
-        }).flowable.map { paging ->
+            database.episodeDao().fetchEpisodes(episodeName, episodeNumber)
+        }).observable.map { paging ->
             paging.map { episode ->
                 mapperEpisode.mapToEpisode(episode)
             }

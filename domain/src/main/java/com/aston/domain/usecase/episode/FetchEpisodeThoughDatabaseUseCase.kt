@@ -7,6 +7,7 @@ class FetchEpisodeThoughDatabaseUseCase @Inject constructor(
     private val repository: EpisodeRepository,
 ) {
 
-    operator fun invoke(episodeName: String) = repository.fetchEpisodesThoughDatabase(episodeName)
+    operator fun invoke(episodeName: String, episodeNumber: String) =
+        repository.fetchEpisodesThoughDatabase(episodeName, episodeNumber)
 
 }
