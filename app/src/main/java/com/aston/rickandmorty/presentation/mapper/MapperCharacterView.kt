@@ -1,5 +1,7 @@
 package com.aston.rickandmorty.presentation.mapper
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.character.Location
 import com.aston.domain.model.character.Origin
@@ -10,7 +12,13 @@ import javax.inject.Inject
 
 class MapperCharacterView @Inject constructor() {
 
-    fun mapToCharacterInfoView(character: CharacterInfo): CharacterInfoView {
+    fun mapToCharacterPagingView(paging: PagingData<CharacterInfo>): PagingData<CharacterInfoView> {
+        return paging.map { character ->
+            mapToCharacterInfoView(character)
+        }
+    }
+
+    private fun mapToCharacterInfoView(character: CharacterInfo): CharacterInfoView {
         return CharacterInfoView(
             created = character.created,
             episodes = character.episode,
@@ -27,8 +35,7 @@ class MapperCharacterView @Inject constructor() {
 
     private fun mapToLocationView(location: Location): LocationView {
         return LocationView(
-            locationName = location.locationName,
-            locationInfo = location.locationInfo
+            locationName = location.locationName, locationInfo = location.locationInfo
         )
     }
 

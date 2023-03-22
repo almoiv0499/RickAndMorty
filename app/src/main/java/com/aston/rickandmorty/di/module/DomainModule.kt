@@ -7,22 +7,23 @@ import com.aston.domain.usecase.FetchEpisodesByIdsUseCase
 import dagger.Module
 import dagger.Provides
 
+// Понял, что пока не нужен
 @Module
 class DomainModule {
 
-    @Provides
-    fun provideFetchCharactersThoughDatabaseUseCase(
-        repository: CharactersRepository
-    ): FetchCharactersThoughDatabaseUseCase = FetchCharactersThoughDatabaseUseCase(repository)
-
-    @Provides
-    fun provideFetchCharactersServiceUseCase(
-        repository: CharactersRepository
-    ): FetchCharactersThoughServiceUseCase = FetchCharactersThoughServiceUseCase(repository)
-
-    @Provides
-    fun provideFetchEpisodesForCharactersByIds(
-        repository: CharactersRepository
-    ): FetchEpisodesByIdsUseCase = FetchEpisodesByIdsUseCase(repository)
+//    @Provides
+//    fun provideFetchCharactersThoughDatabaseUseCase(
+//        repository: CharactersRepository
+//    ): FetchCharactersThoughDatabaseUseCase = FetchCharactersThoughDatabaseUseCase(repository)
+//
+//    @Provides
+//    fun provideFetchCharactersServiceUseCase(
+//        repository: CharactersRepository
+//    ): FetchCharactersThoughServiceUseCase = FetchCharactersThoughServiceUseCase(repository)
+//
+//    @Provides
+//    fun provideFetchEpisodesForCharactersByIds(
+//        repository: CharactersRepository
+//    ): FetchEpisodesByIdsUseCase = FetchEpisodesByIdsUseCase(repository)
 
 }
