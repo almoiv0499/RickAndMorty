@@ -10,6 +10,7 @@ import com.aston.rickandmorty.presentation.activity.main.MainActivity
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
+import com.aston.rickandmorty.presentation.fragment.episodes.EpisodesFragment
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
 import com.aston.rickandmorty.presentation.fragment.locations.LocationsFragment
@@ -18,12 +19,7 @@ import dagger.Component
 
 @AppScope
 @Component(
-    modules = [
-        DomainModule::class,
-        DataModule::class,
-        PresentationModule::class,
-        ViewModelModule::class
-    ]
+    modules = [DomainModule::class, DataModule::class, PresentationModule::class, ViewModelModule::class]
 )
 interface AppComponent {
 
@@ -35,12 +31,14 @@ interface AppComponent {
     fun inject(fragment: LocationsFilterFragment)
     fun inject(fragment: LocationDetailsFragment)
 
+    fun inject(fragment: EpisodesFragment)
+
     fun inject(activity: MainActivity)
 
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance context: Context
+            @BindsInstance context: Context,
         ): AppComponent
     }
 

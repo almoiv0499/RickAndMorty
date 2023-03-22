@@ -6,7 +6,7 @@ import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
+import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodesInCharacterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.aston.rickandmorty.presentation.util.parcelable
 import com.bumptech.glide.Glide
@@ -31,8 +31,8 @@ class CharacterDetailsFragment :
         }
     }
 
-    private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        EpisodeAdapter()
+    private val episodesInCharacterAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        EpisodesInCharacterAdapter()
     }
 
     private fun getCharacterArguments(): CharacterInfoView? {
@@ -58,14 +58,14 @@ class CharacterDetailsFragment :
         val character = getCharacterArguments()
         if (character != null) {
             viewModel.fetchEpisodeLiveData(character.episodes).observe(viewLifecycleOwner) { episodes ->
-                episodeAdapter.submitList(episodes)
+                episodesInCharacterAdapter.submitList(episodes)
             }
         }
     }
 
     private fun initRecyclerView() {
         with(binding.characterEpisodeRecyclerView) {
-            adapter = episodeAdapter
+            adapter = episodesInCharacterAdapter
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.fragment.app.commit
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.activity.main.MainActivity
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
+import com.aston.rickandmorty.presentation.fragment.episodes.EpisodesFragment
 import com.aston.rickandmorty.presentation.fragment.locations.LocationsFragment
 
 object RouterMainActivityImpl : RouterMainActivity {
@@ -29,6 +30,11 @@ object RouterMainActivityImpl : RouterMainActivity {
 
     override fun launchLocationsFragment() {
         val fragment = LocationsFragment.newInstance()
+        launchFragmentWithPopBackStack(fragment)
+    }
+
+    override fun launchEpisodesFragment() {
+        val fragment = EpisodesFragment.newInstance()
         launchFragmentWithPopBackStack(fragment)
     }
 

@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                     router.launchLocationsFragment()
                 }
                 R.id.episodes -> {
-
+                    router.launchEpisodesFragment()
                 }
             }
             true

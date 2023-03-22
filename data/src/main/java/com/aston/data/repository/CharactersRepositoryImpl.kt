@@ -57,7 +57,7 @@ class CharactersRepositoryImpl @Inject constructor(
 
     override fun fetchEpisodesByIds(episodeIds: List<Int>): Flow<List<EpisodeInfo>> {
         return networkBoundResource(query = {
-            database.episodeDao().fetchEpisodes(episodeIds).map { episodes ->
+            database.episodeDao().fetchEpisodesByIds(episodeIds).map { episodes ->
                 episodes.map { episode ->
                     mapperEpisode.mapToEpisode(episode)
                 }

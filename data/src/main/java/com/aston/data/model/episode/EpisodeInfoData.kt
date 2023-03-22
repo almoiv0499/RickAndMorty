@@ -11,5 +11,5 @@ data class EpisodeInfoData(
     val episode: String,
     @PrimaryKey val id: Int,
     val name: String,
-    val url: String
+    val url: String,
 )

@@ -1,0 +1,83 @@
+package com.aston.rickandmorty.presentation.fragment.episodes
+
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.PagingData
+import com.aston.domain.usecase.episode.FetchEpisodeThoughDatabaseUseCase
+import com.aston.domain.usecase.episode.FetchEpisodeThoughServiceUseCase
+import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
+import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
+
+class EpisodesViewModel @Inject constructor(
+    private val context: Context,
+    private val fetchEpisodeThoughDatabaseUseCase: FetchEpisodeThoughDatabaseUseCase,
+    private val fetchEpisodeThoughServiceUseCase: FetchEpisodeThoughServiceUseCase,
+    private val mapperEpisode: MapperEpisodeView,
+) : BaseViewModel() {
+
+    private val compositeDisposable by lazy(LazyThreadSafetyMode.NONE) {
+        CompositeDisposable()
+    }
+
+    // Нужен будет для фильтрации
+//    fun episodes(episodeName: String): Flowable<PagingData<EpisodeInfoView>> =
+//        fetchEpisodeThoughServiceUseCase(episodeName).map { paging ->
+//            mapperEpisode.mapToEpisodePaging(paging)
+//        }
+
+    private val _episodesLD = MutableLiveData<PagingData<EpisodeInfoView>>()
+    val episodesLD: LiveData<PagingData<EpisodeInfoView>> = _episodesLD
+
+    init {
+        fetch()
+    }
+
+    private fun fetch() {
+        if (hasInternetConnection()) {
+        compositeDisposable.add(
+            fetchEpisodeThoughServiceUseCase(
+                ""
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe { paging ->
+                    _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
+                }
+        )
+        } else {
+            compositeDisposable.add(
+                fetchEpisodeThoughDatabaseUseCase("")
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { paging ->
+                        _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
+                    }
+            )
+        }
+}
+
+    override fun onCleared() {
+        super.onCleared()
+
+        compositeDisposable.dispose()
+    }
+
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
+                NetworkCapabilities.TRANSPORT_CELLULAR
+            ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    }
+
+}

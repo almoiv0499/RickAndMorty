@@ -2,11 +2,11 @@ package com.aston.rickandmorty.presentation.recyclerview.episode
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.ListAdapter
 import com.aston.rickandmorty.databinding.EpisodeItemBinding
 import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 
-class EpisodeAdapter : PagingDataAdapter<EpisodeInfoView, EpisodeViewHolder>(EpisodeDiffUtil()) {
+class EpisodesInCharacterAdapter : ListAdapter<EpisodeInfoView, EpisodeViewHolder>(EpisodeDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
         val binding = EpisodeItemBinding.inflate(
@@ -18,10 +18,8 @@ class EpisodeAdapter : PagingDataAdapter<EpisodeInfoView, EpisodeViewHolder>(Epi
     }
 
     override fun onBindViewHolder(holder: EpisodeViewHolder, position: Int) {
-        val episode = getItem(position)
-        if (episode != null) {
-            holder.populate(episode)
-        }
+        val episode = currentList[position]
+        holder.populate(episode)
     }
 
 }

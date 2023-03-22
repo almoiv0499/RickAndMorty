@@ -3,6 +3,7 @@
     <string name="contentDescription_splashScreen">Splash Screen Rick and Morty</string>
     <string name="characters_screen_name">Characters</string>
     <string name="locations_screen_name">Locations</string>
+    <string name="episodes_screen_name">Episodes</string>
 
     <string-array name="character_status">
         <item>Alive</item>

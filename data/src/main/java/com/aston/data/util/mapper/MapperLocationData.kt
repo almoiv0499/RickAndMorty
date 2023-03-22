@@ -16,7 +16,7 @@ class MapperLocationData @Inject constructor() {
         }
     }
 
-    fun mapToPagingLocationInfo(pagingData: PagingData<LocationInfoData>): PagingData<LocationInfo> {
+    private fun mapToPagingLocationInfo(pagingData: PagingData<LocationInfoData>): PagingData<LocationInfo> {
         return pagingData.map { location ->
             mapToLocationInfo(location)
         }
