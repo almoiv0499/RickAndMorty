@@ -3,7 +3,9 @@ package com.aston.rickandmorty.presentation.fragment.locations
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.aston.domain.usecase.location.FetchLocationsThoughDatabaseUseCase
 import com.aston.domain.usecase.location.FetchLocationsThoughServiceUseCase
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
@@ -44,7 +46,7 @@ class LocationsViewModel @Inject constructor(
             fetchLocationsThoughServiceUseCase(
                 locationName, locationType, locationDimension
             )
-        )
+        ).cachedIn(viewModelScope)
     }
 
     private fun locationsDatabase(
@@ -56,7 +58,7 @@ class LocationsViewModel @Inject constructor(
             fetchLocationsThoughDatabaseUseCase(
                 locationName, locationType, locationDimension
             )
-        )
+        ).cachedIn(viewModelScope)
     }
 
     private fun hasInternetConnection(): Boolean {

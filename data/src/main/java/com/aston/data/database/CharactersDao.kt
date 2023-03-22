@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.aston.data.model.character.CharacterInfoData
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,8 +24,11 @@ interface CharactersDao {
     @Query("SELECT * FROM characters_table WHERE id IN (:characterIds)")
     fun fetchCharactersById(characterIds: List<Int>): Flow<List<CharacterInfoData>>
 
+    @Query("SELECT * FROM characters_table WHERE id IN (:characterIds)")
+    fun fetchCharactersByIdObservable(characterIds: List<Int>): Observable<List<CharacterInfoData>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacters(characters: List<CharacterInfoData>)
+    fun insertCharacters(characters: List<CharacterInfoData>)
 
     @Query("DELETE FROM characters_table")
     suspend fun deleteCharacters()

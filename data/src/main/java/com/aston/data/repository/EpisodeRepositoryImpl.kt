@@ -8,7 +8,9 @@ import androidx.paging.rxjava3.observable
 import com.aston.data.database.ApplicationDatabase
 import com.aston.data.paging.EpisodePagingSource
 import com.aston.data.remote.EpisodeService
+import com.aston.data.util.mapper.MapperCharacterData
 import com.aston.data.util.mapper.MapperEpisodeData
+import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.episode.EpisodeInfo
 import com.aston.domain.repository.EpisodeRepository
 import io.reactivex.rxjava3.core.Observable
@@ -20,6 +22,7 @@ class EpisodeRepositoryImpl @Inject constructor(
     private val database: ApplicationDatabase,
     private val service: EpisodeService,
     private val mapperEpisode: MapperEpisodeData,
+    private val mapperCharacter: MapperCharacterData,
 ) : EpisodeRepository {
 
     override fun fetchEpisodesThoughService(
@@ -44,6 +47,19 @@ class EpisodeRepositoryImpl @Inject constructor(
         }).observable.map { paging ->
             paging.map { episode ->
                 mapperEpisode.mapToEpisode(episode)
+            }
+        }
+    }
+
+    override fun fetchCharactersById(characterIds: List<Int>): Observable<List<CharacterInfo>> {
+        return service.fetchCharactersById(characterIds).map { characters ->
+            database.charactersDao().insertCharacters(characters)
+            database.charactersDao().fetchCharactersByIdObservable(characterIds)
+        }.flatMap {
+            it.map { characters ->
+                characters.map { character ->
+                    mapperCharacter.mapToCharacter(character)
+                }
             }
         }
     }

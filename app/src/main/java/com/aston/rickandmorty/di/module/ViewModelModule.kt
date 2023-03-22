@@ -5,6 +5,7 @@ import com.aston.rickandmorty.di.annotation.ViewModelKey
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsViewModel
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersViewModel
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterViewModel
+import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetailsViewModel
 import com.aston.rickandmorty.presentation.fragment.episode_filter.EpisodesFilterViewModel
 import com.aston.rickandmorty.presentation.fragment.episodes.EpisodesViewModel
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsViewModel
@@ -49,4 +50,7 @@ interface ViewModelModule {
     @[IntoMap ViewModelKey(EpisodesFilterViewModel::class)]
     fun bindEpisodesFilterViewModel(viewModel: EpisodesFilterViewModel): ViewModel
 
+    @Binds
+    @[IntoMap ViewModelKey(EpisodeDetailsViewModel::class)]
+    fun bindEpisodeDetailsViewModel(viewModel: EpisodeDetailsViewModel): ViewModel
 }

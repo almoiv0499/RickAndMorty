@@ -32,7 +32,11 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
     }
 
     private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        EpisodeAdapter()
+        EpisodeAdapter().apply {
+            onEpisodeClickListener = { episode ->
+                viewModel.launchEpisodeDetailsFragment(episode)
+            }
+        }
     }
 
     override fun injectDependencies() {

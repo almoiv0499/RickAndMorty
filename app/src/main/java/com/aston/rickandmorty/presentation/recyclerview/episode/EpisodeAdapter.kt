@@ -6,7 +6,11 @@ import androidx.paging.PagingDataAdapter
 import com.aston.rickandmorty.databinding.EpisodeItemBinding
 import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 
+typealias OnEpisodeClickListener = (EpisodeInfoView) -> Unit
+
 class EpisodeAdapter : PagingDataAdapter<EpisodeInfoView, EpisodeViewHolder>(EpisodeDiffUtil()) {
+
+    var onEpisodeClickListener: OnEpisodeClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
         val binding = EpisodeItemBinding.inflate(
@@ -20,7 +24,7 @@ class EpisodeAdapter : PagingDataAdapter<EpisodeInfoView, EpisodeViewHolder>(Epi
     override fun onBindViewHolder(holder: EpisodeViewHolder, position: Int) {
         val episode = getItem(position)
         if (episode != null) {
-            holder.populate(episode)
+            holder.populate(episode, onEpisodeClickListener)
         }
     }
 

@@ -95,7 +95,8 @@ class DataModule {
         service: EpisodeService,
         database: ApplicationDatabase,
         mapperEpisode: MapperEpisodeData,
-    ): EpisodeRepository = EpisodeRepositoryImpl(database, service, mapperEpisode)
+        mapperCharacter: MapperCharacterData,
+    ): EpisodeRepository = EpisodeRepositoryImpl(database, service, mapperEpisode, mapperCharacter)
 
 
 }
