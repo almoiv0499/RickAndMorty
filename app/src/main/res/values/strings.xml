@@ -2,6 +2,9 @@
     <string name="app_name">Rick And Morty</string>
     <string name="contentDescription_splashScreen">Splash Screen Rick and Morty</string>
     <string name="characters_screen_name">Characters</string>
+    <string name="locations_screen_name">Locations</string>
+    <string name="episodes_screen_name">Episodes</string>
+    <string name="exception_message">Oops, something wrong!</string>
 
     <string-array name="character_status">
         <item>Alive</item>
@@ -15,12 +18,13 @@
         <item>Genderless</item>
         <item>Unknown</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="characters_status_alive">Alive</string>
     <string name="characters_status_dead">Dead</string>
     <string name="characters_status_unknown">Unknown</string>
     <string name="characters_gender_female">Female</string>
     <string name="characters_gender_male">Male</string>
     <string name="characters_gender_genderless">Genderless</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

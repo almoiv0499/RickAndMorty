@@ -8,9 +8,19 @@ import com.aston.domain.model.character.Origin
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import com.aston.rickandmorty.presentation.model.character.LocationView
 import com.aston.rickandmorty.presentation.model.character.OriginView
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MapperCharacterView @Inject constructor() {
+
+    fun mapToFlowListView(flow: Flow<List<CharacterInfo>>): Flow<List<CharacterInfoView>> {
+        return flow.map { characters ->
+            characters.map { character ->
+                mapToCharacterInfoView(character)
+            }
+        }
+    }
 
     fun mapToCharacterPagingView(paging: PagingData<CharacterInfo>): PagingData<CharacterInfoView> {
         return paging.map { character ->
@@ -18,7 +28,7 @@ class MapperCharacterView @Inject constructor() {
         }
     }
 
-    private fun mapToCharacterInfoView(character: CharacterInfo): CharacterInfoView {
+    fun mapToCharacterInfoView(character: CharacterInfo): CharacterInfoView {
         return CharacterInfoView(
             created = character.created,
             episodes = character.episode,

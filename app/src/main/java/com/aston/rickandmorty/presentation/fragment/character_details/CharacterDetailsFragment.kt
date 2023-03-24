@@ -1,12 +1,13 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
 import android.os.Bundle
+import android.view.View
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
+import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodesInCharacterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.aston.rickandmorty.presentation.util.parcelable
 import com.bumptech.glide.Glide
@@ -32,7 +33,11 @@ class CharacterDetailsFragment :
     }
 
     private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        EpisodeAdapter()
+        EpisodesInCharacterAdapter().apply {
+            onEpisodeClickListener = { episode ->
+                viewModel.launchEpisodeDetailsFragment(episode)
+            }
+        }
     }
 
     private fun getCharacterArguments(): CharacterInfoView? {
@@ -44,7 +49,6 @@ class CharacterDetailsFragment :
     }
 
     override fun setUI() {
-        initRecyclerView()
         setupArguments()
     }
 
@@ -55,15 +59,13 @@ class CharacterDetailsFragment :
     }
 
     private fun observeEpisodes() {
-        val character = getCharacterArguments()
-        if (character != null) {
-            viewModel.fetchEpisodeLiveData(character.episodes).observe(viewLifecycleOwner) { episodes ->
-                episodeAdapter.submitList(episodes)
-            }
+        viewModel.episodesLiveData.observe(viewLifecycleOwner) { episodes ->
+            binding.charactersDetailsProgressBar.visibility = View.GONE
+            episodeAdapter.submitList(episodes)
         }
     }
 
-    private fun initRecyclerView() {
+    override fun setupRecyclerView() {
         with(binding.characterEpisodeRecyclerView) {
             adapter = episodeAdapter
         }
@@ -72,6 +74,8 @@ class CharacterDetailsFragment :
     private fun setupArguments() {
         val character = getCharacterArguments()
         if (character != null) {
+            viewModel.fetchEpisodeLiveData(character.episodes)
+
             with(binding) {
                 characterDetailsName.text = character.name
                 characterDetailsStatus.text = character.status

@@ -14,6 +14,10 @@ interface RouterMainActivity {
 
     fun launchCharactersFragment()
 
+    fun launchLocationsFragment()
+
+    fun launchEpisodesFragment()
+
     fun navigateBack()
 
 }

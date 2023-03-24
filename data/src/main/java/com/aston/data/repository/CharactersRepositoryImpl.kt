@@ -11,7 +11,7 @@ import com.aston.data.util.mapper.MapperCharacterData
 import com.aston.data.util.mapper.MapperEpisodeData
 import com.aston.data.util.resource.networkBoundResource
 import com.aston.domain.model.character.CharacterInfo
-import com.aston.domain.model.episode.Episode
+import com.aston.domain.model.episode.EpisodeInfo
 import com.aston.domain.repository.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -55,9 +55,9 @@ class CharactersRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun fetchEpisodesByIds(episodeIds: List<Int>): Flow<List<Episode>> {
+    override fun fetchEpisodesByIds(episodeIds: List<Int>): Flow<List<EpisodeInfo>> {
         return networkBoundResource(query = {
-            database.episodeDao().fetchEpisodes(episodeIds).map { episodes ->
+            database.episodeDao().fetchEpisodesByIds(episodeIds).map { episodes ->
                 episodes.map { episode ->
                     mapperEpisode.mapToEpisode(episode)
                 }

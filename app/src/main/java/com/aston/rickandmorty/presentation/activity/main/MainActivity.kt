@@ -68,10 +68,10 @@ class MainActivity : AppCompatActivity() {
                     router.launchCharactersFragment()
                 }
                 R.id.locations -> {
-
+                    router.launchLocationsFragment()
                 }
                 R.id.episodes -> {
-
+                    router.launchEpisodesFragment()
                 }
             }
             true

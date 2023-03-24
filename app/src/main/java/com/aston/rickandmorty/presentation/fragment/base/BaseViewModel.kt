@@ -1,5 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.base
 
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,9 @@ abstract class BaseViewModel : ViewModel() {
     private val _launchFragmentLiveData = MutableLiveData<Event<Navigator>>()
     val launchFragmentLiveData: LiveData<Event<Navigator>> = _launchFragmentLiveData
 
+    private val _exceptionLiveData = MutableLiveData<Int>()
+    val exceptionLiveData: LiveData<Int> = _exceptionLiveData
+
     fun launchFragment(fragment: Fragment) {
         _launchFragmentLiveData.value = Event(Navigator.LaunchFragment(fragment))
     }
@@ -20,6 +24,10 @@ abstract class BaseViewModel : ViewModel() {
     fun launchDialogFragment(fragment: BottomSheetDialogFragment, fragmentTag: String) {
         _launchFragmentLiveData.value =
             Event(Navigator.LaunchDialogFragment(fragment, fragmentTag))
+    }
+
+    fun showExceptionMessage(@StringRes exceptionMessage: Int) {
+        _exceptionLiveData.value = exceptionMessage
     }
 
     fun navigateBack() {
