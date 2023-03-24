@@ -1,6 +1,7 @@
 package com.aston.rickandmorty.presentation.fragment.episode_details
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -31,9 +32,9 @@ class EpisodeDetailsFragment :
         }
     }
 
-    private val innerCharacterAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharactersInLocationAdapter().apply {
-            onCharacterClickListener = {character ->
+            onCharacterClickListener = { character ->
                 viewModel.launchCharacterDetailsFragment(character)
             }
         }
@@ -50,8 +51,6 @@ class EpisodeDetailsFragment :
     }
 
     override fun setUI() {
-        setupRecyclerView()
-
         setupArguments()
     }
 
@@ -61,25 +60,24 @@ class EpisodeDetailsFragment :
     }
 
     private fun observeCharacters() {
-        val episode = getEpisodeArguments()
-        if (episode != null) {
-            viewModel.fetchCharactersLiveData(episode.characters)
-            viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
-                innerCharacterAdapter.submitList(characters)
-            }
+        viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
+            binding.episodeDetailsProgressBar.visibility = View.GONE
+            characterAdapter.submitList(characters)
         }
     }
 
-    private fun setupRecyclerView() {
+    override fun setupRecyclerView() {
         with(binding.charactersInEpisodeRecyclerView) {
-            adapter = innerCharacterAdapter
             layoutManager = GridLayoutManager(context, SPAN_COUNT)
+            adapter = characterAdapter
         }
     }
 
     private fun setupArguments() {
         val episode = getEpisodeArguments()
         if (episode != null) {
+            viewModel.fetchCharactersLiveData(episode.characters)
+
             with(binding) {
                 episodeDetailName.text = episode.episodeName
                 episodeDetailNumber.text = episode.episodeNumber

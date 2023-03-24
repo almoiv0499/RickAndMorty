@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.usecase.episode.FetchCharactersByIdDatabaseUseCase
 import com.aston.domain.usecase.episode.FetchCharactersByIdServiceUseCase
+import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
@@ -48,12 +49,16 @@ class EpisodeDetailsViewModel @Inject constructor(
     private fun fetchCharactersForEpisode(
         useCase: Observable<List<CharacterInfo>>,
     ) {
-        compositeDisposable.add(useCase.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread()).subscribe { characters ->
-                _charactersLiveData.value = characters.map { character ->
-                    mapperCharacter.mapToCharacterInfoView(character)
-                }
-            })
+        compositeDisposable.add(
+            useCase.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ characters ->
+                    _charactersLiveData.value = characters.map { character ->
+                        mapperCharacter.mapToCharacterInfoView(character)
+                    }
+                }, {
+                    showExceptionMessage(R.string.exception_message)
+                })
+        )
     }
 
     private fun hasInternetConnection(): Boolean {

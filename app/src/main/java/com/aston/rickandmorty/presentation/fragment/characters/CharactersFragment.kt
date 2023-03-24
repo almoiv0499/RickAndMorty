@@ -7,6 +7,7 @@ import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharactersBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
+import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 
 private const val EMPTY_VALUE = ""
@@ -56,12 +57,9 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     }
 
     override fun setUI() {
-        setupRecyclerView()
         setArguments()
-
-        binding.characterFilter.setOnClickListener {
-            viewModel.launchDialogFragment()
-        }
+        swipeToRefreshScreen()
+        launchFilterFragment()
     }
 
     override fun setupObservers() {
@@ -72,10 +70,23 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
 
     override fun setToolbarTitle(): Int = R.string.characters_screen_name
 
-    private fun setupRecyclerView() {
-        with(binding.characterRecyclerView) {
-            adapter = characterAdapter
-            layoutManager = GridLayoutManager(context, SPAN_COUNT)
+    override fun setupRecyclerView() {
+        with(binding) {
+            characterRecyclerView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
+            characterRecyclerView.adapter = characterAdapter.withLoadStateFooter(
+                footer = LoaderStateFooterAdapter()
+            )
+
+            characterAdapter.addLoadStateListener { loadState ->
+                checkLoadState(
+                    loadState = loadState,
+                    adapter = characterAdapter,
+                    recyclerView = characterRecyclerView,
+                    progress = charactersProgressBar,
+                    filter = characterFilter,
+                    errorMessage = charactersErrorMessage,
+                )
+            }
         }
     }
 
@@ -83,7 +94,23 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { paging ->
             characterAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
         }
+    }
 
+    private fun swipeToRefreshScreen() {
+        binding.charactersSwipeRefreshLayout.setOnRefreshListener {
+            viewModel.charactersFlow(EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE)
+
+            viewModel.charactersLiveData.observe(viewLifecycleOwner) { paging ->
+                characterAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+                binding.charactersSwipeRefreshLayout.isRefreshing = false
+            }
+        }
+    }
+
+    private fun launchFilterFragment() {
+        binding.characterFilter.setOnClickListener {
+            viewModel.launchDialogFragment()
+        }
     }
 
     private fun setArguments() {
@@ -99,3 +126,5 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         return arguments?.getString(key) ?: EMPTY_VALUE
     }
 }
+
+

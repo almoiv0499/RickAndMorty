@@ -16,9 +16,7 @@ import com.aston.rickandmorty.presentation.fragment.location_details.LocationDet
 import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperLocationView
 import com.aston.rickandmorty.presentation.model.location.LocationInfoView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -58,7 +56,7 @@ class LocationsViewModel @Inject constructor(
     private fun fetchLocations(
         useCase: Flow<PagingData<LocationInfo>>,
     ) {
-        useCase.flowOn(Dispatchers.IO).cachedIn(viewModelScope).onEach { paging ->
+        useCase.cachedIn(viewModelScope).onEach { paging ->
             _locationsLiveData.value = mapper.mapToLocationPagingView(paging)
         }.launchIn(viewModelScope)
     }

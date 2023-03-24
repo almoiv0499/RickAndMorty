@@ -36,7 +36,7 @@ class EpisodesViewModel @Inject constructor(
         CompositeDisposable()
     }
     private val _episodesLD = MutableLiveData<PagingData<EpisodeInfoView>>()
-    val episodesLD: LiveData<PagingData<EpisodeInfoView>> = _episodesLD
+    val episodesLiveData: LiveData<PagingData<EpisodeInfoView>> = _episodesLD
 
     fun fetch(episodeName: String, episodeNumber: String) {
         if (hasInternetConnection()) {

@@ -24,8 +24,10 @@ abstract class BaseFragment<VB : ViewBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-
         _binding = bindingInflater.invoke(inflater)
+
+        setupRecyclerView()
+
         return binding.root
     }
 
@@ -36,6 +38,8 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
     protected abstract fun setUI()
+
+    abstract fun setupRecyclerView()
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -21,6 +21,8 @@ import com.aston.domain.repository.LocationRepository
 import com.aston.rickandmorty.di.annotation.AppScope
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -70,6 +72,9 @@ class DataModule {
     @Provides
     fun provideEpisodesService(retrofit: Retrofit): EpisodeService =
         retrofit.create(EpisodeService::class.java)
+
+    @Provides
+    fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
     fun provideCharacterRepository(

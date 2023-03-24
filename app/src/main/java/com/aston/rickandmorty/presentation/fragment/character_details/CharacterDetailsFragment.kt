@@ -1,6 +1,7 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
 import android.os.Bundle
+import android.view.View
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
@@ -31,7 +32,7 @@ class CharacterDetailsFragment :
         }
     }
 
-    private val episodesInCharacterAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
         EpisodesInCharacterAdapter().apply {
             onEpisodeClickListener = { episode ->
                 viewModel.launchEpisodeDetailsFragment(episode)
@@ -48,7 +49,6 @@ class CharacterDetailsFragment :
     }
 
     override fun setUI() {
-        initRecyclerView()
         setupArguments()
     }
 
@@ -59,24 +59,23 @@ class CharacterDetailsFragment :
     }
 
     private fun observeEpisodes() {
-        val character = getCharacterArguments()
-        if (character != null) {
-            viewModel.fetchEpisodeLiveData(character.episodes)
-                .observe(viewLifecycleOwner) { episodes ->
-                    episodesInCharacterAdapter.submitList(episodes)
-                }
+        viewModel.episodesLiveData.observe(viewLifecycleOwner) { episodes ->
+            binding.charactersDetailsProgressBar.visibility = View.GONE
+            episodeAdapter.submitList(episodes)
         }
     }
 
-    private fun initRecyclerView() {
+    override fun setupRecyclerView() {
         with(binding.characterEpisodeRecyclerView) {
-            adapter = episodesInCharacterAdapter
+            adapter = episodeAdapter
         }
     }
 
     private fun setupArguments() {
         val character = getCharacterArguments()
         if (character != null) {
+            viewModel.fetchEpisodeLiveData(character.episodes)
+
             with(binding) {
                 characterDetailsName.text = character.name
                 characterDetailsStatus.text = character.status

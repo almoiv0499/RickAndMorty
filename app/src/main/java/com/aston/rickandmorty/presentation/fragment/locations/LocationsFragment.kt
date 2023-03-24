@@ -6,6 +6,7 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentLocationsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
+import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.recyclerview.location.LocationAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 
@@ -50,8 +51,8 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
     }
 
     override fun setUI() {
-        setupRecyclerView()
         setArguments()
+        swipeToRefreshLayout()
         launchFilterFragment()
     }
 
@@ -63,10 +64,23 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     override fun setToolbarTitle(): Int = R.string.locations_screen_name
 
-    private fun setupRecyclerView() {
-        with(binding.locationsRecyclerView) {
-            adapter = locationAdapter
-            layoutManager = GridLayoutManager(context, SPAN_COUNT)
+    override fun setupRecyclerView() {
+        with(binding) {
+            locationsRecyclerView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
+            locationsRecyclerView.adapter = locationAdapter.withLoadStateFooter(
+                footer = LoaderStateFooterAdapter()
+            )
+
+            locationAdapter.addLoadStateListener { loadState ->
+                checkLoadState(
+                    loadState = loadState,
+                    adapter = locationAdapter,
+                    recyclerView = locationsRecyclerView,
+                    progress = locationsProgressBar,
+                    filter = locationFilter,
+                    errorMessage = locationsErrorMessage
+                )
+            }
         }
     }
 
@@ -79,6 +93,16 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
     private fun observeLocationFlow() {
         viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
             locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+        }
+    }
+
+    private fun swipeToRefreshLayout() {
+        binding.locationsSwipeRefreshLayout.setOnRefreshListener {
+            viewModel.locationsFlow(EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE)
+            viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
+                locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+                binding.locationsSwipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 

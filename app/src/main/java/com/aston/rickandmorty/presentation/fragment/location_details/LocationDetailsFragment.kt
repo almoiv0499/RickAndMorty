@@ -1,7 +1,7 @@
 package com.aston.rickandmorty.presentation.fragment.location_details
 
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -11,8 +11,6 @@ import com.aston.rickandmorty.presentation.model.location.LocationInfoView
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharactersInLocationAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.aston.rickandmorty.presentation.util.parcelable
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 private const val SPAN_COUNT = 2
 private const val LOCATION_ARGS_KEY = "location_args_key"
@@ -34,7 +32,7 @@ class LocationDetailsFragment :
         }
     }
 
-    private val innerCharactersAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharactersInLocationAdapter().apply {
             onCharacterClickListener = { character ->
                 viewModel.launchCharacterDetailsFragment(character)
@@ -53,7 +51,6 @@ class LocationDetailsFragment :
     }
 
     override fun setUI() {
-        setupRecyclerView()
         setupArguments()
     }
 
@@ -63,19 +60,15 @@ class LocationDetailsFragment :
     }
 
     private fun observeCharacterList() {
-        val location = getLocationArguments()
-        if (location != null) {
-            lifecycleScope.launch {
-                viewModel.fetchCharactersLiveData(location.residents).collectLatest { characters ->
-                    innerCharactersAdapter.submitList(characters)
-                }
-            }
+        viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
+            binding.locationDetailsProgressBar.visibility = View.GONE
+            characterAdapter.submitList(characters)
         }
     }
 
-    private fun setupRecyclerView() {
+    override fun setupRecyclerView() {
         with(binding.charactersInLocationRecyclerView) {
-            adapter = innerCharactersAdapter
+            adapter = characterAdapter
             layoutManager = GridLayoutManager(context, SPAN_COUNT)
         }
     }
@@ -83,6 +76,8 @@ class LocationDetailsFragment :
     private fun setupArguments() {
         val location = getLocationArguments()
         if (location != null) {
+            viewModel.fetchCharactersLiveData(location.residents)
+
             with(binding) {
                 locationDetailsName.text = location.name
                 locationDetailsType.text = location.type

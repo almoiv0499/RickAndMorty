@@ -16,11 +16,9 @@ import com.aston.rickandmorty.presentation.fragment.character_details.CharacterD
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val FRAGMENT_FILTER_TAG = "CharacterFragmentFilter"
@@ -57,9 +55,11 @@ class CharactersViewModel @Inject constructor(
     private fun fetchCharacters(
         useCase: Flow<PagingData<CharacterInfo>>,
     ) {
-        useCase.flowOn(Dispatchers.IO).cachedIn(viewModelScope).onEach { paging ->
-            _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            useCase.cachedIn(viewModelScope).collectLatest { paging ->
+                _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
+            }
+        }
     }
 
     private fun hasInternetConnection(): Boolean {

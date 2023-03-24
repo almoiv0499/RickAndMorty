@@ -4,15 +4,25 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.viewmodel_factory.ViewModelFactory
 import com.aston.rickandmorty.presentation.util.Navigator
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
 
 abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
@@ -44,6 +54,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
 
     protected open fun setupObservers() {
         observeNavigation()
+        observeExceptionMessage()
     }
 
     private fun observeNavigation() {
@@ -51,6 +62,12 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
             event.getContentIfNotHandled()?.let { navigator ->
                 handleNavigation(navigator)
             }
+        }
+    }
+
+    private fun observeExceptionMessage() {
+        viewModel.exceptionLiveData.observe(viewLifecycleOwner) { exceptionMessage ->
+            Toast.makeText(context, exceptionMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -83,6 +100,27 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
     ) {
         val fragmentManager = activity?.supportFragmentManager!!
         fragment.show(fragmentManager, fragmentTag)
+    }
+
+    fun <T : Any, VH : ViewHolder> checkLoadState(
+        loadState: CombinedLoadStates,
+        adapter: PagingDataAdapter<T, VH>,
+        recyclerView: RecyclerView,
+        progress: ProgressBar,
+        filter: FloatingActionButton,
+        errorMessage: TextView,
+    ) {
+        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+            recyclerView.isVisible = loadState.refresh != LoadState.Loading
+            progress.isVisible = loadState.refresh == LoadState.Loading
+            filter.visibility = View.GONE
+            errorMessage.visibility = View.VISIBLE
+        } else {
+            recyclerView.isVisible = loadState.refresh != LoadState.Loading
+            progress.isVisible = loadState.refresh == LoadState.Loading
+            filter.visibility = View.VISIBLE
+            errorMessage.visibility = View.GONE
+        }
     }
 
 }

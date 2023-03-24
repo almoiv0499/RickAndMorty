@@ -7,6 +7,7 @@ import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentEpisodesBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
+import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 
 private const val SPAN_COUNT = 2
@@ -50,7 +51,8 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
     }
 
     override fun setUI() {
-        setupRecyclerView()
+        setArguments()
+        swipeToRefreshScreen()
         launchFilterFragment()
     }
 
@@ -63,20 +65,48 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
     }
 
     private fun observeEpisode() {
-        val episodeName = fetchFilteredData(EPISODE_NAME)
-        val episodeNumber = fetchFilteredData(EPISODE_NUMBER)
-        viewModel.fetch(episodeName, episodeNumber)
-
-        viewModel.episodesLD.observe(viewLifecycleOwner) { paging ->
+        viewModel.episodesLiveData.observe(viewLifecycleOwner) { paging ->
             episodeAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
         }
     }
 
-    private fun setupRecyclerView() {
-        with(binding.episodesRecyclerView) {
-            adapter = episodeAdapter
-            layoutManager = GridLayoutManager(context, SPAN_COUNT)
+    override fun setupRecyclerView() {
+        with(binding) {
+            episodesRecyclerView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
+            episodesRecyclerView.adapter = episodeAdapter.withLoadStateFooter(
+                footer = LoaderStateFooterAdapter()
+            )
+
+
+            episodeAdapter.addLoadStateListener { loadState ->
+                checkLoadState(
+                    loadState = loadState,
+                    adapter = episodeAdapter,
+                    recyclerView = episodesRecyclerView,
+                    progress = episodesProgressBar,
+                    filter = episodeFilter,
+                    errorMessage = episodesErrorMessage
+                )
+            }
         }
+    }
+
+    private fun swipeToRefreshScreen() {
+        binding.episodesSwipeRefreshLayout.setOnRefreshListener {
+            viewModel.fetch(EMPTY_VALUE, EMPTY_VALUE)
+
+            viewModel.episodesLiveData.observe(viewLifecycleOwner) { paging ->
+                episodeAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+                binding.episodesSwipeRefreshLayout.isRefreshing = false
+            }
+        }
+    }
+
+    private fun setArguments() {
+        val episodeName = fetchFilteredData(EPISODE_NAME)
+        val episodeNumber = fetchFilteredData(EPISODE_NUMBER)
+
+        viewModel.fetch(episodeName, episodeNumber)
     }
 
     private fun fetchFilteredData(key: String): String {

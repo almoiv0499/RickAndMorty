@@ -4,6 +4,7 @@
     <string name="characters_screen_name">Characters</string>
     <string name="locations_screen_name">Locations</string>
     <string name="episodes_screen_name">Episodes</string>
+    <string name="exception_message">Oops, something wrong!</string>
 
     <string-array name="character_status">
         <item>Alive</item>
