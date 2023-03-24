@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.viewmodel_factory.ViewModelFactory
-import com.aston.rickandmorty.presentation.util.Navigator
+import com.aston.rickandmorty.presentation.util.NavigationManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
@@ -58,7 +58,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
     }
 
     private fun observeNavigation() {
-        viewModel.launchFragmentLiveData.observe(viewLifecycleOwner) { event ->
+        viewModel.manageFragmentLiveData.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { navigator ->
                 handleNavigation(navigator)
             }
@@ -71,13 +71,14 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         }
     }
 
-    private fun handleNavigation(navigator: Navigator) {
-        when (navigator) {
-            is Navigator.LaunchFragment -> launchFragment(navigator.fragment)
-            is Navigator.LaunchDialogFragment -> launchDialogFragment(
-                navigator.fragment, navigator.fragmentTag
+    private fun handleNavigation(navigationManager: NavigationManager) {
+        when (navigationManager) {
+            is NavigationManager.LaunchFragment -> launchFragment(navigationManager.fragment)
+            is NavigationManager.LaunchDialogFragment -> launchDialogFragment(
+                navigationManager.fragment, navigationManager.fragmentTag
             )
-            is Navigator.NavigateBack -> navigateBack()
+            is NavigationManager.RefreshFragment -> refreshFragment(navigationManager.fragment)
+            is NavigationManager.NavigateBack -> navigateBack()
         }
     }
 
@@ -102,7 +103,13 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         fragment.show(fragmentManager, fragmentTag)
     }
 
-    fun <T : Any, VH : ViewHolder> checkLoadState(
+    protected fun refreshFragment(fragment: Fragment) {
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fragment_container, fragment)
+        }
+    }
+
+    protected fun <T : Any, VH : ViewHolder> checkLoadState(
         loadState: CombinedLoadStates,
         adapter: PagingDataAdapter<T, VH>,
         recyclerView: RecyclerView,

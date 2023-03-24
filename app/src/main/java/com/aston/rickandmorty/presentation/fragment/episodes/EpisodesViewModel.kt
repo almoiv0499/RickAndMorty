@@ -82,4 +82,8 @@ class EpisodesViewModel @Inject constructor(
         launchFragment(EpisodeDetailsFragment.newInstance(episode))
     }
 
+    fun refreshFragment() {
+        refreshFragment(EpisodesFragment.newInstance())
+    }
+
 }

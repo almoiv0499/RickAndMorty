@@ -1,6 +1,7 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
 import android.os.Bundle
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -98,12 +99,8 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
 
     private fun swipeToRefreshScreen() {
         binding.charactersSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.charactersFlow(EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE)
-
-            viewModel.charactersLiveData.observe(viewLifecycleOwner) { paging ->
-                characterAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
-                binding.charactersSwipeRefreshLayout.isRefreshing = false
-            }
+            viewModel.refreshFragment()
+            binding.charactersSwipeRefreshLayout.isRefreshing = false
         }
     }
 

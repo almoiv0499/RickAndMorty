@@ -3,13 +3,15 @@ package com.aston.rickandmorty.presentation.util
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-sealed class Navigator {
-    data class LaunchFragment(val fragment: Fragment) : Navigator()
+sealed class NavigationManager {
+    data class LaunchFragment(val fragment: Fragment) : NavigationManager()
 
     data class LaunchDialogFragment(
         val fragment: BottomSheetDialogFragment,
         val fragmentTag: String,
-    ) : Navigator()
+    ) : NavigationManager()
 
-    object NavigateBack : Navigator()
+    data class RefreshFragment(val fragment: Fragment) : NavigationManager()
+
+    object NavigateBack : NavigationManager()
 }

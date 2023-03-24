@@ -81,4 +81,8 @@ class LocationsViewModel @Inject constructor(
         launchFragment(LocationDetailsFragment.newInstance(location))
     }
 
+    fun refreshFragment() {
+        refreshFragment(LocationsFragment.newInstance())
+    }
+
 }

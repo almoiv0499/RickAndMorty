@@ -74,12 +74,16 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
+    fun launchCharacterDetailsFragment(character: CharacterInfoView) {
+        launchFragment(CharacterDetailsFragment.newInstance(character))
+    }
+
     fun launchDialogFragment() {
         launchDialogFragment(CharactersFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
     }
 
-    fun launchCharacterDetailsFragment(character: CharacterInfoView) {
-        launchFragment(CharacterDetailsFragment.newInstance(character))
+    fun refreshFragment() {
+        refreshFragment(CharactersFragment.newInstance())
     }
 
 }

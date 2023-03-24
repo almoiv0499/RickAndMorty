@@ -98,11 +98,8 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     private fun swipeToRefreshLayout() {
         binding.locationsSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.locationsFlow(EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE)
-            viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
-                locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
-                binding.locationsSwipeRefreshLayout.isRefreshing = false
-            }
+            viewModel.refreshFragment()
+            binding.locationsSwipeRefreshLayout.isRefreshing = false
         }
     }
 

@@ -93,12 +93,8 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
 
     private fun swipeToRefreshScreen() {
         binding.episodesSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.fetch(EMPTY_VALUE, EMPTY_VALUE)
-
-            viewModel.episodesLiveData.observe(viewLifecycleOwner) { paging ->
-                episodeAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
-                binding.episodesSwipeRefreshLayout.isRefreshing = false
-            }
+            viewModel.refreshFragment()
+            binding.episodesSwipeRefreshLayout.isRefreshing = false
         }
     }
 

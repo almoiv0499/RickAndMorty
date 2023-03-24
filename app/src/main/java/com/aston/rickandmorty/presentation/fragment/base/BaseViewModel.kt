@@ -6,24 +6,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.aston.rickandmorty.presentation.util.Event
-import com.aston.rickandmorty.presentation.util.Navigator
+import com.aston.rickandmorty.presentation.util.NavigationManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val _launchFragmentLiveData = MutableLiveData<Event<Navigator>>()
-    val launchFragmentLiveData: LiveData<Event<Navigator>> = _launchFragmentLiveData
+    private val _manageFragmentLiveData = MutableLiveData<Event<NavigationManager>>()
+    val manageFragmentLiveData: LiveData<Event<NavigationManager>> = _manageFragmentLiveData
 
     private val _exceptionLiveData = MutableLiveData<Int>()
     val exceptionLiveData: LiveData<Int> = _exceptionLiveData
 
     fun launchFragment(fragment: Fragment) {
-        _launchFragmentLiveData.value = Event(Navigator.LaunchFragment(fragment))
+        _manageFragmentLiveData.value = Event(NavigationManager.LaunchFragment(fragment))
     }
 
     fun launchDialogFragment(fragment: BottomSheetDialogFragment, fragmentTag: String) {
-        _launchFragmentLiveData.value =
-            Event(Navigator.LaunchDialogFragment(fragment, fragmentTag))
+        _manageFragmentLiveData.value = Event(NavigationManager.LaunchDialogFragment(fragment, fragmentTag))
+    }
+
+    fun refreshFragment(fragment: Fragment) {
+        _manageFragmentLiveData.value = Event(NavigationManager.RefreshFragment(fragment))
     }
 
     fun showExceptionMessage(@StringRes exceptionMessage: Int) {
@@ -31,6 +34,6 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     fun navigateBack() {
-        _launchFragmentLiveData.value = Event(Navigator.NavigateBack)
+        _manageFragmentLiveData.value = Event(NavigationManager.NavigateBack)
     }
 }
