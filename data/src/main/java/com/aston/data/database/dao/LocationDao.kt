@@ -1,4 +1,4 @@
-package com.aston.data.database
+package com.aston.data.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -32,8 +32,5 @@ interface LocationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOriginLocation(originLocation: LocationInfoData)
-
-    @Query("DELETE FROM location_table")
-    suspend fun deleteLocations()
 
 }

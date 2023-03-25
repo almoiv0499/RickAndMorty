@@ -1,4 +1,4 @@
-package com.aston.data.database
+package com.aston.data.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao

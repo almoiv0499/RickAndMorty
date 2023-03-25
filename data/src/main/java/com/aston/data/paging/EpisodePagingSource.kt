@@ -2,7 +2,7 @@ package com.aston.data.paging
 
 import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxPagingSource
-import com.aston.data.database.ApplicationDatabase
+import com.aston.data.database.datasource.EpisodeDataSource
 import com.aston.data.model.episode.EpisodeInfoData
 import com.aston.data.remote.EpisodeService
 import io.reactivex.rxjava3.core.Single
@@ -13,7 +13,7 @@ private const val BY_ONE = 1
 class EpisodePagingSource(
     private val episodeName: String,
     private val episodeNumber: String,
-    private val database: ApplicationDatabase,
+    private val episodeDataSource: EpisodeDataSource,
     private val service: EpisodeService,
 ) : RxPagingSource<Int, EpisodeInfoData>() {
 
@@ -29,7 +29,7 @@ class EpisodePagingSource(
 
         return service.fetchEpisodesByPage(currentPage, episodeName, episodeNumber)
             .subscribeOn(Schedulers.io()).map { episodeResult ->
-                database.episodeDao().insertEpisodes(episodeResult.results)
+                episodeDataSource.insertEpisodes(episodeResult.results)
                 LoadResult.Page(
                     data = episodeResult.results,
                     prevKey = if (currentPage == BY_ONE) null else currentPage.minus(BY_ONE),

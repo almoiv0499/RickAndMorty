@@ -3,7 +3,8 @@ package com.aston.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.aston.data.database.ApplicationDatabase
+import com.aston.data.database.datasource.CharacterDataSource
+import com.aston.data.database.datasource.LocationDataSource
 import com.aston.data.paging.LocationsPagingSource
 import com.aston.data.remote.LocationsService
 import com.aston.data.util.mapper.MapperCharacterData
@@ -18,7 +19,8 @@ import javax.inject.Inject
 private const val PAGE_SIZE = 1
 
 class LocationsRepositoryImpl @Inject constructor(
-    private val database: ApplicationDatabase,
+    private val locationDataSource: LocationDataSource,
+    private val characterDataSource: CharacterDataSource,
     private val service: LocationsService,
     private val mapperLocation: MapperLocationData,
     private val mapperCharacter: MapperCharacterData,
@@ -32,7 +34,7 @@ class LocationsRepositoryImpl @Inject constructor(
         return mapperLocation.mapToFlowData(
             Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
                 LocationsPagingSource(
-                    locationName, locationType, locationDimension, database, service
+                    locationName, locationType, locationDimension, locationDataSource, service
                 )
             }).flow
         )
@@ -45,7 +47,7 @@ class LocationsRepositoryImpl @Inject constructor(
     ): Flow<PagingData<LocationInfo>> {
         return mapperLocation.mapToFlowData(
             Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-                database.locationDao().fetchLocations(locationName, locationType, locationDimension)
+                locationDataSource.fetchLocations(locationName, locationType, locationDimension)
             }).flow
         )
     }
@@ -53,12 +55,12 @@ class LocationsRepositoryImpl @Inject constructor(
     override fun fetchCharactersById(characterIds: List<Int>): Flow<List<CharacterInfo>> {
         return networkBoundResource(query = {
             mapperCharacter.mapToFLowListData(
-                database.charactersDao().fetchCharactersById(characterIds)
+                characterDataSource.fetchCharactersById(characterIds)
             )
         }, fetch = {
             service.fetchCharactersById(characterIds)
         }, saveFetchResult = { characters ->
-            database.charactersDao().insertCharacters(characters)
+            characterDataSource.insertCharacters(characters)
         })
     }
 }

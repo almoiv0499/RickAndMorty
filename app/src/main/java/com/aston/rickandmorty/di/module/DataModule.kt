@@ -3,9 +3,12 @@ package com.aston.rickandmorty.di.module
 import android.content.Context
 import androidx.room.Room
 import com.aston.data.database.ApplicationDatabase
-import com.aston.data.database.CharactersDao
-import com.aston.data.database.EpisodeDao
-import com.aston.data.database.LocationDao
+import com.aston.data.database.dao.CharactersDao
+import com.aston.data.database.dao.EpisodeDao
+import com.aston.data.database.dao.LocationDao
+import com.aston.data.database.datasource.CharacterDataSource
+import com.aston.data.database.datasource.EpisodeDataSource
+import com.aston.data.database.datasource.LocationDataSource
 import com.aston.data.remote.CharactersService
 import com.aston.data.remote.EpisodeService
 import com.aston.data.remote.LocationsService
@@ -79,30 +82,50 @@ class DataModule {
     @Provides
     fun provideCharacterRepository(
         service: CharactersService,
-        database: ApplicationDatabase,
+        characterDataSource: CharacterDataSource,
+        locationDataSource: LocationDataSource,
+        episodeDataSource: EpisodeDataSource,
         mapperEpisode: MapperEpisodeData,
         mapperCharacter: MapperCharacterData,
-        mapperLocation: MapperLocationData
+        mapperLocation: MapperLocationData,
     ): CharactersRepository = CharactersRepositoryImpl(
-        service, database, mapperEpisode, mapperCharacter, mapperLocation
+        service,
+        characterDataSource,
+        locationDataSource,
+        episodeDataSource,
+        mapperEpisode,
+        mapperCharacter,
+        mapperLocation
     )
 
     @Provides
     fun provideLocationRepository(
+        locationDataSource: LocationDataSource,
+        characterDataSource: CharacterDataSource,
         service: LocationsService,
-        database: ApplicationDatabase,
         mapperLocation: MapperLocationData,
         mapperCharacter: MapperCharacterData,
-    ): LocationRepository =
-        LocationsRepositoryImpl(database, service, mapperLocation, mapperCharacter)
+    ): LocationRepository = LocationsRepositoryImpl(
+        locationDataSource = locationDataSource,
+        characterDataSource = characterDataSource,
+        service = service,
+        mapperLocation = mapperLocation,
+        mapperCharacter = mapperCharacter
+    )
 
     @Provides
     fun provideEpisodeRepository(
+        episodeDataSource: EpisodeDataSource,
+        characterDataSource: CharacterDataSource,
         service: EpisodeService,
-        database: ApplicationDatabase,
         mapperEpisode: MapperEpisodeData,
         mapperCharacter: MapperCharacterData,
-    ): EpisodeRepository = EpisodeRepositoryImpl(database, service, mapperEpisode, mapperCharacter)
-
+    ): EpisodeRepository = EpisodeRepositoryImpl(
+        episodeDataSource = episodeDataSource,
+        characterDataSource = characterDataSource,
+        service = service,
+        mapperEpisode = mapperEpisode,
+        mapperCharacter = mapperCharacter
+    )
 
 }

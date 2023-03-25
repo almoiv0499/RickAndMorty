@@ -32,6 +32,10 @@ class LocationDetailsFragment :
         }
     }
 
+    private val location by lazy(LazyThreadSafetyMode.NONE) {
+        getLocationArguments()
+    }
+
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharactersInLocationAdapter().apply {
             onCharacterClickListener = { character ->
@@ -48,6 +52,7 @@ class LocationDetailsFragment :
         super.setupObservers()
 
         observeCharacterList()
+        observeInternetConnection()
     }
 
     override fun setUI() {
@@ -55,7 +60,6 @@ class LocationDetailsFragment :
     }
 
     override fun setToolbarTitle(): String {
-        val location = getLocationArguments()
         return location?.name ?: getString(R.string.locations_screen_name)
     }
 
@@ -63,6 +67,13 @@ class LocationDetailsFragment :
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
             binding.locationDetailsProgressBar.visibility = View.GONE
             characterAdapter.submitList(characters)
+        }
+    }
+
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.checkInternetConnection.visibility =
+                checkInternetConnection(hasInternetConnection)
         }
     }
 
@@ -74,14 +85,13 @@ class LocationDetailsFragment :
     }
 
     private fun setupArguments() {
-        val location = getLocationArguments()
-        if (location != null) {
-            viewModel.fetchCharactersLiveData(location.residents)
+        location?.let { locationNotNull ->
+            viewModel.fetchCharactersLiveData(locationNotNull.residents)
 
             with(binding) {
-                locationDetailsName.text = location.name
-                locationDetailsType.text = location.type
-                locationDetailsDimension.text = location.dimension
+                locationDetailsName.text = locationNotNull.name
+                locationDetailsType.text = locationNotNull.type
+                locationDetailsDimension.text = locationNotNull.dimension
             }
         }
     }

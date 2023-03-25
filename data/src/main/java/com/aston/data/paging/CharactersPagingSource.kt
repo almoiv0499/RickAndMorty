@@ -2,11 +2,9 @@ package com.aston.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.room.withTransaction
-import com.aston.data.database.ApplicationDatabase
+import com.aston.data.database.datasource.CharacterDataSource
 import com.aston.data.model.character.CharacterInfoData
 import com.aston.data.remote.CharactersService
-import javax.inject.Inject
 
 private const val BY_ONE = 1
 
@@ -15,7 +13,7 @@ class CharactersPagingSource(
     private val characterStatus: String,
     private val characterSpecies: String,
     private val characterGender: String,
-    private val database: ApplicationDatabase,
+    private val dataSource: CharacterDataSource,
     private val service: CharactersService,
 ) : PagingSource<Int, CharacterInfoData>() {
 
@@ -36,9 +34,7 @@ class CharactersPagingSource(
             )
             val data = response.characterInfo
 
-            database.withTransaction {
-                database.charactersDao().insertCharacters(data)
-            }
+            dataSource.insertCharacters(data)
 
             val prevKey = if (currentPage == BY_ONE) null else currentPage.minus(BY_ONE)
             val nextKey = if (data.isEmpty()) null else currentPage.plus(BY_ONE)

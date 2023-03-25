@@ -22,7 +22,7 @@ import javax.inject.Inject
 private const val FRAGMENT_FILTER_TAG = "CharacterFragmentFilter"
 
 class CharactersViewModel @Inject constructor(
-    private val context: Context,
+    context: Context,
     private val fetchCharactersThoughServiceUseCase: FetchCharactersThoughServiceUseCase,
     private val fetchCharactersThoughDatabaseUseCase: FetchCharactersThoughDatabaseUseCase,
     private val mapper: MapperCharacterView,

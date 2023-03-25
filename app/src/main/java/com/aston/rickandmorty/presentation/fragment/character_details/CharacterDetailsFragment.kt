@@ -15,10 +15,6 @@ import com.bumptech.glide.Glide
 
 private const val CHARACTER_ARGS_KEY = "character_args_key"
 
-private fun log(message: String) {
-    Log.d("ADAPTER_TAG", message)
-}
-
 class CharacterDetailsFragment :
     BaseViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
         R.layout.fragment_character_details,
@@ -35,6 +31,10 @@ class CharacterDetailsFragment :
             fragment.arguments = args
             return fragment
         }
+    }
+
+    private val character by lazy(LazyThreadSafetyMode.NONE) {
+        getCharacterArguments()
     }
 
     private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -64,6 +64,7 @@ class CharacterDetailsFragment :
         observeEpisodes()
         observeLocation()
         observeOriginLocation()
+        observeInternetConnection()
     }
 
     private fun observeEpisodes() {
@@ -97,6 +98,12 @@ class CharacterDetailsFragment :
         }
     }
 
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) {hasInternetConnection ->
+            binding.checkInternetConnection.visibility = checkInternetConnection(hasInternetConnection)
+        }
+    }
+
     override fun setupRecyclerView() {
         with(binding.characterEpisodeRecyclerView) {
             adapter = episodeAdapter
@@ -104,27 +111,24 @@ class CharacterDetailsFragment :
     }
 
     private fun setupArguments() {
-        val character = getCharacterArguments()
-        if (character != null) {
-
+        character?.let { characterNotNull ->
             with(binding) {
-                characterDetailsName.text = character.name
-                characterDetailsStatus.text = character.status
-                characterDetailsGender.text = character.gender
-                characterDetailsSpecies.text = character.species
+                characterDetailsName.text = characterNotNull.name
+                characterDetailsStatus.text = characterNotNull.status
+                characterDetailsGender.text = characterNotNull.gender
+                characterDetailsSpecies.text = characterNotNull.species
 
-                Glide.with(this@CharacterDetailsFragment).load(character.image)
+                Glide.with(this@CharacterDetailsFragment).load(characterNotNull.image)
                     .placeholder(R.drawable.ic_launcher_foreground).into(characterDetailsImage)
             }
         }
     }
 
     private fun setArgumentsForViewModels() {
-        val character = getCharacterArguments()
-        if (character != null) {
-            viewModel.fetchEpisodeLiveData(character.episodes)
-            viewModel.fetchLocationById(character.location.locationInfo)
-            viewModel.fetchOriginLocationById(character.origin.originLocationName)
+        character?.let { characterNotNull ->
+            viewModel.fetchEpisodeLiveData(characterNotNull.episodes)
+            viewModel.fetchLocationById(characterNotNull.location.locationInfo)
+            viewModel.fetchOriginLocationById(characterNotNull.origin.originLocationName)
         }
     }
 

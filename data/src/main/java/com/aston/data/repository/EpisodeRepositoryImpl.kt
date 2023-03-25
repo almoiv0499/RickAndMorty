@@ -5,7 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.paging.rxjava3.observable
-import com.aston.data.database.ApplicationDatabase
+import com.aston.data.database.datasource.CharacterDataSource
+import com.aston.data.database.datasource.EpisodeDataSource
 import com.aston.data.paging.EpisodePagingSource
 import com.aston.data.remote.EpisodeService
 import com.aston.data.util.mapper.MapperCharacterData
@@ -19,7 +20,8 @@ import javax.inject.Inject
 private const val PAGE_SIZE = 1
 
 class EpisodeRepositoryImpl @Inject constructor(
-    private val database: ApplicationDatabase,
+    private val episodeDataSource: EpisodeDataSource,
+    private val characterDataSource: CharacterDataSource,
     private val service: EpisodeService,
     private val mapperEpisode: MapperEpisodeData,
     private val mapperCharacter: MapperCharacterData,
@@ -30,7 +32,7 @@ class EpisodeRepositoryImpl @Inject constructor(
         episodeNumber: String,
     ): Observable<PagingData<EpisodeInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            EpisodePagingSource(episodeName, episodeNumber, database, service)
+            EpisodePagingSource(episodeName, episodeNumber, episodeDataSource, service)
         }).observable.map { paging ->
             paging.map { episode ->
                 mapperEpisode.mapToEpisode(episode)
@@ -43,7 +45,7 @@ class EpisodeRepositoryImpl @Inject constructor(
         episodeNumber: String,
     ): Observable<PagingData<EpisodeInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            database.episodeDao().fetchEpisodes(episodeName, episodeNumber)
+            episodeDataSource.fetchEpisodes(episodeName, episodeNumber)
         }).observable.map { paging ->
             paging.map { episode ->
                 mapperEpisode.mapToEpisode(episode)
@@ -53,8 +55,8 @@ class EpisodeRepositoryImpl @Inject constructor(
 
     override fun fetchCharactersByIdService(characterIds: List<Int>): Observable<List<CharacterInfo>> {
         return service.fetchCharactersById(characterIds).map { characters ->
-            database.charactersDao().insertCharacters(characters)
-            database.charactersDao().fetchCharactersByIdForEpisode(characterIds)
+            characterDataSource.insertCharactersForEpisode(characters)
+            characterDataSource.fetchCharactersByIdForEpisode(characterIds)
         }.flatMap {
             it.map { characters ->
                 characters.map { character ->
@@ -65,7 +67,7 @@ class EpisodeRepositoryImpl @Inject constructor(
     }
 
     override fun fetchCharactersByIdDatabase(characterIds: List<Int>): Observable<List<CharacterInfo>> {
-        return database.charactersDao().fetchCharactersByIdForEpisode(characterIds).map { characters ->
+        return characterDataSource.fetchCharactersByIdForEpisode(characterIds).map { characters ->
             characters.map { character ->
                 mapperCharacter.mapToCharacter(character)
             }

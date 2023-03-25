@@ -25,7 +25,7 @@ import javax.inject.Inject
 private const val SPLIT = "/"
 
 class CharacterDetailsViewModel @Inject constructor(
-    private val context: Context,
+    context: Context,
     private val fetchEpisodesByIdsUseCase: FetchEpisodesByIdsUseCase,
     private val fetchLocationByIdUseCase: FetchLocationByIdUseCase,
     private val fetchOriginLocationByNameUseCase: FetchOriginLocationByNameUseCase,

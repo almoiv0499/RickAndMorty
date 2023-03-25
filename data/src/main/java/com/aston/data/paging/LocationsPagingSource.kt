@@ -2,8 +2,7 @@ package com.aston.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.room.withTransaction
-import com.aston.data.database.ApplicationDatabase
+import com.aston.data.database.datasource.LocationDataSource
 import com.aston.data.model.location.LocationInfoData
 import com.aston.data.remote.LocationsService
 
@@ -13,7 +12,7 @@ class LocationsPagingSource(
     private val locationName: String,
     private val locationType: String,
     private val locationDimension: String,
-    private val database: ApplicationDatabase,
+    private val locationDataSource: LocationDataSource,
     private val service: LocationsService,
 ) : PagingSource<Int, LocationInfoData>() {
 
@@ -34,9 +33,7 @@ class LocationsPagingSource(
             )
             val data = response.results
 
-            database.withTransaction {
-                database.locationDao().insertLocations(data)
-            }
+            locationDataSource.insertLocations(data)
 
             val prevKey = if (currentPage == BY_ONE) null else currentPage.minus(BY_ONE)
             val nextKey = if (data.isEmpty()) null else currentPage.plus(BY_ONE)

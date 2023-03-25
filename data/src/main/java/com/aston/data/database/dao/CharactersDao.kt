@@ -1,4 +1,4 @@
-package com.aston.data.database
+package com.aston.data.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -28,8 +28,8 @@ interface CharactersDao {
     fun fetchCharactersByIdForEpisode(characterIds: List<Int>): Observable<List<CharacterInfoData>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCharacters(characters: List<CharacterInfoData>)
+    suspend fun insertCharacters(characters: List<CharacterInfoData>)
 
-    @Query("DELETE FROM characters_table")
-    suspend fun deleteCharacters()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCharactersForEpisode(characters: List<CharacterInfoData>)
 }

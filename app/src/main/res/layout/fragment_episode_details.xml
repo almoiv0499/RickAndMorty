@@ -2,9 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/episodeDetails_swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.episode_details.EpisodeDetailsFragment">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/check_internetConnection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Check Internet Connection"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/episode_detail_name"
@@ -12,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/check_internetConnection" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/episode_detail_number"

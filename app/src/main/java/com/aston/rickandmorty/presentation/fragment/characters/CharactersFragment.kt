@@ -56,18 +56,6 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        binding.charactersLayout.isVisible = true
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        binding.charactersLayout.isVisible = false
-    }
-
     override fun injectDependencies() {
         (activity?.applicationContext as App).component.inject(this)
     }
@@ -98,9 +86,9 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
                 characterAdapter.loadStateFlow.collect { loadState ->
                     val isListEmpty =
                         loadState.refresh is LoadState.NotLoading && characterAdapter.itemCount == 0
+                    charactersProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
                     characterRecyclerView.isVisible = !isListEmpty
                     characterFilter.isVisible = !isListEmpty
-                    charactersProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
                     charactersErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
                 }
             }

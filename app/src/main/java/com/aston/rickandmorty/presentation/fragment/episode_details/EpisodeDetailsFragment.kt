@@ -32,6 +32,10 @@ class EpisodeDetailsFragment :
         }
     }
 
+    private val episode by lazy(LazyThreadSafetyMode.NONE) {
+        getEpisodeArguments()
+    }
+
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CharactersInLocationAdapter().apply {
             onCharacterClickListener = { character ->
@@ -48,6 +52,7 @@ class EpisodeDetailsFragment :
         super.setupObservers()
 
         observeCharacters()
+        observeInternetConnection()
     }
 
     override fun setUI() {
@@ -55,7 +60,6 @@ class EpisodeDetailsFragment :
     }
 
     override fun setToolbarTitle(): String {
-        val episode = getEpisodeArguments()
         return episode?.episodeName ?: getString(R.string.episodes_screen_name)
     }
 
@@ -63,6 +67,13 @@ class EpisodeDetailsFragment :
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
             binding.episodeDetailsProgressBar.visibility = View.GONE
             characterAdapter.submitList(characters)
+        }
+    }
+
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.checkInternetConnection.visibility =
+                checkInternetConnection(hasInternetConnection)
         }
     }
 
@@ -74,14 +85,13 @@ class EpisodeDetailsFragment :
     }
 
     private fun setupArguments() {
-        val episode = getEpisodeArguments()
-        if (episode != null) {
-            viewModel.fetchCharactersLiveData(episode.characters)
+        episode?.let { episodeNotNull ->
+            viewModel.fetchCharactersLiveData(episodeNotNull.characters)
 
             with(binding) {
-                episodeDetailName.text = episode.episodeName
-                episodeDetailNumber.text = episode.episodeNumber
-                episodeDetailAirDate.text = episode.airDate
+                episodeDetailName.text = episodeNotNull.episodeName
+                episodeDetailNumber.text = episodeNotNull.episodeNumber
+                episodeDetailAirDate.text = episodeNotNull.airDate
             }
         }
     }
