@@ -30,7 +30,7 @@ class EpisodesViewModel @Inject constructor(
     private val fetchEpisodeThoughDatabaseUseCase: FetchEpisodeThoughDatabaseUseCase,
     private val fetchEpisodeThoughServiceUseCase: FetchEpisodeThoughServiceUseCase,
     private val mapperEpisode: MapperEpisodeView,
-) : BaseViewModel() {
+) : BaseViewModel(context) {
 
     private val compositeDisposable by lazy(LazyThreadSafetyMode.NONE) {
         CompositeDisposable()
@@ -60,18 +60,6 @@ class EpisodesViewModel @Inject constructor(
         super.onCleared()
 
         compositeDisposable.dispose()
-    }
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
-                NetworkCapabilities.TRANSPORT_CELLULAR
-            ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
     }
 
     fun launchFilterFragment() {

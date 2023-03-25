@@ -1,7 +1,9 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
 import android.os.Bundle
-import androidx.fragment.app.commit
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -10,6 +12,7 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
+import kotlinx.coroutines.launch
 
 private const val EMPTY_VALUE = ""
 private const val SPAN_COUNT = 2
@@ -53,6 +56,18 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        binding.charactersLayout.isVisible = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        binding.charactersLayout.isVisible = false
+    }
+
     override fun injectDependencies() {
         (activity?.applicationContext as App).component.inject(this)
     }
@@ -67,6 +82,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         super.setupObservers()
 
         observeCharactersFlow()
+        observeInternetConnection()
     }
 
     override fun setToolbarTitle(): Int = R.string.characters_screen_name
@@ -78,15 +94,15 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
                 footer = LoaderStateFooterAdapter()
             )
 
-            characterAdapter.addLoadStateListener { loadState ->
-                checkLoadState(
-                    loadState = loadState,
-                    adapter = characterAdapter,
-                    recyclerView = characterRecyclerView,
-                    progress = charactersProgressBar,
-                    filter = characterFilter,
-                    errorMessage = charactersErrorMessage,
-                )
+            lifecycleScope.launch {
+                characterAdapter.loadStateFlow.collect { loadState ->
+                    val isListEmpty =
+                        loadState.refresh is LoadState.NotLoading && characterAdapter.itemCount == 0
+                    characterRecyclerView.isVisible = !isListEmpty
+                    characterFilter.isVisible = !isListEmpty
+                    charactersProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                    charactersErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                }
             }
         }
     }
@@ -94,6 +110,13 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     private fun observeCharactersFlow() {
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { paging ->
             characterAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+        }
+    }
+
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.checkInternetConnection.visibility =
+                checkInternetConnection(hasInternetConnection)
         }
     }
 
@@ -116,7 +139,9 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         val characterGender = fetchFilterData(CHARACTER_GENDER)
         val characterStatus = fetchFilterData(CHARACTER_STATUS)
 
-        viewModel.charactersFlow(characterName, characterStatus, characterSpecies, characterGender)
+        viewModel.charactersFlow(
+            characterName, characterStatus, characterSpecies, characterGender
+        )
     }
 
     private fun fetchFilterData(key: String): String {

@@ -1,6 +1,10 @@
 package com.aston.rickandmorty.presentation.fragment.locations
 
 import android.os.Bundle
+import android.view.View
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -9,6 +13,7 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.recyclerview.location.LocationAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
+import kotlinx.coroutines.launch
 
 private const val EMPTY_VALUE = ""
 private const val SPAN_COUNT = 2
@@ -60,6 +65,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         super.setupObservers()
 
         observeLocationFlow()
+        observeInternetConnection()
     }
 
     override fun setToolbarTitle(): Int = R.string.locations_screen_name
@@ -71,15 +77,15 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
                 footer = LoaderStateFooterAdapter()
             )
 
-            locationAdapter.addLoadStateListener { loadState ->
-                checkLoadState(
-                    loadState = loadState,
-                    adapter = locationAdapter,
-                    recyclerView = locationsRecyclerView,
-                    progress = locationsProgressBar,
-                    filter = locationFilter,
-                    errorMessage = locationsErrorMessage
-                )
+            lifecycleScope.launch {
+                locationAdapter.loadStateFlow.collect { loadState ->
+                    val isListEmpty =
+                        loadState.refresh is LoadState.NotLoading && locationAdapter.itemCount == 0
+                    locationsRecyclerView.isVisible = !isListEmpty
+                    locationFilter.isVisible = !isListEmpty
+                    locationsProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                    locationsErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                }
             }
         }
     }
@@ -93,6 +99,13 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
     private fun observeLocationFlow() {
         viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
             locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+        }
+    }
+
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.checkInternetConnection.visibility =
+                checkInternetConnection(hasInternetConnection)
         }
     }
 

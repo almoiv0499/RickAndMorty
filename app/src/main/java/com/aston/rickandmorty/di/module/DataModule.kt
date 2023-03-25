@@ -82,8 +82,9 @@ class DataModule {
         database: ApplicationDatabase,
         mapperEpisode: MapperEpisodeData,
         mapperCharacter: MapperCharacterData,
+        mapperLocation: MapperLocationData
     ): CharactersRepository = CharactersRepositoryImpl(
-        service, database, mapperEpisode, mapperCharacter
+        service, database, mapperEpisode, mapperCharacter, mapperLocation
     )
 
     @Provides

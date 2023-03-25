@@ -1,8 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.locations
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -28,7 +26,7 @@ class LocationsViewModel @Inject constructor(
     private val fetchLocationsThoughDatabaseUseCase: FetchLocationsThoughDatabaseUseCase,
     private val fetchLocationsThoughServiceUseCase: FetchLocationsThoughServiceUseCase,
     private val mapper: MapperLocationView,
-) : BaseViewModel() {
+) : BaseViewModel(context) {
 
     private val _locationsLiveData = MutableLiveData<PagingData<LocationInfoView>>()
     val locationsLiveData: LiveData<PagingData<LocationInfoView>> = _locationsLiveData
@@ -59,18 +57,6 @@ class LocationsViewModel @Inject constructor(
         useCase.cachedIn(viewModelScope).onEach { paging ->
             _locationsLiveData.value = mapper.mapToLocationPagingView(paging)
         }.launchIn(viewModelScope)
-    }
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
-                NetworkCapabilities.TRANSPORT_CELLULAR
-            ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
     }
 
     fun launchFilterFragment() {

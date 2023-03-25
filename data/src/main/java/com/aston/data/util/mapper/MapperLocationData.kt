@@ -22,7 +22,7 @@ class MapperLocationData @Inject constructor() {
         }
     }
 
-    private fun mapToLocationInfo(locationData: LocationInfoData): LocationInfo {
+    fun mapToLocationInfo(locationData: LocationInfoData): LocationInfo {
         return LocationInfo(
             created = locationData.created,
             dimension = locationData.dimension,

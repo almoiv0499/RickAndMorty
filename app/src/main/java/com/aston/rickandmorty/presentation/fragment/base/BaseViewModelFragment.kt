@@ -103,7 +103,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         fragment.show(fragmentManager, fragmentTag)
     }
 
-    protected fun refreshFragment(fragment: Fragment) {
+    private fun refreshFragment(fragment: Fragment) {
         activity?.supportFragmentManager?.commit {
             replace(R.id.fragment_container, fragment)
         }
@@ -128,6 +128,11 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
             filter.visibility = View.VISIBLE
             errorMessage.visibility = View.GONE
         }
+    }
+
+    protected fun checkInternetConnection(hasInternetConnection: Boolean): Int {
+        return if (hasInternetConnection) View.GONE
+        else View.VISIBLE
     }
 
 }

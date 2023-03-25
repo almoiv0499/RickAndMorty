@@ -26,7 +26,7 @@ class EpisodeDetailsViewModel @Inject constructor(
     private val fetchCharactersByIdServiceUseCase: FetchCharactersByIdServiceUseCase,
     private val fetchCharactersByIdDatabaseUseCase: FetchCharactersByIdDatabaseUseCase,
     private val mapperCharacter: MapperCharacterView,
-) : BaseViewModel() {
+) : BaseViewModel(context) {
 
     private val compositeDisposable by lazy(LazyThreadSafetyMode.NONE) {
         CompositeDisposable()
@@ -59,18 +59,6 @@ class EpisodeDetailsViewModel @Inject constructor(
                     showExceptionMessage(R.string.exception_message)
                 })
         )
-    }
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
-                NetworkCapabilities.TRANSPORT_CELLULAR
-            ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
     }
 
     override fun onCleared() {

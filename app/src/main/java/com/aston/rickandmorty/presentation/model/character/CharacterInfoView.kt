@@ -14,5 +14,5 @@ data class CharacterInfoView(
     val name: String,
     val origin: OriginView,
     val species: String,
-    val status: String
+    val status: String,
 ) : Parcelable

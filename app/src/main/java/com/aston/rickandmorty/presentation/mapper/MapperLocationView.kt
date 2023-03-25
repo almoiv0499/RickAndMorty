@@ -14,7 +14,7 @@ class MapperLocationView @Inject constructor() {
         }
     }
 
-    private fun mapToLocationInfoView(locationInfo: LocationInfo): LocationInfoView {
+    fun mapToLocationInfoView(locationInfo: LocationInfo): LocationInfoView {
         return LocationInfoView(
             created = locationInfo.created,
             dimension = locationInfo.dimension,

@@ -31,7 +31,7 @@ class MapperCharacterData @Inject constructor() {
             name = characterData.name,
             origin = mapToOrigin(characterData.origin),
             species = characterData.species,
-            status = characterData.status
+            status = characterData.status,
         )
     }
 

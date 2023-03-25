@@ -37,14 +37,14 @@ abstract class BaseFragment<VB : ViewBinding>(
         setUI()
     }
 
-    protected abstract fun setUI()
-
-    abstract fun setupRecyclerView()
-
     override fun onDestroyView() {
         super.onDestroyView()
 
         _binding = null
     }
+
+    protected abstract fun setUI()
+
+    protected abstract fun setupRecyclerView()
 
 }

@@ -1,8 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -28,7 +26,7 @@ class CharactersViewModel @Inject constructor(
     private val fetchCharactersThoughServiceUseCase: FetchCharactersThoughServiceUseCase,
     private val fetchCharactersThoughDatabaseUseCase: FetchCharactersThoughDatabaseUseCase,
     private val mapper: MapperCharacterView,
-) : BaseViewModel() {
+) : BaseViewModel(context) {
 
     private val _charactersLiveData = MutableLiveData<PagingData<CharacterInfoView>>()
     val charactersLiveData: LiveData<PagingData<CharacterInfoView>> = _charactersLiveData
@@ -59,18 +57,6 @@ class CharactersViewModel @Inject constructor(
             useCase.cachedIn(viewModelScope).collectLatest { paging ->
                 _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
             }
-        }
-    }
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capability.hasTransport(
-                NetworkCapabilities.TRANSPORT_CELLULAR
-            ) || capability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
         }
     }
 

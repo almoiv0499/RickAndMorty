@@ -2,6 +2,7 @@ package com.aston.rickandmorty.di.module
 
 import androidx.lifecycle.ViewModel
 import com.aston.rickandmorty.di.annotation.ViewModelKey
+import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsViewModel
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersViewModel
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterViewModel

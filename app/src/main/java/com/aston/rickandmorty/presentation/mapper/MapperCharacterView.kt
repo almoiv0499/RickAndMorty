@@ -39,7 +39,7 @@ class MapperCharacterView @Inject constructor() {
             name = character.name,
             origin = mapToOriginView(character.origin),
             species = character.species,
-            status = character.status
+            status = character.status,
         )
     }
 

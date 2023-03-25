@@ -1,6 +1,10 @@
 package com.aston.rickandmorty.presentation.fragment.episodes
 
 import android.os.Bundle
+import android.view.View
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -9,6 +13,7 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
 import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
+import kotlinx.coroutines.launch
 
 private const val SPAN_COUNT = 2
 private const val EPISODE_NAME = "episode name"
@@ -48,6 +53,7 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
         super.setupObservers()
 
         observeEpisode()
+        observeInternetConnection()
     }
 
     override fun setUI() {
@@ -70,6 +76,13 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
         }
     }
 
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.checkInternetConnection.visibility =
+                checkInternetConnection(hasInternetConnection)
+        }
+    }
+
     override fun setupRecyclerView() {
         with(binding) {
             episodesRecyclerView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
@@ -77,16 +90,15 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
                 footer = LoaderStateFooterAdapter()
             )
 
-
-            episodeAdapter.addLoadStateListener { loadState ->
-                checkLoadState(
-                    loadState = loadState,
-                    adapter = episodeAdapter,
-                    recyclerView = episodesRecyclerView,
-                    progress = episodesProgressBar,
-                    filter = episodeFilter,
-                    errorMessage = episodesErrorMessage
-                )
+            lifecycleScope.launch {
+                episodeAdapter.loadStateFlow.collect { loadState ->
+                    val isListEmpty =
+                        loadState.refresh is LoadState.NotLoading && episodeAdapter.itemCount == 0
+                    episodesRecyclerView.isVisible = !isListEmpty
+                    episodeFilter.isVisible = !isListEmpty
+                    episodesProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                    episodesErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
+                }
             }
         }
     }

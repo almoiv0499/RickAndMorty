@@ -1,5 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.location_details
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -19,9 +20,10 @@ import javax.inject.Inject
 private const val SPLIT = "/"
 
 class LocationDetailsViewModel @Inject constructor(
+    private val context: Context,
     private val fetchCharactersByIdUseCase: FetchCharactersByIdUseCase,
     private val mapperCharacter: MapperCharacterView,
-) : BaseViewModel() {
+) : BaseViewModel(context) {
 
     private val _charactersLiveData = MutableLiveData<List<CharacterInfoView>>()
     val charactersLiveData: LiveData<List<CharacterInfoView>> = _charactersLiveData

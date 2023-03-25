@@ -1,6 +1,7 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -13,6 +14,10 @@ import com.aston.rickandmorty.presentation.util.parcelable
 import com.bumptech.glide.Glide
 
 private const val CHARACTER_ARGS_KEY = "character_args_key"
+
+private fun log(message: String) {
+    Log.d("ADAPTER_TAG", message)
+}
 
 class CharacterDetailsFragment :
     BaseViewModelFragment<FragmentCharacterDetailsBinding, CharacterDetailsViewModel>(
@@ -50,18 +55,45 @@ class CharacterDetailsFragment :
 
     override fun setUI() {
         setupArguments()
+        setArgumentsForViewModels()
     }
 
     override fun setupObservers() {
         super.setupObservers()
 
         observeEpisodes()
+        observeLocation()
+        observeOriginLocation()
     }
 
     private fun observeEpisodes() {
         viewModel.episodesLiveData.observe(viewLifecycleOwner) { episodes ->
             binding.charactersDetailsProgressBar.visibility = View.GONE
             episodeAdapter.submitList(episodes)
+        }
+    }
+
+    private fun observeLocation() {
+        viewModel.locationLiveData.observe(viewLifecycleOwner) { location ->
+            binding.locationForCharacterDetailsName.text = location.name
+            binding.locationForCharacterDetailsType.text = location.type
+            binding.locationForCharacterDetailsDimension.text = location.dimension
+
+            binding.locationForCharacterDetailsCardView.setOnClickListener {
+                viewModel.launchLocationDetailsFragment(location)
+            }
+        }
+    }
+
+    private fun observeOriginLocation() {
+        viewModel.originLocationLiveData.observe(viewLifecycleOwner) { location ->
+            binding.originForCharacterDetailsName.text = location.name
+            binding.originForCharacterDetailsType.text = location.type
+            binding.originForCharacterDetailsDimension.text = location.dimension
+
+            binding.originForCharacterDetailsCardView.setOnClickListener {
+                viewModel.launchLocationDetailsFragment(location)
+            }
         }
     }
 
@@ -74,7 +106,6 @@ class CharacterDetailsFragment :
     private fun setupArguments() {
         val character = getCharacterArguments()
         if (character != null) {
-            viewModel.fetchEpisodeLiveData(character.episodes)
 
             with(binding) {
                 characterDetailsName.text = character.name
@@ -85,6 +116,15 @@ class CharacterDetailsFragment :
                 Glide.with(this@CharacterDetailsFragment).load(character.image)
                     .placeholder(R.drawable.ic_launcher_foreground).into(characterDetailsImage)
             }
+        }
+    }
+
+    private fun setArgumentsForViewModels() {
+        val character = getCharacterArguments()
+        if (character != null) {
+            viewModel.fetchEpisodeLiveData(character.episodes)
+            viewModel.fetchLocationById(character.location.locationInfo)
+            viewModel.fetchOriginLocationById(character.origin.originLocationName)
         }
     }
 

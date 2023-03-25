@@ -9,9 +9,11 @@ import com.aston.data.paging.CharactersPagingSource
 import com.aston.data.remote.CharactersService
 import com.aston.data.util.mapper.MapperCharacterData
 import com.aston.data.util.mapper.MapperEpisodeData
+import com.aston.data.util.mapper.MapperLocationData
 import com.aston.data.util.resource.networkBoundResource
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.episode.EpisodeInfo
+import com.aston.domain.model.location.LocationInfo
 import com.aston.domain.repository.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -24,6 +26,7 @@ class CharactersRepositoryImpl @Inject constructor(
     private val database: ApplicationDatabase,
     private val mapperEpisode: MapperEpisodeData,
     private val mapperCharacter: MapperCharacterData,
+    private val mapperLocation: MapperLocationData,
 ) : CharactersRepository {
 
     override fun fetchCharactersThoughService(
@@ -66,6 +69,30 @@ class CharactersRepositoryImpl @Inject constructor(
             service.getEpisodesForCharacterByUrl(episodeIds)
         }, saveFetchResult = { episodes ->
             database.episodeDao().insertEpisodes(episodes)
+        })
+    }
+
+    override fun fetchLocationById(locationId: Int): Flow<LocationInfo> {
+        return networkBoundResource(query = {
+            database.locationDao().fetchLocationById(locationId).map { location ->
+                mapperLocation.mapToLocationInfo(location)
+            }
+        }, fetch = {
+            service.fetchLocationById(locationId)
+        }, saveFetchResult = { location ->
+            database.locationDao().insertLocation(location.results[0])
+        })
+    }
+
+    override fun fetchOriginLocationByName(originLocationName: String): Flow<LocationInfo> {
+        return networkBoundResource(query = {
+            database.locationDao().fetchOriginLocationByName(originLocationName).map { location ->
+                mapperLocation.mapToLocationInfo(location)
+            }
+        }, fetch = {
+            service.fetchOriginLocationByName(originLocationName)
+        }, saveFetchResult = { location ->
+            database.locationDao().insertOriginLocation(location.results[0])
         })
     }
 }
