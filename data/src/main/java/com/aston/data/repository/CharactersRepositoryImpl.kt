@@ -82,27 +82,27 @@ class CharactersRepositoryImpl @Inject constructor(
         })
     }
 
-    override fun fetchLocationById(locationId: Int): Flow<LocationInfo> {
-        return networkBoundResource(query = {
-            locationDataSource.fetchLocationById(locationId).map { location ->
-                mapperLocation.mapToLocationInfo(location)
-            }
-        }, fetch = {
-            service.fetchLocationById(locationId)
-        }, saveFetchResult = { location ->
-            locationDataSource.insertLocation(location.results[0])
-        })
+    override suspend fun fetchLocationByIdService(locationId: Int): LocationInfo {
+        val location = service.fetchLocationById(locationId)
+        locationDataSource.insertLocation(location)
+        return mapperLocation.mapToLocationInfo(location)
     }
 
-    override fun fetchOriginLocationByName(originLocationName: String): Flow<LocationInfo> {
-        return networkBoundResource(query = {
-            locationDataSource.fetchOriginLocationByName(originLocationName).map { location ->
-                mapperLocation.mapToLocationInfo(location)
-            }
-        }, fetch = {
-            service.fetchOriginLocationByName(originLocationName)
-        }, saveFetchResult = { location ->
-            locationDataSource.insertOriginLocation(location.results[0])
-        })
+    override fun fetchLocationByIdDatabase(locationId: Int): Flow<LocationInfo> {
+        return locationDataSource.fetchLocationById(locationId).map { location ->
+            mapperLocation.mapToLocationInfo(location)
+        }
+    }
+
+    override suspend fun fetchOriginLocationByNameService(originLocationName: String): LocationInfo {
+        val originLocation = service.fetchOriginLocationByName(originLocationName).results[0]
+        locationDataSource.insertOriginLocation(originLocation)
+        return mapperLocation.mapToLocationInfo(originLocation)
+    }
+
+    override fun fetchOriginLocationByNameDatabase(originLocationName: String): Flow<LocationInfo> {
+        return locationDataSource.fetchOriginLocationByName(originLocationName).map { location ->
+            mapperLocation.mapToLocationInfo(location)
+        }
     }
 }

@@ -5,12 +5,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class FetchOriginLocationByNameUseCase @Inject constructor(
+class FetchOriginLocationByNameDatabaseUseCase @Inject constructor(
     private val repository: CharactersRepository,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     operator fun invoke(originLocationName: String) =
-        repository.fetchOriginLocationByName(originLocationName).flowOn(ioDispatcher)
+        repository.fetchOriginLocationByNameDatabase(originLocationName).flowOn(ioDispatcher)
 
 }

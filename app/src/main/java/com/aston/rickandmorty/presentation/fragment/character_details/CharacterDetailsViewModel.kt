@@ -5,9 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.aston.domain.model.episode.EpisodeInfo
-import com.aston.domain.usecase.character.FetchEpisodesByIdsUseCase
-import com.aston.domain.usecase.character.FetchLocationByIdUseCase
-import com.aston.domain.usecase.character.FetchOriginLocationByNameUseCase
+import com.aston.domain.model.location.LocationInfo
+import com.aston.domain.usecase.character.*
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetailsFragment
@@ -27,8 +26,10 @@ private const val SPLIT = "/"
 class CharacterDetailsViewModel @Inject constructor(
     context: Context,
     private val fetchEpisodesByIdsUseCase: FetchEpisodesByIdsUseCase,
-    private val fetchLocationByIdUseCase: FetchLocationByIdUseCase,
-    private val fetchOriginLocationByNameUseCase: FetchOriginLocationByNameUseCase,
+    private val fetchLocationByIdServiceUseCase: FetchLocationByIdServiceUseCase,
+    private val fetchLocationByIdDatabaseUseCase: FetchLocationByIdDatabaseUseCase,
+    private val fetchOriginLocationByNameService: FetchOriginLocationByNameService,
+    private val fetchOriginLocationByNameDatabase: FetchOriginLocationByNameDatabaseUseCase,
     private val mapperEpisode: MapperEpisodeView,
     private val mapperLocation: MapperLocationView,
 ) : BaseViewModel(context) {
@@ -52,20 +53,33 @@ class CharacterDetailsViewModel @Inject constructor(
     fun fetchLocationById(locationUrl: String) {
         val locationId = locationUrl.split(SPLIT).last().toInt()
         viewModelScope.launch {
-            fetchLocationByIdUseCase(locationId).catch {
-                showExceptionMessage(R.string.exception_message)
-            }.collectLatest { location ->
-                _locationLiveData.value = mapperLocation.mapToLocationInfoView(location)
-            }
+            if (hasInternetConnection()) {
+                _locationLiveData.value =
+                    mapperLocation.mapToLocationInfoView(fetchLocationByIdServiceUseCase(locationId))
+            } else fetchLocation(fetchLocationByIdDatabaseUseCase(locationId))
         }
     }
 
     fun fetchOriginLocationById(originLocationName: String) {
         viewModelScope.launch {
-            fetchOriginLocationByNameUseCase(originLocationName).catch {
-                showExceptionMessage(R.string.exception_message)
-            }.collectLatest { location ->
-                _originLocationLiveData.value = mapperLocation.mapToLocationInfoView(location)
+            if (hasInternetConnection()) {
+                _originLocationLiveData.value = mapperLocation.mapToLocationInfoView(
+                    fetchOriginLocationByNameService(originLocationName)
+                )
+            } else {
+                fetchOriginLocationByNameDatabase(originLocationName).collectLatest { location ->
+                    _originLocationLiveData.value = mapperLocation.mapToLocationInfoView(location)
+                }
+            }
+        }
+    }
+
+    private fun fetchLocation(
+        useCase: Flow<LocationInfo>,
+    ) {
+        viewModelScope.launch {
+            useCase.collectLatest { location ->
+                _locationLiveData.value = mapperLocation.mapToLocationInfoView(location)
             }
         }
     }

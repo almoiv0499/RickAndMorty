@@ -25,12 +25,12 @@ interface CharactersService {
     ): List<EpisodeInfoData>
 
     @GET("api/location/{locationId}")
-    fun fetchLocationById(
+    suspend fun fetchLocationById(
         @Path("locationId") locationId: Int,
-    ): LocationResultData
+    ): LocationInfoData
 
     @GET("api/location")
-    fun fetchOriginLocationByName(
+    suspend fun fetchOriginLocationByName(
         @Query("name") originLocationName: String,
     ): LocationResultData
 

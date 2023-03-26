@@ -20,8 +20,10 @@ interface CharactersRepository {
 
     fun fetchEpisodesByIds(episodeIds: List<Int>): Flow<List<EpisodeInfo>>
 
-    fun fetchLocationById(locationId: Int): Flow<LocationInfo>
+    suspend fun fetchLocationByIdService(locationId: Int): LocationInfo
+    fun fetchLocationByIdDatabase(locationId: Int): Flow<LocationInfo>
 
-    fun fetchOriginLocationByName(originLocationName: String): Flow<LocationInfo>
+    suspend fun fetchOriginLocationByNameService(originLocationName: String): LocationInfo
+    fun fetchOriginLocationByNameDatabase(originLocationName: String): Flow<LocationInfo>
 
 }

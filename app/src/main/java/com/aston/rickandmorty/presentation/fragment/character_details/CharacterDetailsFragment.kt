@@ -77,10 +77,8 @@ class CharacterDetailsFragment :
     private fun observeLocation() {
         viewModel.locationLiveData.observe(viewLifecycleOwner) { location ->
             binding.locationForCharacterDetailsName.text = location.name
-            binding.locationForCharacterDetailsType.text = location.type
-            binding.locationForCharacterDetailsDimension.text = location.dimension
 
-            binding.locationForCharacterDetailsCardView.setOnClickListener {
+            binding.locationForCharacterDetailsName.setOnClickListener {
                 viewModel.launchLocationDetailsFragment(location)
             }
         }
@@ -89,10 +87,8 @@ class CharacterDetailsFragment :
     private fun observeOriginLocation() {
         viewModel.originLocationLiveData.observe(viewLifecycleOwner) { location ->
             binding.originForCharacterDetailsName.text = location.name
-            binding.originForCharacterDetailsType.text = location.type
-            binding.originForCharacterDetailsDimension.text = location.dimension
 
-            binding.originForCharacterDetailsCardView.setOnClickListener {
+            binding.originForCharacterDetailsName.setOnClickListener {
                 viewModel.launchLocationDetailsFragment(location)
             }
         }
