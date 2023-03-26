@@ -34,7 +34,12 @@ class LocationsRepositoryImpl @Inject constructor(
         return mapperLocation.mapToFlowData(
             Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
                 LocationsPagingSource(
-                    locationName, locationType, locationDimension, locationDataSource, service
+                    locationName,
+                    locationType,
+                    locationDimension,
+                    locationDataSource,
+                    service,
+                    mapperLocation
                 )
             }).flow
         )
@@ -60,7 +65,9 @@ class LocationsRepositoryImpl @Inject constructor(
         }, fetch = {
             service.fetchCharactersById(characterIds)
         }, saveFetchResult = { characters ->
-            characterDataSource.insertCharacters(characters)
+            characterDataSource.insertCharacters(characters.map { character ->
+                mapperCharacter.mapFromCharacterDto(character)
+            })
         })
     }
 }

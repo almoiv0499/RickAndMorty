@@ -44,7 +44,8 @@ class CharactersRepositoryImpl @Inject constructor(
                 characterSpecies,
                 characterGender,
                 characterDataSource,
-                service
+                service,
+                mapperCharacter
             )
         }).flow.map { paging ->
             paging.map { character ->
@@ -78,12 +79,14 @@ class CharactersRepositoryImpl @Inject constructor(
         }, fetch = {
             service.getEpisodesForCharacterByUrl(episodeIds)
         }, saveFetchResult = { episodes ->
-            episodeDataSource.insertEpisodes(episodes)
+            episodeDataSource.insertEpisodes(episodes.map { episode ->
+                mapperEpisode.mapFromEpisodeDto(episode)
+            })
         })
     }
 
     override suspend fun fetchLocationByIdService(locationId: Int): LocationInfo {
-        val location = service.fetchLocationById(locationId)
+        val location = mapperLocation.mapFromLocationInfoDto(service.fetchLocationById(locationId))
         locationDataSource.insertLocation(location)
         return mapperLocation.mapToLocationInfo(location)
     }
@@ -95,7 +98,9 @@ class CharactersRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchOriginLocationByNameService(originLocationName: String): LocationInfo {
-        val originLocation = service.fetchOriginLocationByName(originLocationName).results[0]
+        val originLocation = mapperLocation.mapFromLocationInfoDto(
+            service.fetchOriginLocationByName(originLocationName).locations[0]
+        )
         locationDataSource.insertOriginLocation(originLocation)
         return mapperLocation.mapToLocationInfo(originLocation)
     }

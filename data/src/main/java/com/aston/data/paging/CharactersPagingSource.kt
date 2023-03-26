@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.aston.data.database.datasource.CharacterDataSource
 import com.aston.data.model.character.CharacterInfoData
 import com.aston.data.remote.CharactersService
+import com.aston.data.util.mapper.MapperCharacterData
 
 private const val BY_ONE = 1
 
@@ -15,6 +16,7 @@ class CharactersPagingSource(
     private val characterGender: String,
     private val dataSource: CharacterDataSource,
     private val service: CharactersService,
+    private val mapperCharacter: MapperCharacterData,
 ) : PagingSource<Int, CharacterInfoData>() {
 
     override fun getRefreshKey(state: PagingState<Int, CharacterInfoData>): Int? {
@@ -32,7 +34,9 @@ class CharactersPagingSource(
             val response = service.fetchCharactersByPage(
                 currentPage, characterName, characterStatus, characterSpecies, characterGender
             )
-            val data = response.characterInfo
+            val data = response.characters.map { character ->
+                mapperCharacter.mapFromCharacterDto(character)
+            }
 
             dataSource.insertCharacters(data)
 

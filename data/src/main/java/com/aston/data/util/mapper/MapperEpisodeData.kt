@@ -3,6 +3,7 @@ package com.aston.data.util.mapper
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.aston.data.model.episode.EpisodeInfoData
+import com.aston.data.model.episode_dto.EpisodeInfoDataDto
 import com.aston.domain.model.episode.EpisodeInfo
 import javax.inject.Inject
 
@@ -22,6 +23,18 @@ class MapperEpisodeData @Inject constructor() {
             episodeNumber = episode.episode,
             id = episode.id,
             name = episode.name,
+            url = episode.url
+        )
+    }
+
+    fun mapFromEpisodeDto(episode: EpisodeInfoDataDto): EpisodeInfoData {
+        return EpisodeInfoData(
+            air_date = episode.airDate,
+            characters = episode.characters,
+            created = episode.episodeCreated,
+            episode = episode.episodeNumber,
+            id = episode.episodeId,
+            name = episode.episodeName,
             url = episode.url
         )
     }

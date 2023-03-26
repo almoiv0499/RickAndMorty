@@ -5,6 +5,7 @@ import androidx.paging.rxjava3.RxPagingSource
 import com.aston.data.database.datasource.EpisodeDataSource
 import com.aston.data.model.episode.EpisodeInfoData
 import com.aston.data.remote.EpisodeService
+import com.aston.data.util.mapper.MapperEpisodeData
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -15,6 +16,7 @@ class EpisodePagingSource(
     private val episodeNumber: String,
     private val episodeDataSource: EpisodeDataSource,
     private val service: EpisodeService,
+    private val mapperEpisode: MapperEpisodeData,
 ) : RxPagingSource<Int, EpisodeInfoData>() {
 
     override fun getRefreshKey(state: PagingState<Int, EpisodeInfoData>): Int? {
@@ -29,11 +31,14 @@ class EpisodePagingSource(
 
         return service.fetchEpisodesByPage(currentPage, episodeName, episodeNumber)
             .subscribeOn(Schedulers.io()).map { episodeResult ->
-                episodeDataSource.insertEpisodes(episodeResult.results)
+                val episodes = episodeResult.episodes.map { episode ->
+                    mapperEpisode.mapFromEpisodeDto(episode)
+                }
+                episodeDataSource.insertEpisodes(episodes)
                 LoadResult.Page(
-                    data = episodeResult.results,
+                    data = episodes,
                     prevKey = if (currentPage == BY_ONE) null else currentPage.minus(BY_ONE),
-                    nextKey = if (episodeResult.results.isEmpty()) null else currentPage.plus(BY_ONE)
+                    nextKey = if (episodes.isEmpty()) null else currentPage.plus(BY_ONE)
                 ) as LoadResult<Int, EpisodeInfoData>
             }.onErrorReturn { throwable ->
                 LoadResult.Error(throwable)

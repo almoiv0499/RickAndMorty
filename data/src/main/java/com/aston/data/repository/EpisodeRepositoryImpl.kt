@@ -32,7 +32,9 @@ class EpisodeRepositoryImpl @Inject constructor(
         episodeNumber: String,
     ): Observable<PagingData<EpisodeInfo>> {
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
-            EpisodePagingSource(episodeName, episodeNumber, episodeDataSource, service)
+            EpisodePagingSource(
+                episodeName, episodeNumber, episodeDataSource, service, mapperEpisode
+            )
         }).observable.map { paging ->
             paging.map { episode ->
                 mapperEpisode.mapToEpisode(episode)
@@ -55,7 +57,9 @@ class EpisodeRepositoryImpl @Inject constructor(
 
     override fun fetchCharactersByIdService(characterIds: List<Int>): Observable<List<CharacterInfo>> {
         return service.fetchCharactersById(characterIds).map { characters ->
-            characterDataSource.insertCharactersForEpisode(characters)
+            characterDataSource.insertCharactersForEpisode(characters.map { character ->
+                mapperCharacter.mapFromCharacterDto(character)
+            })
             characterDataSource.fetchCharactersByIdForEpisode(characterIds)
         }.flatMap {
             it.map { characters ->

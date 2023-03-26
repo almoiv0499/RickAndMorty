@@ -1,7 +1,9 @@
 package com.aston.data.remote
 
 import com.aston.data.model.character.CharacterInfoData
+import com.aston.data.model.character_dto.CharacterInfoDataDto
 import com.aston.data.model.episode.EpisodeResultData
+import com.aston.data.model.episode_dto.EpisodeResultDataDto
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
@@ -15,11 +17,11 @@ interface EpisodeService {
         @Query("page") page: Int,
         @Query("name") episodeName: String,
         @Query("episode") episodeNumber: String
-    ): Single<EpisodeResultData>
+    ): Single<EpisodeResultDataDto>
 
     @GET("api/character/{characterIds}")
     fun fetchCharactersById(
         @Path("characterIds") characterIds: List<Int>,
-    ): Observable<List<CharacterInfoData>>
+    ): Observable<List<CharacterInfoDataDto>>
 
 }

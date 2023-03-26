@@ -1,9 +1,13 @@
 package com.aston.data.remote
 
 import com.aston.data.model.character.CharactersResultData
+import com.aston.data.model.character_dto.CharacterResultDataDto
 import com.aston.data.model.episode.EpisodeInfoData
+import com.aston.data.model.episode_dto.EpisodeInfoDataDto
 import com.aston.data.model.location.LocationInfoData
 import com.aston.data.model.location.LocationResultData
+import com.aston.data.model.location_dto.LocationInfoDataDto
+import com.aston.data.model.location_dto.LocationResultDataDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -17,21 +21,21 @@ interface CharactersService {
         @Query("status") characterStatus: String,
         @Query("species") characterSpecies: String,
         @Query("gender") characterGender: String,
-    ): CharactersResultData
+    ): CharacterResultDataDto
 
     @GET("api/episode/{episodeIds}")
     suspend fun getEpisodesForCharacterByUrl(
         @Path("episodeIds") episodeIds: List<Int>,
-    ): List<EpisodeInfoData>
+    ): List<EpisodeInfoDataDto>
 
     @GET("api/location/{locationId}")
     suspend fun fetchLocationById(
         @Path("locationId") locationId: Int,
-    ): LocationInfoData
+    ): LocationInfoDataDto
 
     @GET("api/location")
     suspend fun fetchOriginLocationByName(
         @Query("name") originLocationName: String,
-    ): LocationResultData
+    ): LocationResultDataDto
 
 }

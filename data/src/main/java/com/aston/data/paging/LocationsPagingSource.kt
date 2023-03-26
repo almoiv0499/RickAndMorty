@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.aston.data.database.datasource.LocationDataSource
 import com.aston.data.model.location.LocationInfoData
 import com.aston.data.remote.LocationsService
+import com.aston.data.util.mapper.MapperLocationData
 
 private const val BY_ONE = 1
 
@@ -14,6 +15,7 @@ class LocationsPagingSource(
     private val locationDimension: String,
     private val locationDataSource: LocationDataSource,
     private val service: LocationsService,
+    private val mapperLocation: MapperLocationData,
 ) : PagingSource<Int, LocationInfoData>() {
 
     override fun getRefreshKey(state: PagingState<Int, LocationInfoData>): Int? {
@@ -31,7 +33,9 @@ class LocationsPagingSource(
             val response = service.fetchLocationsByPage(
                 currentPage, locationName, locationType, locationDimension
             )
-            val data = response.results
+            val data = response.locations.map { location ->
+                mapperLocation.mapFromLocationInfoDto(location)
+            }
 
             locationDataSource.insertLocations(data)
 

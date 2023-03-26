@@ -3,6 +3,7 @@ package com.aston.data.util.mapper
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.aston.data.model.location.LocationInfoData
+import com.aston.data.model.location_dto.LocationInfoDataDto
 import com.aston.domain.model.location.LocationInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -30,6 +31,18 @@ class MapperLocationData @Inject constructor() {
             name = locationData.name,
             residents = locationData.residents,
             type = locationData.type,
+            url = locationData.url
+        )
+    }
+
+    fun mapFromLocationInfoDto(locationData: LocationInfoDataDto): LocationInfoData {
+        return LocationInfoData(
+            created = locationData.locationCreated,
+            dimension = locationData.locationDimension,
+            id = locationData.locationId,
+            name = locationData.locationName,
+            residents = locationData.characters,
+            type = locationData.locationType,
             url = locationData.url
         )
     }
