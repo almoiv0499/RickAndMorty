@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.aston.rickandmorty.databinding.LocationItemBinding
-import com.aston.rickandmorty.presentation.model.location.LocationInfoView
+import com.aston.rickandmorty.presentation.model.location.LocationInfoViewModel
 
-typealias OnLocationClickListener = (LocationInfoView) -> Unit
+typealias OnLocationClickListener = (LocationInfoViewModel) -> Unit
 
 class LocationAdapter :
-    PagingDataAdapter<LocationInfoView, LocationViewHolder>(LocationDiffUtil()) {
+    PagingDataAdapter<LocationInfoViewModel, LocationViewHolder>(LocationDiffUtil()) {
 
     var onLocationClickListener: OnLocationClickListener? = null
 

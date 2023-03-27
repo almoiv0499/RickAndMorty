@@ -4,8 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class InfoView(
-    val count: Int,
-    val next: String,
-    val pages: Int,
+data class EpisodeResultViewModel(
+    val info: InfoViewModel,
+    val results: List<EpisodeInfoViewModel>,
 ) : Parcelable

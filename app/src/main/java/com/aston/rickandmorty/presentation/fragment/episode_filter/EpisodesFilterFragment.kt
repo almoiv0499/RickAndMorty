@@ -42,7 +42,7 @@ class EpisodesFilterFragment :
     }
 
     private fun observeAndDismissDialogFragment(episodeName: String, episodeNumber: String) {
-        viewModel.launchFilteredEpisodesFragment(episodeName, episodeNumber)
+        viewModel.launchFilteredFragment(episodeName, episodeNumber)
         dismiss()
     }
 

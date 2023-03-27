@@ -6,8 +6,8 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodesInCharacterAdapter
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
+import com.aston.rickandmorty.presentation.recyclerview.episode.InnerEpisodeAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.aston.rickandmorty.presentation.util.parcelable
 import com.bumptech.glide.Glide
@@ -22,7 +22,7 @@ class CharacterDetailsFragment :
     ), TitleToolbarDetails {
 
     companion object {
-        fun newInstance(character: CharacterInfoView): CharacterDetailsFragment {
+        fun newInstance(character: CharacterInfoViewModel): CharacterDetailsFragment {
             val fragment = CharacterDetailsFragment()
             fragment.arguments = Bundle().apply {
                 putParcelable(CHARACTER_ARGS_KEY, character)
@@ -36,15 +36,11 @@ class CharacterDetailsFragment :
     }
 
     private val episodeAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        EpisodesInCharacterAdapter().apply {
+        InnerEpisodeAdapter().apply {
             onEpisodeClickListener = { episode ->
                 viewModel.launchEpisodeDetailsFragment(episode)
             }
         }
-    }
-
-    private fun getCharacterArguments(): CharacterInfoView? {
-        return arguments?.parcelable(CHARACTER_ARGS_KEY)
     }
 
     override fun injectDependencies() {
@@ -53,7 +49,7 @@ class CharacterDetailsFragment :
 
     override fun setUI() {
         setupArguments()
-        setArgumentsForViewModels()
+        passArgumentsToViewModel()
         swipeToRefresh()
     }
 
@@ -65,6 +61,14 @@ class CharacterDetailsFragment :
         observeOriginLocation()
         observeInternetConnection()
     }
+
+    override fun setupRecyclerView() {
+        with(binding.characterEpisodeRecyclerView) {
+            adapter = episodeAdapter
+        }
+    }
+
+    override fun setToolbarTitle(): String = getString(R.string.characterDetails_screen_name)
 
     private fun observeEpisodes() {
         viewModel.episodesLiveData.observe(viewLifecycleOwner) { episodes ->
@@ -96,7 +100,7 @@ class CharacterDetailsFragment :
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
             binding.internetConnectionMessage.visibility =
-                checkInternetConnection(hasInternetConnection)
+                getVisibilityByInternetConnection(hasInternetConnection)
         }
     }
 
@@ -106,12 +110,6 @@ class CharacterDetailsFragment :
                 viewModel.refreshFragment(it)
                 binding.characterDetailsSwipeRefreshLayout.isRefreshing = false
             }
-        }
-    }
-
-    override fun setupRecyclerView() {
-        with(binding.characterEpisodeRecyclerView) {
-            adapter = episodeAdapter
         }
     }
 
@@ -129,16 +127,15 @@ class CharacterDetailsFragment :
         }
     }
 
-    private fun setArgumentsForViewModels() {
+    private fun passArgumentsToViewModel() {
         character?.let { characterNotNull ->
-            viewModel.fetchEpisodeLiveData(characterNotNull.episodes)
-            viewModel.fetchLocationById(characterNotNull.location.locationInfo)
-            viewModel.fetchOriginLocationById(characterNotNull.origin.originLocationName)
+            viewModel.getEpisodes(characterNotNull.episodes)
+            viewModel.getLocationById(characterNotNull.location.locationInfo)
+            viewModel.getOriginLocationById(characterNotNull.origin.originLocationName)
         }
     }
 
-    override fun setToolbarTitle(): String {
-        val character = getCharacterArguments()
-        return character?.name ?: getString(R.string.characters_screen_name)
+    private fun getCharacterArguments(): CharacterInfoViewModel? {
+        return arguments?.parcelable(CHARACTER_ARGS_KEY)
     }
 }

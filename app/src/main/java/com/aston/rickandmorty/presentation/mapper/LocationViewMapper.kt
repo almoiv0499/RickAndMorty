@@ -3,19 +3,19 @@ package com.aston.rickandmorty.presentation.mapper
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.aston.domain.model.location.LocationInfo
-import com.aston.rickandmorty.presentation.model.location.LocationInfoView
+import com.aston.rickandmorty.presentation.model.location.LocationInfoViewModel
 import javax.inject.Inject
 
-class MapperLocationView @Inject constructor() {
+class LocationViewMapper @Inject constructor() {
 
-    fun mapToLocationPagingView(paging: PagingData<LocationInfo>): PagingData<LocationInfoView> {
+    fun mapToLocationPagingView(paging: PagingData<LocationInfo>): PagingData<LocationInfoViewModel> {
         return paging.map { location ->
             mapToLocationInfoView(location)
         }
     }
 
-    fun mapToLocationInfoView(locationInfo: LocationInfo): LocationInfoView {
-        return LocationInfoView(
+    fun mapToLocationInfoView(locationInfo: LocationInfo): LocationInfoViewModel {
+        return LocationInfoViewModel(
             created = locationInfo.created,
             dimension = locationInfo.dimension,
             id = locationInfo.id,

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LocationResultView(
-    val info: InfoView,
-    val results: List<LocationInfoView>,
+data class LocationResultViewModel(
+    val info: InfoViewModel,
+    val results: List<LocationInfoViewModel>,
 ) : Parcelable

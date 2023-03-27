@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.aston.rickandmorty.databinding.CharacterItemBinding
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
 
-class CharactersInLocationAdapter :
-    ListAdapter<CharacterInfoView, CharacterViewHolder>(CharacterDiffUtil()) {
+class InnerCharactersAdapter :
+    ListAdapter<CharacterInfoViewModel, CharacterViewHolder>(CharacterDiffUtil()) {
 
     var onCharacterClickListener: OnCharacterClickListener? = null
 

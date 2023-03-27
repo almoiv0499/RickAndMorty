@@ -3,7 +3,7 @@ package com.aston.rickandmorty.presentation.activity.router
 import androidx.fragment.app.FragmentManager
 import com.aston.rickandmorty.presentation.activity.main.MainActivity
 
-interface RouterMainActivity {
+interface MainActivityRouter {
 
     fun onCreate(
         mainActivity: MainActivity,

@@ -4,7 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LocationView(
-    val locationName: String,
-    val locationInfo: String
+data class InfoViewModel(
+    val count: Int,
+    val next: String,
+    val pages: Int
 ) : Parcelable

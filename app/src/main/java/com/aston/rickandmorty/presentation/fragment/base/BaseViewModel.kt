@@ -50,10 +50,6 @@ abstract class BaseViewModel(
         _exceptionLiveData.value = exceptionMessage
     }
 
-    fun navigateBack() {
-        _manageFragmentLiveData.value = Event(NavigationManager.NavigateBack)
-    }
-
     fun hasInternetConnection(): Boolean {
         val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
         val activeNetwork = connectivityManager.activeNetwork ?: return false

@@ -54,7 +54,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         setArguments()
         swipeToRefreshLayout()
         launchFilterFragment()
-        checkResults()
+        checkLoadState()
     }
 
     override fun setupObservers() {
@@ -63,8 +63,6 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         observeLocationFlow()
         observeInternetConnection()
     }
-
-    override fun setToolbarTitle(): Int = R.string.locations_screen_name
 
     override fun setupRecyclerView() {
         with(binding) {
@@ -75,9 +73,24 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         }
     }
 
-    private fun checkResults() {
+    override fun setToolbarTitle(): Int = R.string.locations_screen_name
+
+    private fun observeLocationFlow() {
+        viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
+            locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+        }
+    }
+
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.internetConnectionMessage.visibility =
+                getVisibilityByInternetConnection(hasInternetConnection)
+        }
+    }
+
+    private fun checkLoadState() {
         with(binding) {
-            checkNoResults(
+            observeLoadState(
                 adapter = locationAdapter,
                 recyclerView = locationRecyclerView,
                 filter = locationFilter,
@@ -93,19 +106,6 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         }
     }
 
-    private fun observeLocationFlow() {
-        viewModel.locationsLiveData.observe(viewLifecycleOwner) { paging ->
-            locationAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
-        }
-    }
-
-    private fun observeInternetConnection() {
-        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
-            binding.internetConnectionMessage.visibility =
-                checkInternetConnection(hasInternetConnection)
-        }
-    }
-
     private fun swipeToRefreshLayout() {
         binding.locationsSwipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshFragment()
@@ -118,7 +118,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         val locationType = fetchFilteredData(LOCATION_TYPE)
         val locationDimension = fetchFilteredData(LOCATION_DIMENSION)
 
-        viewModel.locationsFlow(locationName, locationType, locationDimension)
+        viewModel.getLocations(locationName, locationType, locationDimension)
     }
 
     private fun fetchFilteredData(key: String): String {

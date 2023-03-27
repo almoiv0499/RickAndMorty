@@ -54,7 +54,7 @@ class CharactersFilterFragment :
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
     ) {
-        viewModel.returnToFilteredFragment(
+        viewModel.passFilteredData(
             characterName, characterStatus, characterSpecies, characterGender
         )
         dismiss()

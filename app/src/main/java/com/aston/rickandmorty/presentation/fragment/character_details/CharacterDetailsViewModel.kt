@@ -11,11 +11,11 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
-import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
-import com.aston.rickandmorty.presentation.mapper.MapperLocationView
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
-import com.aston.rickandmorty.presentation.model.location.LocationInfoView
+import com.aston.rickandmorty.presentation.mapper.EpisodeViewMapper
+import com.aston.rickandmorty.presentation.mapper.LocationViewMapper
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoViewModel
+import com.aston.rickandmorty.presentation.model.location.LocationInfoViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -31,27 +31,27 @@ class CharacterDetailsViewModel @Inject constructor(
     private val fetchLocationByIdDatabaseUseCase: FetchLocationByIdDatabaseUseCase,
     private val fetchOriginLocationByNameService: FetchOriginLocationByNameService,
     private val fetchOriginLocationByNameDatabase: FetchOriginLocationByNameDatabaseUseCase,
-    private val mapperEpisode: MapperEpisodeView,
-    private val mapperLocation: MapperLocationView,
+    private val mapperEpisode: EpisodeViewMapper,
+    private val mapperLocation: LocationViewMapper,
 ) : BaseViewModel(context) {
 
-    private val _episodesLiveData = MutableLiveData<List<EpisodeInfoView>>()
-    val episodesLiveData: LiveData<List<EpisodeInfoView>> = _episodesLiveData
+    private val _episodesLiveData = MutableLiveData<List<EpisodeInfoViewModel>>()
+    val episodesLiveData: LiveData<List<EpisodeInfoViewModel>> = _episodesLiveData
 
-    private val _locationLiveData = MutableLiveData<LocationInfoView>()
-    val locationLiveData: LiveData<LocationInfoView> = _locationLiveData
+    private val _locationLiveData = MutableLiveData<LocationInfoViewModel>()
+    val locationLiveData: LiveData<LocationInfoViewModel> = _locationLiveData
 
-    private val _originLocationLiveData = MutableLiveData<LocationInfoView>()
-    val originLocationLiveData: LiveData<LocationInfoView> = _originLocationLiveData
+    private val _originLocationLiveData = MutableLiveData<LocationInfoViewModel>()
+    val originLocationLiveData: LiveData<LocationInfoViewModel> = _originLocationLiveData
 
-    fun fetchEpisodeLiveData(episodesUrl: List<String>) {
+    fun getEpisodes(episodesUrl: List<String>) {
         val episodesIds = episodesUrl.map { episodeUrl ->
             episodeUrl.split(SPLIT).last().toInt()
         }
         fetchEpisodes(fetchEpisodesByIdsUseCase(episodesIds))
     }
 
-    fun fetchLocationById(locationUrl: String) {
+    fun getLocationById(locationUrl: String) {
         val locationId = locationUrl.split(SPLIT).last().toInt()
         viewModelScope.launch {
             if (hasInternetConnection()) {
@@ -61,7 +61,7 @@ class CharacterDetailsViewModel @Inject constructor(
         }
     }
 
-    fun fetchOriginLocationById(originLocationName: String) {
+    fun getOriginLocationById(originLocationName: String) {
         viewModelScope.launch {
             if (hasInternetConnection()) {
                 _originLocationLiveData.value = mapperLocation.mapToLocationInfoView(
@@ -70,7 +70,7 @@ class CharacterDetailsViewModel @Inject constructor(
             } else {
                 fetchOriginLocationByNameDatabase(originLocationName)
                     .catch {
-                        showExceptionMessage(R.string.exception_message)
+                        showExceptionMessage(R.string.fetchData_exceptionMessage)
                     }
                     .collectLatest { location ->
                         _originLocationLiveData.value =
@@ -86,11 +86,11 @@ class CharacterDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             useCase
                 .catch {
-                    showExceptionMessage(R.string.exception_message)
+                    showExceptionMessage(R.string.fetchData_exceptionMessage)
                 }
                 .collectLatest { location ->
-                _locationLiveData.value = mapperLocation.mapToLocationInfoView(location)
-            }
+                    _locationLiveData.value = mapperLocation.mapToLocationInfoView(location)
+                }
         }
     }
 
@@ -98,25 +98,25 @@ class CharacterDetailsViewModel @Inject constructor(
         useCase: Flow<List<EpisodeInfo>>,
     ) {
         viewModelScope.launch {
-            useCase.catch {
-                showExceptionMessage(R.string.exception_message)
-            }.collectLatest { episodes ->
-                _episodesLiveData.value = episodes.map { episode ->
-                    mapperEpisode.mapToEpisodeView(episode)
+            useCase
+                .catch {
+                    showExceptionMessage(R.string.fetchData_exceptionMessage)
                 }
-            }
+                .collectLatest { episodes ->
+                    _episodesLiveData.value = mapperEpisode.mapToEpisodeListView(episodes)
+                }
         }
     }
 
-    fun launchEpisodeDetailsFragment(episode: EpisodeInfoView) {
+    fun launchEpisodeDetailsFragment(episode: EpisodeInfoViewModel) {
         launchFragment(EpisodeDetailsFragment.newInstance(episode))
     }
 
-    fun launchLocationDetailsFragment(location: LocationInfoView) {
+    fun launchLocationDetailsFragment(location: LocationInfoViewModel) {
         launchFragment(LocationDetailsFragment.newInstance(location))
     }
 
-    fun refreshFragment(character: CharacterInfoView) {
+    fun refreshFragment(character: CharacterInfoViewModel) {
         val fragment = CharacterDetailsFragment.newInstance(character)
         refreshFragment(fragment)
     }

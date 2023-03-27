@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.aston.rickandmorty.databinding.EpisodeItemBinding
-import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoViewModel
 
-typealias OnEpisodeClickListener = (EpisodeInfoView) -> Unit
+typealias OnEpisodeClickListener = (EpisodeInfoViewModel) -> Unit
 
-class EpisodeAdapter : PagingDataAdapter<EpisodeInfoView, EpisodeViewHolder>(EpisodeDiffUtil()) {
+class EpisodeAdapter : PagingDataAdapter<EpisodeInfoViewModel, EpisodeViewHolder>(EpisodeDiffUtil()) {
 
     var onEpisodeClickListener: OnEpisodeClickListener? = null
 

@@ -5,12 +5,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class FetchCharactersByIdUseCase @Inject constructor(
+class FetchCharactersByIdsUseCase @Inject constructor(
     private val repository: LocationRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) {
 
     operator fun invoke(characterIds: List<Int>) =
-        repository.fetchCharactersById(characterIds).flowOn(ioDispatcher)
+        repository.fetchCharactersByIds(characterIds).flowOn(ioDispatcher)
 
 }

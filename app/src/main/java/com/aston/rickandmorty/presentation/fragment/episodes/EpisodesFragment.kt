@@ -47,36 +47,15 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
     override fun setupObservers() {
         super.setupObservers()
 
-        observeEpisode()
+        observeEpisodes()
         observeInternetConnection()
     }
 
     override fun setUI() {
         setArguments()
-        swipeToRefreshScreen()
+        swipeToRefresh()
         launchFilterFragment()
-        checkResults()
-    }
-
-    override fun setToolbarTitle(): Int = R.string.episodes_screen_name
-
-    private fun launchFilterFragment() {
-        binding.episodeFilter.setOnClickListener {
-            viewModel.launchFilterFragment()
-        }
-    }
-
-    private fun observeEpisode() {
-        viewModel.episodesLiveData.observe(viewLifecycleOwner) { paging ->
-            episodeAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
-        }
-    }
-
-    private fun observeInternetConnection() {
-        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
-            binding.internetConnectionMessage.visibility =
-                checkInternetConnection(hasInternetConnection)
-        }
+        checkLoadState()
     }
 
     override fun setupRecyclerView() {
@@ -88,9 +67,30 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
         }
     }
 
-    private fun checkResults() {
+    override fun setToolbarTitle(): Int = R.string.episodes_screen_name
+
+    private fun observeEpisodes() {
+        viewModel.episodesLiveData.observe(viewLifecycleOwner) { paging ->
+            episodeAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
+        }
+    }
+
+    private fun observeInternetConnection() {
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.internetConnectionMessage.visibility =
+                getVisibilityByInternetConnection(hasInternetConnection)
+        }
+    }
+
+    private fun launchFilterFragment() {
+        binding.episodeFilter.setOnClickListener {
+            viewModel.launchFilterFragment()
+        }
+    }
+
+    private fun checkLoadState() {
         with(binding) {
-            checkNoResults(
+            observeLoadState(
                 adapter = episodeAdapter,
                 recyclerView = episodesRecyclerView,
                 filter = episodeFilter,
@@ -100,7 +100,7 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
         }
     }
 
-    private fun swipeToRefreshScreen() {
+    private fun swipeToRefresh() {
         binding.episodesSwipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshFragment()
             binding.episodesSwipeRefreshLayout.isRefreshing = false
@@ -111,7 +111,7 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
         val episodeName = fetchFilteredData(EPISODE_NAME)
         val episodeNumber = fetchFilteredData(EPISODE_NUMBER)
 
-        viewModel.fetch(episodeName, episodeNumber)
+        viewModel.getEpisodes(episodeName, episodeNumber)
     }
 
     private fun fetchFilteredData(key: String): String {

@@ -5,31 +5,27 @@ import androidx.paging.map
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.character.Location
 import com.aston.domain.model.character.Origin
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import com.aston.rickandmorty.presentation.model.character.LocationView
-import com.aston.rickandmorty.presentation.model.character.OriginView
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
+import com.aston.rickandmorty.presentation.model.character.LocationViewModel
+import com.aston.rickandmorty.presentation.model.character.OriginViewModel
 import javax.inject.Inject
 
-class MapperCharacterView @Inject constructor() {
+class CharacterViewMapper @Inject constructor() {
 
-    fun mapToFlowListView(flow: Flow<List<CharacterInfo>>): Flow<List<CharacterInfoView>> {
-        return flow.map { characters ->
-            characters.map { character ->
-                mapToCharacterInfoView(character)
-            }
+    fun mapToCharactersListView(list: List<CharacterInfo>): List<CharacterInfoViewModel> {
+        return list.map { character ->
+            mapToCharacterInfoView(character)
         }
     }
 
-    fun mapToCharacterPagingView(paging: PagingData<CharacterInfo>): PagingData<CharacterInfoView> {
+    fun mapToCharacterPagingView(paging: PagingData<CharacterInfo>): PagingData<CharacterInfoViewModel> {
         return paging.map { character ->
             mapToCharacterInfoView(character)
         }
     }
 
-    fun mapToCharacterInfoView(character: CharacterInfo): CharacterInfoView {
-        return CharacterInfoView(
+    fun mapToCharacterInfoView(character: CharacterInfo): CharacterInfoViewModel {
+        return CharacterInfoViewModel(
             created = character.created,
             episodes = character.episode,
             gender = character.gender,
@@ -43,14 +39,14 @@ class MapperCharacterView @Inject constructor() {
         )
     }
 
-    private fun mapToLocationView(location: Location): LocationView {
-        return LocationView(
+    private fun mapToLocationView(location: Location): LocationViewModel {
+        return LocationViewModel(
             locationName = location.locationName, locationInfo = location.locationInfo
         )
     }
 
-    private fun mapToOriginView(origin: Origin): OriginView {
-        return OriginView(
+    private fun mapToOriginView(origin: Origin): OriginViewModel {
+        return OriginViewModel(
             originLocationName = origin.originLocationName,
             originLocationInfo = origin.originLocationInfo
         )

@@ -3,14 +3,13 @@ package com.aston.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
 import androidx.paging.rxjava3.observable
 import com.aston.data.database.datasource.CharacterDataSource
 import com.aston.data.database.datasource.EpisodeDataSource
 import com.aston.data.paging.EpisodePagingSource
 import com.aston.data.remote.EpisodeService
-import com.aston.data.util.mapper.MapperCharacterData
-import com.aston.data.util.mapper.MapperEpisodeData
+import com.aston.data.util.mapper.CharacterDataMapper
+import com.aston.data.util.mapper.EpisodeDataMapper
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.episode.EpisodeInfo
 import com.aston.domain.repository.EpisodeRepository
@@ -23,8 +22,8 @@ class EpisodeRepositoryImpl @Inject constructor(
     private val episodeDataSource: EpisodeDataSource,
     private val characterDataSource: CharacterDataSource,
     private val service: EpisodeService,
-    private val mapperEpisode: MapperEpisodeData,
-    private val mapperCharacter: MapperCharacterData,
+    private val mapperEpisode: EpisodeDataMapper,
+    private val mapperCharacter: CharacterDataMapper,
 ) : EpisodeRepository {
 
     override fun fetchEpisodesThoughService(
@@ -36,9 +35,7 @@ class EpisodeRepositoryImpl @Inject constructor(
                 episodeName, episodeNumber, episodeDataSource, service, mapperEpisode
             )
         }).observable.map { paging ->
-            paging.map { episode ->
-                mapperEpisode.mapToEpisode(episode)
-            }
+            mapperEpisode.mapToPagingEpisodeInfo(paging)
         }
     }
 
@@ -49,32 +46,30 @@ class EpisodeRepositoryImpl @Inject constructor(
         return Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
             episodeDataSource.fetchEpisodes(episodeName, episodeNumber)
         }).observable.map { paging ->
-            paging.map { episode ->
-                mapperEpisode.mapToEpisode(episode)
-            }
+            mapperEpisode.mapToPagingEpisodeInfo(paging)
         }
     }
 
-    override fun fetchCharactersByIdService(characterIds: List<Int>): Observable<List<CharacterInfo>> {
-        return service.fetchCharactersById(characterIds).map { characters ->
-            characterDataSource.insertCharactersForEpisode(characters.map { character ->
-                mapperCharacter.mapFromCharacterDto(character)
-            })
-            characterDataSource.fetchCharactersByIdForEpisode(characterIds)
-        }.flatMap {
-            it.map { characters ->
-                characters.map { character ->
-                    mapperCharacter.mapToCharacter(character)
+    override fun fetchCharactersByIdsService(characterIds: List<Int>): Observable<List<CharacterInfo>> {
+        return service.fetchCharactersByIds(characterIds)
+            .map { characters ->
+                characterDataSource.insertCharactersForEpisode(
+                    mapperCharacter.mapToCharacterListData(
+                        characters
+                    )
+                )
+                characterDataSource.fetchCharactersByIdForEpisode(characterIds)
+            }
+            .flatMap {
+                it.map { characters ->
+                    mapperCharacter.mapToCharacterList(characters)
                 }
             }
-        }
     }
 
-    override fun fetchCharactersByIdDatabase(characterIds: List<Int>): Observable<List<CharacterInfo>> {
+    override fun fetchCharactersByIdsDatabase(characterIds: List<Int>): Observable<List<CharacterInfo>> {
         return characterDataSource.fetchCharactersByIdForEpisode(characterIds).map { characters ->
-            characters.map { character ->
-                mapperCharacter.mapToCharacter(character)
-            }
+            mapperCharacter.mapToCharacterList(characters)
         }
     }
 }

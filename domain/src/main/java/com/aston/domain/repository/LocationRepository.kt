@@ -15,6 +15,6 @@ interface LocationRepository {
         locationName: String, locationType: String, locationDimension: String,
     ): Flow<PagingData<LocationInfo>>
 
-    fun fetchCharactersById(characterIds: List<Int>): Flow<List<CharacterInfo>>
+    fun fetchCharactersByIds(characterIds: List<Int>): Flow<List<CharacterInfo>>
 
 }

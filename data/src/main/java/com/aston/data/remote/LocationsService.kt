@@ -17,7 +17,7 @@ interface LocationsService {
     ): LocationResultDataDto
 
     @GET("api/character/{characterIds}")
-    suspend fun fetchCharactersById(
+    suspend fun fetchCharactersByIds(
         @Path("characterIds") characterIds: List<Int>,
     ): List<CharacterInfoDataDto>
 

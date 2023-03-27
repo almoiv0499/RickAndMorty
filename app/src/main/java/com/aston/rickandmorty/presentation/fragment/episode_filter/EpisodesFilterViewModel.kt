@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class EpisodesFilterViewModel @Inject constructor() : BaseBottomSheetDialogViewModel() {
 
-    fun launchFilteredEpisodesFragment(episodeName: String, episodeNumber: String) {
+    fun launchFilteredFragment(episodeName: String, episodeNumber: String) {
         launchFilteredFragment(EpisodesFragment.newInstance(episodeName, episodeNumber))
     }
 

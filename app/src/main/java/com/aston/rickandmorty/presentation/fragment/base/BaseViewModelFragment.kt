@@ -80,12 +80,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
                 navigationManager.fragment, navigationManager.fragmentTag
             )
             is NavigationManager.RefreshFragment -> refreshFragment(navigationManager.fragment)
-            is NavigationManager.NavigateBack -> navigateBack()
         }
-    }
-
-    private fun navigateBack() {
-        activity?.supportFragmentManager?.popBackStack()
     }
 
     private fun launchFragment(fragment: Fragment) {
@@ -111,7 +106,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         }
     }
 
-    protected fun <T : Any, VH : ViewHolder> checkNoResults(
+    protected fun <T : Any, VH : ViewHolder> observeLoadState(
         adapter: PagingDataAdapter<T, VH>,
         recyclerView: RecyclerView,
         filter: FloatingActionButton,
@@ -138,7 +133,7 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
         }
     }
 
-    protected fun checkInternetConnection(hasInternetConnection: Boolean): Int {
+    protected fun getVisibilityByInternetConnection(hasInternetConnection: Boolean): Int {
         return if (hasInternetConnection) View.GONE
         else View.VISIBLE
     }

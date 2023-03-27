@@ -9,7 +9,7 @@ import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragmen
 import com.aston.rickandmorty.presentation.fragment.episodes.EpisodesFragment
 import com.aston.rickandmorty.presentation.fragment.locations.LocationsFragment
 
-object RouterMainActivityImpl : RouterMainActivity {
+object MainActivityRouterImpl : MainActivityRouter {
 
     private var activity: MainActivity? = null
 
@@ -48,7 +48,9 @@ object RouterMainActivityImpl : RouterMainActivity {
     }
 
     private fun launchFragmentWithPopBackStack(fragment: Fragment) {
-        activity?.supportFragmentManager?.popBackStack()
+        activity?.supportFragmentManager?.popBackStack(
+            null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
         activity?.supportFragmentManager?.commit {
             replace(R.id.fragment_container, fragment)
             addToBackStack(null)

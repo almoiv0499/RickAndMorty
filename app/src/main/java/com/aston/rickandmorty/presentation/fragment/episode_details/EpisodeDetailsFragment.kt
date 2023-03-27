@@ -7,8 +7,8 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentEpisodeDetailsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
-import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
-import com.aston.rickandmorty.presentation.recyclerview.characters.CharactersInLocationAdapter
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoViewModel
+import com.aston.rickandmorty.presentation.recyclerview.characters.InnerCharactersAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.aston.rickandmorty.presentation.util.parcelable
 
@@ -23,7 +23,7 @@ class EpisodeDetailsFragment :
     ), TitleToolbarDetails {
 
     companion object {
-        fun newInstance(episode: EpisodeInfoView): EpisodeDetailsFragment {
+        fun newInstance(episode: EpisodeInfoViewModel): EpisodeDetailsFragment {
             val fragment = EpisodeDetailsFragment()
             fragment.arguments = Bundle().apply {
                 putParcelable(EPISODE_ARGS_KEY, episode)
@@ -37,7 +37,7 @@ class EpisodeDetailsFragment :
     }
 
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CharactersInLocationAdapter().apply {
+        InnerCharactersAdapter().apply {
             onCharacterClickListener = { character ->
                 viewModel.launchCharacterDetailsFragment(character)
             }
@@ -60,9 +60,14 @@ class EpisodeDetailsFragment :
         swipeToRefresh()
     }
 
-    override fun setToolbarTitle(): String {
-        return episode?.episodeName ?: getString(R.string.episodes_screen_name)
+    override fun setupRecyclerView() {
+        with(binding.charactersInEpisodeRecyclerView) {
+            layoutManager = GridLayoutManager(context, SPAN_COUNT)
+            adapter = characterAdapter
+        }
     }
+
+    override fun setToolbarTitle(): String = getString(R.string.episodeDetails_screen_name)
 
     private fun observeCharacters() {
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
@@ -74,7 +79,7 @@ class EpisodeDetailsFragment :
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
             binding.internetConnectionMessage.visibility =
-                checkInternetConnection(hasInternetConnection)
+                getVisibilityByInternetConnection(hasInternetConnection)
         }
     }
 
@@ -87,16 +92,9 @@ class EpisodeDetailsFragment :
         }
     }
 
-    override fun setupRecyclerView() {
-        with(binding.charactersInEpisodeRecyclerView) {
-            layoutManager = GridLayoutManager(context, SPAN_COUNT)
-            adapter = characterAdapter
-        }
-    }
-
     private fun setupArguments() {
         episode?.let { episodeNotNull ->
-            viewModel.fetchCharactersLiveData(episodeNotNull.characters)
+            viewModel.getCharacters(episodeNotNull.characters)
 
             with(binding) {
                 episodeDetailName.text = episodeNotNull.episodeName
@@ -106,7 +104,7 @@ class EpisodeDetailsFragment :
         }
     }
 
-    private fun getEpisodeArguments(): EpisodeInfoView? {
+    private fun getEpisodeArguments(): EpisodeInfoViewModel? {
         return arguments?.parcelable(EPISODE_ARGS_KEY)
     }
 }

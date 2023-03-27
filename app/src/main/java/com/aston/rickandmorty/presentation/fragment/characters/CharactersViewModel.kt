@@ -13,8 +13,8 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
-import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
+import com.aston.rickandmorty.presentation.mapper.CharacterViewMapper
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -27,13 +27,13 @@ class CharactersViewModel @Inject constructor(
     context: Context,
     private val fetchCharactersThoughServiceUseCase: FetchCharactersThoughServiceUseCase,
     private val fetchCharactersThoughDatabaseUseCase: FetchCharactersThoughDatabaseUseCase,
-    private val mapper: MapperCharacterView,
+    private val mapper: CharacterViewMapper,
 ) : BaseViewModel(context) {
 
-    private val _charactersLiveData = MutableLiveData<PagingData<CharacterInfoView>>()
-    val charactersLiveData: LiveData<PagingData<CharacterInfoView>> = _charactersLiveData
+    private val _charactersLiveData = MutableLiveData<PagingData<CharacterInfoViewModel>>()
+    val charactersLiveData: LiveData<PagingData<CharacterInfoViewModel>> = _charactersLiveData
 
-    fun charactersFlow(
+    fun getCharacters(
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
     ) {
@@ -56,17 +56,18 @@ class CharactersViewModel @Inject constructor(
         useCase: Flow<PagingData<CharacterInfo>>,
     ) {
         viewModelScope.launch {
-            useCase.cachedIn(viewModelScope)
+            useCase
+                .cachedIn(viewModelScope)
                 .catch {
-                    showExceptionMessage(R.string.exception_message)
+                    showExceptionMessage(R.string.fetchData_exceptionMessage)
                 }
                 .collectLatest { paging ->
-                _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
-            }
+                    _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
+                }
         }
     }
 
-    fun launchCharacterDetailsFragment(character: CharacterInfoView) {
+    fun launchCharacterDetailsFragment(character: CharacterInfoViewModel) {
         launchFragment(CharacterDetailsFragment.newInstance(character))
     }
 

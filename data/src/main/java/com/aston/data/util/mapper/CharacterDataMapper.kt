@@ -1,5 +1,7 @@
 package com.aston.data.util.mapper
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.aston.data.model.character.CharacterInfoData
 import com.aston.data.model.character.LocationData
 import com.aston.data.model.character.OriginData
@@ -13,37 +15,55 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class MapperCharacterData @Inject constructor() {
+class CharacterDataMapper @Inject constructor() {
 
-    fun mapFromCharacterDto(character: CharacterInfoDataDto): CharacterInfoData {
+    fun mapToCharacterListData(list: List<CharacterInfoDataDto>): List<CharacterInfoData> {
+        return list.map { character ->
+            mapToCharacterData(character)
+        }
+    }
+
+    fun mapToCharacterData(character: CharacterInfoDataDto): CharacterInfoData {
         return CharacterInfoData(
             created = character.characterCreated,
             episode = character.episodes,
             gender = character.characterGender,
             id = character.characterId,
             image = character.characterImage,
-            location = mapFromLocationDto(character.location),
+            location = mapToLocationData(character.location),
             name = character.characterName,
-            origin = mapFromOriginDto(character.origin),
+            origin = mapToOriginData(character.origin),
             species = character.characterSpecies,
             status = character.characterStatus
         )
     }
 
-    private fun mapFromLocationDto(location: LocationDataDto): LocationData {
+    private fun mapToLocationData(location: LocationDataDto): LocationData {
         return LocationData(
             locationName = location.locationName, locationInfo = location.locationInfo
         )
     }
 
-    private fun mapFromOriginDto(origin: OriginDataDto): OriginData {
+    private fun mapToOriginData(origin: OriginDataDto): OriginData {
         return OriginData(
             originLocationName = origin.originLocationName,
             originLocationInfo = origin.originLocationInfo
         )
     }
 
-    fun mapToFLowListData(flow: Flow<List<CharacterInfoData>>): Flow<List<CharacterInfo>> {
+    fun mapToCharacterFlowPaging(flow: Flow<PagingData<CharacterInfoData>>): Flow<PagingData<CharacterInfo>> {
+        return flow.map { paging ->
+            mapToCharacterPaging(paging)
+        }
+    }
+
+    private fun mapToCharacterPaging(paging: PagingData<CharacterInfoData>): PagingData<CharacterInfo> {
+        return paging.map { character ->
+            mapToCharacter(character)
+        }
+    }
+
+    fun mapToCharacterFlowList(flow: Flow<List<CharacterInfoData>>): Flow<List<CharacterInfo>> {
         return flow.map { characters ->
             characters.map { character ->
                 mapToCharacter(character)
@@ -51,7 +71,13 @@ class MapperCharacterData @Inject constructor() {
         }
     }
 
-    fun mapToCharacter(characterData: CharacterInfoData): CharacterInfo {
+    fun mapToCharacterList(list: List<CharacterInfoData>): List<CharacterInfo> {
+        return list.map { character ->
+            mapToCharacter(character)
+        }
+    }
+
+    private fun mapToCharacter(characterData: CharacterInfoData): CharacterInfo {
         return CharacterInfo(
             created = characterData.created,
             episode = characterData.episode,

@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.ActivityMainBinding
-import com.aston.rickandmorty.presentation.activity.router.RouterMainActivity
+import com.aston.rickandmorty.presentation.activity.router.MainActivityRouter
 import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     @Inject
-    lateinit var router: RouterMainActivity
+    lateinit var router: MainActivityRouter
 
     private val component by lazy(LazyThreadSafetyMode.NONE) {
         (applicationContext as App).component

@@ -45,7 +45,7 @@ class LocationsFilterFragment :
     private fun observeAndDismissDialogFragment(
         locationName: String, locationType: String, locationDimension: String,
     ) {
-        viewModel.launchFilteredLocationsFragment(locationName, locationType, locationDimension)
+        viewModel.launchFilteredFragment(locationName, locationType, locationDimension)
         dismiss()
     }
 

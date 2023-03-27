@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.aston.rickandmorty.databinding.EpisodeItemBinding
-import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoViewModel
 
 
-class EpisodesInCharacterAdapter :
-    ListAdapter<EpisodeInfoView, EpisodeViewHolder>(EpisodeDiffUtil()) {
+class InnerEpisodeAdapter :
+    ListAdapter<EpisodeInfoViewModel, EpisodeViewHolder>(EpisodeDiffUtil()) {
 
     var onEpisodeClickListener: OnEpisodeClickListener? = null
 

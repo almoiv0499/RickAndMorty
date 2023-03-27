@@ -1,8 +1,6 @@
 package com.aston.data.remote
 
-import com.aston.data.model.character.CharacterInfoData
 import com.aston.data.model.character_dto.CharacterInfoDataDto
-import com.aston.data.model.episode.EpisodeResultData
 import com.aston.data.model.episode_dto.EpisodeResultDataDto
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -20,7 +18,7 @@ interface EpisodeService {
     ): Single<EpisodeResultDataDto>
 
     @GET("api/character/{characterIds}")
-    fun fetchCharactersById(
+    fun fetchCharactersByIds(
         @Path("characterIds") characterIds: List<Int>,
     ): Observable<List<CharacterInfoDataDto>>
 

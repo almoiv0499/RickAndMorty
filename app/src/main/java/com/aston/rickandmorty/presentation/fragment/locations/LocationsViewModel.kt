@@ -13,8 +13,8 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.location_filter.LocationsFilterFragment
-import com.aston.rickandmorty.presentation.mapper.MapperLocationView
-import com.aston.rickandmorty.presentation.model.location.LocationInfoView
+import com.aston.rickandmorty.presentation.mapper.LocationViewMapper
+import com.aston.rickandmorty.presentation.model.location.LocationInfoViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,16 +22,16 @@ import javax.inject.Inject
 private const val FRAGMENT_FILTER_TAG = "LocationFragmentFilter"
 
 class LocationsViewModel @Inject constructor(
-    private val context: Context,
+    context: Context,
     private val fetchLocationsThoughDatabaseUseCase: FetchLocationsThoughDatabaseUseCase,
     private val fetchLocationsThoughServiceUseCase: FetchLocationsThoughServiceUseCase,
-    private val mapper: MapperLocationView,
+    private val mapper: LocationViewMapper,
 ) : BaseViewModel(context) {
 
-    private val _locationsLiveData = MutableLiveData<PagingData<LocationInfoView>>()
-    val locationsLiveData: LiveData<PagingData<LocationInfoView>> = _locationsLiveData
+    private val _locationsLiveData = MutableLiveData<PagingData<LocationInfoViewModel>>()
+    val locationsLiveData: LiveData<PagingData<LocationInfoViewModel>> = _locationsLiveData
 
-    fun locationsFlow(
+    fun getLocations(
         locationName: String,
         locationType: String,
         locationDimension: String,
@@ -58,7 +58,7 @@ class LocationsViewModel @Inject constructor(
             useCase
                 .cachedIn(viewModelScope)
                 .catch {
-                    showExceptionMessage(R.string.exception_message)
+                    showExceptionMessage(R.string.fetchData_exceptionMessage)
                 }
                 .collectLatest { paging ->
                     _locationsLiveData.value = mapper.mapToLocationPagingView(paging)
@@ -70,7 +70,7 @@ class LocationsViewModel @Inject constructor(
         launchDialogFragment(LocationsFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
     }
 
-    fun launchLocationDetailsFragment(location: LocationInfoView) {
+    fun launchLocationDetailsFragment(location: LocationInfoViewModel) {
         launchFragment(LocationDetailsFragment.newInstance(location))
     }
 

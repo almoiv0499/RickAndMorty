@@ -1,7 +1,7 @@
 package com.aston.rickandmorty.di.module
 
-import com.aston.rickandmorty.presentation.activity.router.RouterMainActivity
-import com.aston.rickandmorty.presentation.activity.router.RouterMainActivityImpl
+import com.aston.rickandmorty.presentation.activity.router.MainActivityRouter
+import com.aston.rickandmorty.presentation.activity.router.MainActivityRouterImpl
 import dagger.Module
 import dagger.Provides
 
@@ -9,6 +9,6 @@ import dagger.Provides
 class PresentationModule {
 
     @Provides
-    fun provideRouter(): RouterMainActivity = RouterMainActivityImpl
+    fun provideRouter(): MainActivityRouter = MainActivityRouterImpl
 
 }

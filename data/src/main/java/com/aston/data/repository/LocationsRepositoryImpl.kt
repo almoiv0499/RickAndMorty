@@ -7,8 +7,8 @@ import com.aston.data.database.datasource.CharacterDataSource
 import com.aston.data.database.datasource.LocationDataSource
 import com.aston.data.paging.LocationsPagingSource
 import com.aston.data.remote.LocationsService
-import com.aston.data.util.mapper.MapperCharacterData
-import com.aston.data.util.mapper.MapperLocationData
+import com.aston.data.util.mapper.CharacterDataMapper
+import com.aston.data.util.mapper.LocationDataMapper
 import com.aston.data.util.resource.networkBoundResource
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.model.location.LocationInfo
@@ -22,8 +22,8 @@ class LocationsRepositoryImpl @Inject constructor(
     private val locationDataSource: LocationDataSource,
     private val characterDataSource: CharacterDataSource,
     private val service: LocationsService,
-    private val mapperLocation: MapperLocationData,
-    private val mapperCharacter: MapperCharacterData,
+    private val mapperLocation: LocationDataMapper,
+    private val mapperCharacter: CharacterDataMapper,
 ) : LocationRepository {
 
     override fun fetchLocationsThoughService(
@@ -31,7 +31,7 @@ class LocationsRepositoryImpl @Inject constructor(
         locationType: String,
         locationDimension: String,
     ): Flow<PagingData<LocationInfo>> {
-        return mapperLocation.mapToFlowData(
+        return mapperLocation.mapToLocationFlowPaging(
             Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
                 LocationsPagingSource(
                     locationName,
@@ -50,24 +50,22 @@ class LocationsRepositoryImpl @Inject constructor(
         locationType: String,
         locationDimension: String,
     ): Flow<PagingData<LocationInfo>> {
-        return mapperLocation.mapToFlowData(
+        return mapperLocation.mapToLocationFlowPaging(
             Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = {
                 locationDataSource.fetchLocations(locationName, locationType, locationDimension)
             }).flow
         )
     }
 
-    override fun fetchCharactersById(characterIds: List<Int>): Flow<List<CharacterInfo>> {
+    override fun fetchCharactersByIds(characterIds: List<Int>): Flow<List<CharacterInfo>> {
         return networkBoundResource(query = {
-            mapperCharacter.mapToFLowListData(
+            mapperCharacter.mapToCharacterFlowList(
                 characterDataSource.fetchCharactersById(characterIds)
             )
         }, fetch = {
-            service.fetchCharactersById(characterIds)
+            service.fetchCharactersByIds(characterIds)
         }, saveFetchResult = { characters ->
-            characterDataSource.insertCharacters(characters.map { character ->
-                mapperCharacter.mapFromCharacterDto(character)
-            })
+            characterDataSource.insertCharacters(mapperCharacter.mapToCharacterListData(characters))
         })
     }
 }

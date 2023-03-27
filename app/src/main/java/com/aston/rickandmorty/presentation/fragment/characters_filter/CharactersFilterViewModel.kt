@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class CharactersFilterViewModel @Inject constructor() : BaseBottomSheetDialogViewModel() {
 
-    fun returnToFilteredFragment(
+    fun passFilteredData(
         characterName: String, characterStatus: String,
         characterSpecies: String, characterGender: String,
     ) {

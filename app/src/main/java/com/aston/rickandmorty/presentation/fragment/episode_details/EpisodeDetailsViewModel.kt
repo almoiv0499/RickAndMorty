@@ -1,49 +1,46 @@
 package com.aston.rickandmorty.presentation.fragment.episode_details
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.aston.domain.model.character.CharacterInfo
-import com.aston.domain.usecase.episode.FetchCharactersByIdDatabaseUseCase
-import com.aston.domain.usecase.episode.FetchCharactersByIdServiceUseCase
+import com.aston.domain.usecase.episode.FetchCharactersByIdsDatabaseUseCase
+import com.aston.domain.usecase.episode.FetchCharactersByIdsServiceUseCase
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
-import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
-import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
+import com.aston.rickandmorty.presentation.mapper.CharacterViewMapper
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 private const val SPLIT = "/"
 
 class EpisodeDetailsViewModel @Inject constructor(
-    private val context: Context,
-    private val fetchCharactersByIdServiceUseCase: FetchCharactersByIdServiceUseCase,
-    private val fetchCharactersByIdDatabaseUseCase: FetchCharactersByIdDatabaseUseCase,
-    private val mapperCharacter: MapperCharacterView,
+    context: Context,
+    private val fetchCharactersByIdsServiceUseCase: FetchCharactersByIdsServiceUseCase,
+    private val fetchCharactersByIdsDatabaseUseCase: FetchCharactersByIdsDatabaseUseCase,
+    private val mapperCharacter: CharacterViewMapper,
 ) : BaseViewModel(context) {
 
     private val compositeDisposable by lazy(LazyThreadSafetyMode.NONE) {
         CompositeDisposable()
     }
 
-    private val _charactersLiveData = MutableLiveData<List<CharacterInfoView>>()
-    val charactersLiveData: LiveData<List<CharacterInfoView>> = _charactersLiveData
+    private val _charactersLiveData = MutableLiveData<List<CharacterInfoViewModel>>()
+    val charactersLiveData: LiveData<List<CharacterInfoViewModel>> = _charactersLiveData
 
-    fun fetchCharactersLiveData(characterUrls: List<String>) {
+    fun getCharacters(characterUrls: List<String>) {
         val characterIds = characterUrls.map { characterUrl ->
             characterUrl.split(SPLIT).last().toInt()
         }
         if (hasInternetConnection()) {
-            fetchCharactersForEpisode(fetchCharactersByIdServiceUseCase(characterIds))
+            fetchCharactersForEpisode(fetchCharactersByIdsServiceUseCase(characterIds))
         } else {
-            fetchCharactersForEpisode(fetchCharactersByIdDatabaseUseCase(characterIds))
+            fetchCharactersForEpisode(fetchCharactersByIdsDatabaseUseCase(characterIds))
         }
     }
 
@@ -51,13 +48,12 @@ class EpisodeDetailsViewModel @Inject constructor(
         useCase: Observable<List<CharacterInfo>>,
     ) {
         compositeDisposable.add(
-            useCase.observeOn(AndroidSchedulers.mainThread())
+            useCase
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ characters ->
-                    _charactersLiveData.value = characters.map { character ->
-                        mapperCharacter.mapToCharacterInfoView(character)
-                    }
+                    _charactersLiveData.value = mapperCharacter.mapToCharactersListView(characters)
                 }, {
-                    showExceptionMessage(R.string.exception_message)
+                    showExceptionMessage(R.string.fetchData_exceptionMessage)
                 })
         )
     }
@@ -68,11 +64,11 @@ class EpisodeDetailsViewModel @Inject constructor(
         compositeDisposable.dispose()
     }
 
-    fun launchCharacterDetailsFragment(character: CharacterInfoView) {
+    fun launchCharacterDetailsFragment(character: CharacterInfoViewModel) {
         launchFragment(CharacterDetailsFragment.newInstance(character))
     }
 
-    fun refreshEpisodeDetailsFragment(episode: EpisodeInfoView) {
+    fun refreshEpisodeDetailsFragment(episode: EpisodeInfoViewModel) {
         val fragment = EpisodeDetailsFragment.newInstance(episode)
         refreshFragment(fragment)
     }

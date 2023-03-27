@@ -7,8 +7,8 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.FragmentLocationDetailsBinding
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
-import com.aston.rickandmorty.presentation.model.location.LocationInfoView
-import com.aston.rickandmorty.presentation.recyclerview.characters.CharactersInLocationAdapter
+import com.aston.rickandmorty.presentation.model.location.LocationInfoViewModel
+import com.aston.rickandmorty.presentation.recyclerview.characters.InnerCharactersAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import com.aston.rickandmorty.presentation.util.parcelable
 
@@ -23,7 +23,7 @@ class LocationDetailsFragment :
     ), TitleToolbarDetails {
 
     companion object {
-        fun newInstance(location: LocationInfoView): LocationDetailsFragment {
+        fun newInstance(location: LocationInfoViewModel): LocationDetailsFragment {
             val fragment = LocationDetailsFragment()
             fragment.arguments = Bundle().apply {
                 putParcelable(LOCATION_ARGS_KEY, location)
@@ -37,7 +37,7 @@ class LocationDetailsFragment :
     }
 
     private val characterAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CharactersInLocationAdapter().apply {
+        InnerCharactersAdapter().apply {
             onCharacterClickListener = { character ->
                 viewModel.launchCharacterDetailsFragment(character)
             }
@@ -51,7 +51,7 @@ class LocationDetailsFragment :
     override fun setupObservers() {
         super.setupObservers()
 
-        observeCharacterList()
+        observeCharacters()
         observeInternetConnection()
     }
 
@@ -60,11 +60,16 @@ class LocationDetailsFragment :
         swipeToRefresh()
     }
 
-    override fun setToolbarTitle(): String {
-        return location?.name ?: getString(R.string.locations_screen_name)
+    override fun setupRecyclerView() {
+        with(binding.charactersInLocationRecyclerView) {
+            adapter = characterAdapter
+            layoutManager = GridLayoutManager(context, SPAN_COUNT)
+        }
     }
 
-    private fun observeCharacterList() {
+    override fun setToolbarTitle(): String = getString(R.string.locationDetails_screen_name)
+
+    private fun observeCharacters() {
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { characters ->
             binding.locationDetailsProgressBar.visibility = View.GONE
             characterAdapter.submitList(characters)
@@ -74,7 +79,7 @@ class LocationDetailsFragment :
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
             binding.internetConnectionMessage.visibility =
-                checkInternetConnection(hasInternetConnection)
+                getVisibilityByInternetConnection(hasInternetConnection)
         }
     }
 
@@ -87,16 +92,9 @@ class LocationDetailsFragment :
         }
     }
 
-    override fun setupRecyclerView() {
-        with(binding.charactersInLocationRecyclerView) {
-            adapter = characterAdapter
-            layoutManager = GridLayoutManager(context, SPAN_COUNT)
-        }
-    }
-
     private fun setupArguments() {
         location?.let { locationNotNull ->
-            viewModel.fetchCharactersLiveData(locationNotNull.residents)
+            viewModel.getCharacters(locationNotNull.residents)
 
             with(binding) {
                 locationDetailsName.text = locationNotNull.name
@@ -106,7 +104,7 @@ class LocationDetailsFragment :
         }
     }
 
-    private fun getLocationArguments(): LocationInfoView? {
+    private fun getLocationArguments(): LocationInfoViewModel? {
         return arguments?.parcelable(LOCATION_ARGS_KEY)
     }
 }

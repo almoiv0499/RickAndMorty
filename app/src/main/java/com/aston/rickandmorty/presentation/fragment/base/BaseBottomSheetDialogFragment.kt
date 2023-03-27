@@ -38,12 +38,12 @@ abstract class BaseBottomSheetDialogFragment<VB : ViewBinding>(
         setUI()
     }
 
-    protected abstract fun setUI()
-
     override fun onDestroyView() {
         super.onDestroyView()
 
         _binding = null
     }
+
+    protected abstract fun setUI()
 
 }

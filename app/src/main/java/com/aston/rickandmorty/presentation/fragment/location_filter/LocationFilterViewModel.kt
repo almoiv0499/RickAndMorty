@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class LocationFilterViewModel @Inject constructor() : BaseBottomSheetDialogViewModel() {
 
-    fun launchFilteredLocationsFragment(
+    fun launchFilteredFragment(
         locationName: String,
         locationType: String,
         locationDimension: String,

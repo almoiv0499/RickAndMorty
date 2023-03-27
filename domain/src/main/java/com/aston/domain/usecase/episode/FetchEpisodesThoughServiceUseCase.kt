@@ -4,11 +4,12 @@ import com.aston.domain.repository.EpisodeRepository
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class FetchEpisodeThoughServiceUseCase @Inject constructor(
+class FetchEpisodesThoughServiceUseCase @Inject constructor(
     private val repository: EpisodeRepository,
 ) {
 
     operator fun invoke(episodeName: String, episodeNumber: String) =
-        repository.fetchEpisodesThoughService(episodeName, episodeNumber).subscribeOn(Schedulers.io())
+        repository.fetchEpisodesThoughService(episodeName, episodeNumber)
+            .subscribeOn(Schedulers.io())
 
 }

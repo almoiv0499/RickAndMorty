@@ -58,19 +58,17 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
 
     override fun setUI() {
         setArguments()
-        swipeToRefreshScreen()
+        swipeToRefresh()
         launchFilterFragment()
-        checkResults()
+        checkLoadState()
     }
 
     override fun setupObservers() {
         super.setupObservers()
 
-        observeCharactersFlow()
+        observeCharacters()
         observeInternetConnection()
     }
-
-    override fun setToolbarTitle(): Int = R.string.characters_screen_name
 
     override fun setupRecyclerView() {
         with(binding) {
@@ -81,9 +79,11 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         }
     }
 
-    private fun checkResults() {
+    override fun setToolbarTitle(): Int = R.string.characters_screen_name
+
+    private fun checkLoadState() {
         with(binding) {
-            checkNoResults(
+            observeLoadState(
                 adapter = characterAdapter,
                 recyclerView = characterRecyclerView,
                 filter = characterFilter,
@@ -93,7 +93,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         }
     }
 
-    private fun observeCharactersFlow() {
+    private fun observeCharacters() {
         viewModel.charactersLiveData.observe(viewLifecycleOwner) { paging ->
             characterAdapter.submitData(viewLifecycleOwner.lifecycle, paging)
         }
@@ -102,11 +102,11 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
             binding.internetConnectionMessage.visibility =
-                checkInternetConnection(hasInternetConnection)
+                getVisibilityByInternetConnection(hasInternetConnection)
         }
     }
 
-    private fun swipeToRefreshScreen() {
+    private fun swipeToRefresh() {
         binding.charactersSwipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshFragment()
             binding.charactersSwipeRefreshLayout.isRefreshing = false
@@ -120,17 +120,17 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
     }
 
     private fun setArguments() {
-        val characterName = fetchFilterData(CHARACTER_NAME)
-        val characterSpecies = fetchFilterData(CHARACTER_SPECIES)
-        val characterGender = fetchFilterData(CHARACTER_GENDER)
-        val characterStatus = fetchFilterData(CHARACTER_STATUS)
+        val characterName = fetchFilteredData(CHARACTER_NAME)
+        val characterSpecies = fetchFilteredData(CHARACTER_SPECIES)
+        val characterGender = fetchFilteredData(CHARACTER_GENDER)
+        val characterStatus = fetchFilteredData(CHARACTER_STATUS)
 
-        viewModel.charactersFlow(
+        viewModel.getCharacters(
             characterName, characterStatus, characterSpecies, characterGender
         )
     }
 
-    private fun fetchFilterData(key: String): String {
+    private fun fetchFilteredData(key: String): String {
         return arguments?.getString(key) ?: EMPTY_VALUE
     }
 }

@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.aston.rickandmorty.databinding.CharacterItemBinding
-import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoViewModel
 
-typealias OnCharacterClickListener = (CharacterInfoView) -> Unit
+typealias OnCharacterClickListener = (CharacterInfoViewModel) -> Unit
 
 class CharacterAdapter :
-    PagingDataAdapter<CharacterInfoView, CharacterViewHolder>(CharacterDiffUtil()) {
+    PagingDataAdapter<CharacterInfoViewModel, CharacterViewHolder>(CharacterDiffUtil()) {
 
     var onCharacterClickListener: OnCharacterClickListener? = null
 

@@ -1,49 +1,46 @@
 package com.aston.rickandmorty.presentation.fragment.episodes
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.rxjava3.cachedIn
 import com.aston.domain.model.episode.EpisodeInfo
-import com.aston.domain.usecase.episode.FetchEpisodeThoughDatabaseUseCase
-import com.aston.domain.usecase.episode.FetchEpisodeThoughServiceUseCase
+import com.aston.domain.usecase.episode.FetchEpisodesThoughDatabaseUseCase
+import com.aston.domain.usecase.episode.FetchEpisodesThoughServiceUseCase
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.episode_filter.EpisodesFilterFragment
-import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
-import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
+import com.aston.rickandmorty.presentation.mapper.EpisodeViewMapper
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 private const val FRAGMENT_FILTER_TAG = "EpisodeFragmentFilter"
 
 class EpisodesViewModel @Inject constructor(
-    private val context: Context,
-    private val fetchEpisodeThoughDatabaseUseCase: FetchEpisodeThoughDatabaseUseCase,
-    private val fetchEpisodeThoughServiceUseCase: FetchEpisodeThoughServiceUseCase,
-    private val mapperEpisode: MapperEpisodeView,
+    context: Context,
+    private val fetchEpisodesThoughDatabaseUseCase: FetchEpisodesThoughDatabaseUseCase,
+    private val fetchEpisodesThoughServiceUseCase: FetchEpisodesThoughServiceUseCase,
+    private val mapperEpisode: EpisodeViewMapper,
 ) : BaseViewModel(context) {
 
     private val compositeDisposable by lazy(LazyThreadSafetyMode.NONE) {
         CompositeDisposable()
     }
-    private val _episodesLD = MutableLiveData<PagingData<EpisodeInfoView>>()
-    val episodesLiveData: LiveData<PagingData<EpisodeInfoView>> = _episodesLD
+    private val _episodesLiveData = MutableLiveData<PagingData<EpisodeInfoViewModel>>()
+    val episodesLiveData: LiveData<PagingData<EpisodeInfoViewModel>> = _episodesLiveData
 
-    fun fetch(episodeName: String, episodeNumber: String) {
+    fun getEpisodes(episodeName: String, episodeNumber: String) {
         if (hasInternetConnection()) {
-            fetchEpisodes(fetchEpisodeThoughServiceUseCase(episodeName, episodeNumber))
+            fetchEpisodes(fetchEpisodesThoughServiceUseCase(episodeName, episodeNumber))
         } else {
-            fetchEpisodes(fetchEpisodeThoughDatabaseUseCase(episodeName, episodeNumber))
+            fetchEpisodes(fetchEpisodesThoughDatabaseUseCase(episodeName, episodeNumber))
         }
     }
 
@@ -56,9 +53,9 @@ class EpisodesViewModel @Inject constructor(
                 .cachedIn(viewModelScope)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ paging ->
-                    _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
+                    _episodesLiveData.value = mapperEpisode.mapToEpisodePagingView(paging)
                 }, {
-                    showExceptionMessage(R.string.exception_message)
+                    showExceptionMessage(R.string.fetchData_exceptionMessage)
                 })
         )
     }
@@ -73,7 +70,7 @@ class EpisodesViewModel @Inject constructor(
         launchDialogFragment(EpisodesFilterFragment.newInstance(), FRAGMENT_FILTER_TAG)
     }
 
-    fun launchEpisodeDetailsFragment(episode: EpisodeInfoView) {
+    fun launchEpisodeDetailsFragment(episode: EpisodeInfoViewModel) {
         launchFragment(EpisodeDetailsFragment.newInstance(episode))
     }
 

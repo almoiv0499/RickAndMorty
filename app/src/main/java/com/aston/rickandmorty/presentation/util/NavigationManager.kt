@@ -13,5 +13,4 @@ sealed class NavigationManager {
 
     data class RefreshFragment(val fragment: Fragment) : NavigationManager()
 
-    object NavigateBack : NavigationManager()
 }

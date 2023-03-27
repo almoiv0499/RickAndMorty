@@ -6,7 +6,6 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import com.aston.rickandmorty.databinding.LoadStateFooterBinding
 
-
 class LoaderStateFooterAdapter : LoadStateAdapter<LoadStateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {

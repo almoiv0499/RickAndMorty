@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class EpisodeInfoView(
+data class EpisodeInfoViewModel(
     val airDate: String,
     val characters: List<String>,
     val created: String,

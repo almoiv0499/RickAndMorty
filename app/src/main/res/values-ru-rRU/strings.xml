@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rick And Morty</string>
+    <string name="internetConnection_message">Нет инетрнет соединения!\\nВключи его и обнови страницу</string>
+    <string name="character_filter">Филтры персонажей</string>
+    <string name="errorState_message">Нет результатов.\\nПроверь введеные данные или интернет соединение</string>
+    <string name="choose_character_status">Выберите статус персонажа:</string>
+    <string name="choose_character_gender">Выберите пол персонажа:</string>
+    <string name="character_name">Имя персонажа...</string>
+    <string name="character_species">Тип персонажа...</string>
+    <string name="click_confirm">Подтвердить</string>
+    <string name="click_clear_filter">Очистить фильтр</string>
+    <string name="episode_name">Название эпизода...</string>
+    <string name="episode_number">Номер эпизода...</string>
+    <string name="location_name">Название локации...</string>
+    <string name="location_type">Тип локации...</string>
+    <string name="location_dimension">Измерение...</string>
+    <string name="characters_bottomNavigation">Персонажи</string>
+    <string name="locations_bottomNavigation">Локации</string>
+    <string name="episodes_bottomNavigation">Эпизоды</string>
+    <string name="fetchData_exceptionMessage">Проверь интернет соединение и обнови страницу</string>
+    <string name="characters_screen_name">Персонажи</string>
+    <string name="characterDetails_screen_name">Детали персонажей</string>
+    <string name="episodes_screen_name">Эпизоды</string>
+    <string name="episodeDetails_screen_name">Детали эпизодов</string>
+    <string name="locations_screen_name">Локации</string>
+    <string name="locationDetails_screen_name">Детали локаций</string>
+</resources>
