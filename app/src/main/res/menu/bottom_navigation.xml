@@ -5,19 +5,19 @@
     <item
         android:id="@+id/characters"
         android:icon="@drawable/ic_characters"
-        android:title="Characters"
+        android:title="@string/characters_bottomNavigation"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/locations"
         android:icon="@drawable/ic_locations"
-        android:title="Locations"
+        android:title="@string/locations_bottomNavigation"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/episodes"
         android:icon="@drawable/ic_episodes"
-        android:title="Episodes"
+        android:title="@string/episodes_bottomNavigation"
         app:showAsAction="ifRoom" />
 
 </menu>

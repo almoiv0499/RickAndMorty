@@ -8,19 +8,19 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_app"
-        android:layout_width="0dp"
-        app:titleCentered="true"
-        app:title="@string/characters_screen_name"
+        android:layout_width="@dimen/toolbar_width"
         android:layout_height="?android:attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/app_name"
+        app:titleCentered="true" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:name="com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/fragmentContainer_width"
+        android:layout_height="@dimen/fragmentContainer_height"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation_app"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/bottomNavigationBar_width"
         android:layout_height="wrap_content"
         app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"

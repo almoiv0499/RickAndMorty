@@ -25,6 +25,21 @@
     <string name="characters_gender_female">Female</string>
     <string name="characters_gender_male">Male</string>
     <string name="characters_gender_genderless">Genderless</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="internetConnection_message">No internet connection.\nTurn it On and refresh page!</string>
+    <string name="character_filter">Character Filter</string>
+    <string name="errorState_message">No Results.\nCheck entered data or internet connection!</string>
+    <string name="choose_character_status">Choose characters status:</string>
+    <string name="choose_character_gender">Choose characters gender:</string>
+    <string name="character_name">Character name...</string>
+    <string name="character_species">Character species...</string>
+    <string name="click_confirm">Confirm</string>
+    <string name="click_clear_filter">Clear filter</string>
+    <string name="episode_name">Episode name...</string>
+    <string name="episode_number">Episode number...</string>
+    <string name="location_name">Location name...</string>
+    <string name="location_type">Location type...</string>
+    <string name="location_dimension">Location dimension...</string>
+    <string name="characters_bottomNavigation">Characters</string>
+    <string name="locations_bottomNavigation">Locations</string>
+    <string name="episodes_bottomNavigation">Episodes</string>
 </resources>

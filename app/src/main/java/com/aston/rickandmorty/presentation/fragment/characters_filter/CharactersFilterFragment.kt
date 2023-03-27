@@ -31,20 +31,20 @@ class CharactersFilterFragment :
 
     private fun fetchData() {
         with(binding) {
-            charactersFilterConfirm.setOnClickListener {
-                val characterName = getDataFromEditText(charactersFilterName.editText)
+            characterFilterConfirm.setOnClickListener {
+                val characterName = getDataFromEditText(characterFilterName.editText)
                 val characterSpecies = getDataFromEditText(
-                    charactersFilterSpecies.editText
+                    characterFilterSpecies.editText
                 )
 
-                val characterStatus = getDataFromRadioGroup(charactersFilterStatus)
-                val characterGender = getDataFromRadioGroup(charactersFilterGender)
+                val characterStatus = getDataFromRadioGroup(characterFilterStatus)
+                val characterGender = getDataFromRadioGroup(characterFilterGender)
 
                 passDataAndDismissFragment(
                     characterName, characterStatus, characterSpecies, characterGender
                 )
             }
-            charactersFilterClear.setOnClickListener {
+            characterFilterClear.setOnClickListener {
                 passDataAndDismissFragment(EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE, EMPTY_VALUE)
             }
         }

@@ -1,7 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.character_details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -96,7 +95,7 @@ class CharacterDetailsFragment :
 
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
-            binding.checkInternetConnection.visibility =
+            binding.internetConnectionMessage.visibility =
                 checkInternetConnection(hasInternetConnection)
         }
     }

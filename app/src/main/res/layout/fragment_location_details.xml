@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/locationDetails_swipeRefreshLayout"
+    style="@style/BackgroundFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.location_details.LocationDetailsFragment">
@@ -11,48 +12,81 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/check_internetConnection"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="@dimen/guideline_width"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Check Internet Connection"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/guideline_margin" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/internetConnection_message"
+            style="@style/InternetConnectionMessageStyle"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="@id/guideline_top" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/location_details_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_internetConnection" />
+            style="@style/DetailsTextViewStyle"
+            android:fontFamily="@font/candal"
+            android:padding="@dimen/locationDetailName_textView_padding"
+            android:textSize="@dimen/locationDetailName_textView_textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/internetConnection_message" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/location_details_type"
-            android:layout_width="wrap_content"
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="@dimen/divider_width"
             android:layout_height="wrap_content"
-            android:text="type"
-            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/location_details_name" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location_details_type"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/locationDetails_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/locationDetails_textView_textSize"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/location_details_dimension"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="dimension"
-            app:layout_constraintStart_toStartOf="parent"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/locationDetails_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/locationDetails_textView_textSize"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/location_details_type" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/characters_in_location_recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="5dp"
+            android:layout_width="@dimen/locationDetails_recyclerView_width"
+            android:layout_height="@dimen/locationDetails_recyclerView_height"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/location_details_dimension"
             tools:listitem="@layout/character_item" />
 
@@ -61,8 +95,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/location_details_dimension" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

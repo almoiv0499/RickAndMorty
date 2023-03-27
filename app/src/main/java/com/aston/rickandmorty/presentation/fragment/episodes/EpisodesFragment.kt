@@ -74,7 +74,7 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
 
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
-            binding.checkInternetConnection.visibility =
+            binding.internetConnectionMessage.visibility =
                 checkInternetConnection(hasInternetConnection)
         }
     }
@@ -95,7 +95,7 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
                 recyclerView = episodesRecyclerView,
                 filter = episodeFilter,
                 progress = episodesProgressBar,
-                errorMessage = episodesErrorMessage
+                errorMessage = episodeErrorMessage
             )
         }
     }

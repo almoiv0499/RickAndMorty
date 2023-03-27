@@ -1,17 +1,21 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.RickAndMorty" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorPrimary">@color/primary_color_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_color_dark</item>
+        <item name="colorOnPrimary">@color/primary_color_dark</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/statusBar_color_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
+        <item name="colorOnSurface">@color/onSurface_color_dark</item>
+        <item name="colorControlNormal">@color/primary_color_dark</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BackgroundFragment">
+        <item name="android:background">@color/background_fragment_dark</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -21,4 +25,146 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="InternetConnectionMessageStyle">
+        <item name="android:layout_width">@dimen/internetConnection_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/internetConnection_margin</item>
+        <item name="android:background">@drawable/error_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/internetConnection_padding</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/candal</item>
+        <item name="android:textSize">@dimen/internetConnection_textSize</item>
+        <item name="android:text">@string/internetConnection_message</item>
+    </style>
+
+    <style name="FloatingButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/floatingButton_marginEnd</item>
+        <item name="android:layout_marginBottom">@dimen/floatingButton_marginBottom</item>
+        <item name="android:backgroundTint">@color/floatingButton_background_dark</item>
+        <item name="tint">@color/floatingButton_icon_dark</item>
+        <item name="android:src">@drawable/ic_filter</item>
+        <item name="borderWidth">@dimen/floatingButton_borderWidth</item>
+    </style>
+
+    <style name="ErrorMessageStyle">
+        <item name="android:layout_width">@dimen/errorMessage_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/errorMessage_marginStart</item>
+        <item name="android:layout_marginEnd">@dimen/errorMessage_marginEnd</item>
+        <item name="android:background">@drawable/error_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/candal</item>
+        <item name="android:textSize">@dimen/errorMessage_textSize</item>
+        <item name="android:text">@string/errorState_message</item>
+    </style>
+
+    <style name="FilterActionButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/filter_button_marginTop</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DetailsTextViewStyle">
+        <item name="android:layout_width">@dimen/textView_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TitleTextViewStyle">
+        <item name="android:layout_width">@dimen/character_textView_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/character_textView_padding</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CharacterTextViewStyle">
+        <item name="android:layout_width">@dimen/character_textView_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/character_textView_padding</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CharacterImageViewStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/character_imageView_cornerSize</item>
+        <item name="color">@color/black</item>
+    </style>
+
+    <style name="CharacterDividerStyle">
+        <item name="android:layout_width">@dimen/character_divider_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="LocationTextViewStyle">
+        <item name="android:layout_width">@dimen/location_textView_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="EpisodeTextViewStyle">
+        <item name="android:layout_width">@dimen/episode_textView_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="CharacterFilterTextViewStyle">
+        <item name="android:layout_width">@dimen/characterFilter_textView_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/characterFilter_textView_textSize</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CharacterFilterRadioGroupStyle">
+        <item name="android:layout_width">@dimen/characterFilter_radioGroup_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/characterFilter_radioGroup_marginTop</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="CharacterFilterRadioButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">@integer/character_radioButton_weight</item>
+    </style>
+
+    <style name="CharacterFilterEditTextStyle">
+        <item name="android:layout_width">@dimen/characterFilter_editText_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/characterFilter_editText_marginTop</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="boxStrokeColor">@color/white</item>
+    </style>
+
+    <style name="EpisodeFilterEditTextStyle">
+        <item name="android:layout_width">@dimen/episodeFilter_editText_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/episodeFilter_editText_marginTop</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="boxStrokeColor">@color/white</item>
+    </style>
+
+    <style name="LocationFilterEditTextStyle">
+        <item name="android:layout_width">@dimen/locationFilter_editText_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/locationFilter_editText_marginTop</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="boxStrokeColor">@color/white</item>
+    </style>
 </resources>

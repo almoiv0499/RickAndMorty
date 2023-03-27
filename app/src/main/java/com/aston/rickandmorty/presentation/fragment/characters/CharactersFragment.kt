@@ -101,7 +101,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
 
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
-            binding.checkInternetConnection.visibility =
+            binding.internetConnectionMessage.visibility =
                 checkInternetConnection(hasInternetConnection)
         }
     }

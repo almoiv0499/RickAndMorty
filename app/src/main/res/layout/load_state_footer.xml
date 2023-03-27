@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="top|center"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="@dimen/loadState_progressBar_padding">
 
     <ProgressBar
         android:id="@+id/progress_loadState"

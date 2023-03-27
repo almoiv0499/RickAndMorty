@@ -68,8 +68,8 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     override fun setupRecyclerView() {
         with(binding) {
-            locationsRecyclerView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
-            locationsRecyclerView.adapter = locationAdapter.withLoadStateFooter(
+            locationRecyclerView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
+            locationRecyclerView.adapter = locationAdapter.withLoadStateFooter(
                 footer = LoaderStateFooterAdapter()
             )
         }
@@ -79,10 +79,10 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         with(binding) {
             checkNoResults(
                 adapter = locationAdapter,
-                recyclerView = locationsRecyclerView,
+                recyclerView = locationRecyclerView,
                 filter = locationFilter,
-                progress = locationsProgressBar,
-                errorMessage = locationsErrorMessage
+                progress = locationProgressBar,
+                errorMessage = locationErrorMessage
             )
         }
     }
@@ -101,7 +101,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
 
     private fun observeInternetConnection() {
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
-            binding.checkInternetConnection.visibility =
+            binding.internetConnectionMessage.visibility =
                 checkInternetConnection(hasInternetConnection)
         }
     }
