@@ -13,6 +13,7 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
+import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -50,7 +51,7 @@ class EpisodeDetailsViewModel @Inject constructor(
         useCase: Observable<List<CharacterInfo>>,
     ) {
         compositeDisposable.add(
-            useCase.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            useCase.observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ characters ->
                     _charactersLiveData.value = characters.map { character ->
                         mapperCharacter.mapToCharacterInfoView(character)
@@ -69,6 +70,11 @@ class EpisodeDetailsViewModel @Inject constructor(
 
     fun launchCharacterDetailsFragment(character: CharacterInfoView) {
         launchFragment(CharacterDetailsFragment.newInstance(character))
+    }
+
+    fun refreshEpisodeDetailsFragment(episode: EpisodeInfoView) {
+        val fragment = EpisodeDetailsFragment.newInstance(episode)
+        refreshFragment(fragment)
     }
 
 }

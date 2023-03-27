@@ -13,6 +13,7 @@ import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetai
 import com.aston.rickandmorty.presentation.fragment.location_details.LocationDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperEpisodeView
 import com.aston.rickandmorty.presentation.mapper.MapperLocationView
+import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import com.aston.rickandmorty.presentation.model.episode.EpisodeInfoView
 import com.aston.rickandmorty.presentation.model.location.LocationInfoView
 import kotlinx.coroutines.flow.Flow
@@ -67,9 +68,14 @@ class CharacterDetailsViewModel @Inject constructor(
                     fetchOriginLocationByNameService(originLocationName)
                 )
             } else {
-                fetchOriginLocationByNameDatabase(originLocationName).collectLatest { location ->
-                    _originLocationLiveData.value = mapperLocation.mapToLocationInfoView(location)
-                }
+                fetchOriginLocationByNameDatabase(originLocationName)
+                    .catch {
+                        showExceptionMessage(R.string.exception_message)
+                    }
+                    .collectLatest { location ->
+                        _originLocationLiveData.value =
+                            mapperLocation.mapToLocationInfoView(location)
+                    }
             }
         }
     }
@@ -78,7 +84,11 @@ class CharacterDetailsViewModel @Inject constructor(
         useCase: Flow<LocationInfo>,
     ) {
         viewModelScope.launch {
-            useCase.collectLatest { location ->
+            useCase
+                .catch {
+                    showExceptionMessage(R.string.exception_message)
+                }
+                .collectLatest { location ->
                 _locationLiveData.value = mapperLocation.mapToLocationInfoView(location)
             }
         }
@@ -104,6 +114,11 @@ class CharacterDetailsViewModel @Inject constructor(
 
     fun launchLocationDetailsFragment(location: LocationInfoView) {
         launchFragment(LocationDetailsFragment.newInstance(location))
+    }
+
+    fun refreshFragment(character: CharacterInfoView) {
+        val fragment = CharacterDetailsFragment.newInstance(character)
+        refreshFragment(fragment)
     }
 
 }

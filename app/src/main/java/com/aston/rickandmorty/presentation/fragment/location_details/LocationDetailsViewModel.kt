@@ -11,6 +11,7 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
+import com.aston.rickandmorty.presentation.model.location.LocationInfoView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -51,6 +52,11 @@ class LocationDetailsViewModel @Inject constructor(
 
     fun launchCharacterDetailsFragment(character: CharacterInfoView) {
         launchFragment(CharacterDetailsFragment.newInstance(character))
+    }
+
+    fun refreshFragment(location: LocationInfoView) {
+        val fragment = LocationDetailsFragment.newInstance(location)
+        refreshFragment(fragment)
     }
 
 }

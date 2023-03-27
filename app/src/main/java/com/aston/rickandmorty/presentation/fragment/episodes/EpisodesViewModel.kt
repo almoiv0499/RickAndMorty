@@ -11,6 +11,7 @@ import androidx.paging.rxjava3.cachedIn
 import com.aston.domain.model.episode.EpisodeInfo
 import com.aston.domain.usecase.episode.FetchEpisodeThoughDatabaseUseCase
 import com.aston.domain.usecase.episode.FetchEpisodeThoughServiceUseCase
+import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.episode_details.EpisodeDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.episode_filter.EpisodesFilterFragment
@@ -50,10 +51,16 @@ class EpisodesViewModel @Inject constructor(
     private fun fetchEpisodes(
         useCase: Observable<PagingData<EpisodeInfo>>,
     ) {
-        compositeDisposable.add(useCase.cachedIn(viewModelScope).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread()).subscribe { paging ->
-                _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
-            })
+        compositeDisposable.add(
+            useCase
+                .cachedIn(viewModelScope)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ paging ->
+                    _episodesLD.value = mapperEpisode.mapToEpisodePaging(paging)
+                }, {
+                    showExceptionMessage(R.string.exception_message)
+                })
+        )
     }
 
     override fun onCleared() {

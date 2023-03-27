@@ -10,6 +10,7 @@ import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
 import com.aston.rickandmorty.databinding.ActivityMainBinding
 import com.aston.rickandmorty.presentation.activity.router.RouterMainActivity
+import com.aston.rickandmorty.presentation.fragment.characters.CharactersFragment
 import com.aston.rickandmorty.presentation.util.TitleToolbar
 import com.aston.rickandmorty.presentation.util.TitleToolbarDetails
 import javax.inject.Inject
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarApp)
 
         setBottomNavigation()
+
         handleBackPressed()
     }
 
@@ -131,8 +133,7 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    private fun isCharactersFragment(): Boolean =
-        binding.bottomNavigationApp.selectedItemId == R.id.characters
+    private fun isCharactersFragment(): Boolean = currentFragment is CharactersFragment
 
     private fun isTitleToolbarDetails(): Boolean = currentFragment is TitleToolbarDetails
 

@@ -25,10 +25,9 @@ class CharacterDetailsFragment :
     companion object {
         fun newInstance(character: CharacterInfoView): CharacterDetailsFragment {
             val fragment = CharacterDetailsFragment()
-            val args = Bundle().apply {
+            fragment.arguments = Bundle().apply {
                 putParcelable(CHARACTER_ARGS_KEY, character)
             }
-            fragment.arguments = args
             return fragment
         }
     }
@@ -56,6 +55,7 @@ class CharacterDetailsFragment :
     override fun setUI() {
         setupArguments()
         setArgumentsForViewModels()
+        swipeToRefresh()
     }
 
     override fun setupObservers() {
@@ -95,8 +95,18 @@ class CharacterDetailsFragment :
     }
 
     private fun observeInternetConnection() {
-        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) {hasInternetConnection ->
-            binding.checkInternetConnection.visibility = checkInternetConnection(hasInternetConnection)
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            binding.checkInternetConnection.visibility =
+                checkInternetConnection(hasInternetConnection)
+        }
+    }
+
+    private fun swipeToRefresh() {
+        character?.let {
+            binding.characterDetailsSwipeRefreshLayout.setOnRefreshListener {
+                viewModel.refreshFragment(it)
+                binding.characterDetailsSwipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 

@@ -57,6 +57,7 @@ class EpisodeDetailsFragment :
 
     override fun setUI() {
         setupArguments()
+        swipeToRefresh()
     }
 
     override fun setToolbarTitle(): String {
@@ -74,6 +75,15 @@ class EpisodeDetailsFragment :
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
             binding.checkInternetConnection.visibility =
                 checkInternetConnection(hasInternetConnection)
+        }
+    }
+
+    private fun swipeToRefresh() {
+        episode?.let { episodeNotNull ->
+            binding.episodeDetailsSwipeRefreshLayout.setOnRefreshListener {
+                viewModel.refreshEpisodeDetailsFragment(episodeNotNull)
+                binding.episodeDetailsSwipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 

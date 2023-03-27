@@ -9,12 +9,14 @@ import androidx.paging.cachedIn
 import com.aston.domain.model.character.CharacterInfo
 import com.aston.domain.usecase.character.FetchCharactersThoughDatabaseUseCase
 import com.aston.domain.usecase.character.FetchCharactersThoughServiceUseCase
+import com.aston.rickandmorty.R
 import com.aston.rickandmorty.presentation.fragment.base.BaseViewModel
 import com.aston.rickandmorty.presentation.fragment.character_details.CharacterDetailsFragment
 import com.aston.rickandmorty.presentation.fragment.characters_filter.CharactersFilterFragment
 import com.aston.rickandmorty.presentation.mapper.MapperCharacterView
 import com.aston.rickandmorty.presentation.model.character.CharacterInfoView
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,7 +56,11 @@ class CharactersViewModel @Inject constructor(
         useCase: Flow<PagingData<CharacterInfo>>,
     ) {
         viewModelScope.launch {
-            useCase.cachedIn(viewModelScope).collectLatest { paging ->
+            useCase.cachedIn(viewModelScope)
+                .catch {
+                    showExceptionMessage(R.string.exception_message)
+                }
+                .collectLatest { paging ->
                 _charactersLiveData.value = mapper.mapToCharacterPagingView(paging)
             }
         }

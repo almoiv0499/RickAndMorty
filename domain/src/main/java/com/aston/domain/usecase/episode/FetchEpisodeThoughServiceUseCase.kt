@@ -1,6 +1,7 @@
 package com.aston.domain.usecase.episode
 
 import com.aston.domain.repository.EpisodeRepository
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class FetchEpisodeThoughServiceUseCase @Inject constructor(
@@ -8,6 +9,6 @@ class FetchEpisodeThoughServiceUseCase @Inject constructor(
 ) {
 
     operator fun invoke(episodeName: String, episodeNumber: String) =
-        repository.fetchEpisodesThoughService(episodeName, episodeNumber)
+        repository.fetchEpisodesThoughService(episodeName, episodeNumber).subscribeOn(Schedulers.io())
 
 }

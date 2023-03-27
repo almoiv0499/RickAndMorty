@@ -57,6 +57,7 @@ class LocationDetailsFragment :
 
     override fun setUI() {
         setupArguments()
+        swipeToRefresh()
     }
 
     override fun setToolbarTitle(): String {
@@ -74,6 +75,15 @@ class LocationDetailsFragment :
         viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
             binding.checkInternetConnection.visibility =
                 checkInternetConnection(hasInternetConnection)
+        }
+    }
+
+    private fun swipeToRefresh() {
+        location?.let {
+            binding.locationDetailsSwipeRefreshLayout.setOnRefreshListener {
+                viewModel.refreshFragment(it)
+                binding.locationDetailsSwipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 

@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
-import androidx.paging.CombinedLoadStates
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +23,8 @@ import com.aston.rickandmorty.presentation.fragment.viewmodel_factory.ViewModelF
 import com.aston.rickandmorty.presentation.util.NavigationManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
@@ -87,11 +89,9 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
     }
 
     private fun launchFragment(fragment: Fragment) {
-        activity?.let { activity ->
-            activity.supportFragmentManager.commit {
-                replace(R.id.fragment_container, fragment)
-                addToBackStack(null)
-            }
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fragment_container, fragment)
+            addToBackStack(null)
         }
     }
 
@@ -104,29 +104,37 @@ abstract class BaseViewModelFragment<VB : ViewBinding, VM : BaseViewModel>(
     }
 
     private fun refreshFragment(fragment: Fragment) {
+        activity?.supportFragmentManager?.popBackStack()
         activity?.supportFragmentManager?.commit {
             replace(R.id.fragment_container, fragment)
+            addToBackStack(null)
         }
     }
 
-    protected fun <T : Any, VH : ViewHolder> checkLoadState(
-        loadState: CombinedLoadStates,
+    protected fun <T : Any, VH : ViewHolder> checkNoResults(
         adapter: PagingDataAdapter<T, VH>,
         recyclerView: RecyclerView,
-        progress: ProgressBar,
         filter: FloatingActionButton,
+        progress: ProgressBar,
         errorMessage: TextView,
     ) {
-        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
-            recyclerView.isVisible = loadState.refresh != LoadState.Loading
-            progress.isVisible = loadState.refresh == LoadState.Loading
-            filter.visibility = View.GONE
-            errorMessage.visibility = View.VISIBLE
-        } else {
-            recyclerView.isVisible = loadState.refresh != LoadState.Loading
-            progress.isVisible = loadState.refresh == LoadState.Loading
-            filter.visibility = View.VISIBLE
-            errorMessage.visibility = View.GONE
+        viewModel.internetConnectionLiveData.observe(viewLifecycleOwner) { hasInternetConnection ->
+            lifecycleScope.launch {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    val isListEmpty =
+                        loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+
+                    recyclerView.isVisible = !isListEmpty
+                    filter.isVisible = !isListEmpty
+                    progress.isVisible = loadState.source.refresh == LoadState.Loading
+
+                    errorMessage.isVisible = if (hasInternetConnection) {
+                        loadState.source.refresh is LoadState.Error
+                    } else {
+                        isListEmpty
+                    }
+                }
+            }
         }
     }
 

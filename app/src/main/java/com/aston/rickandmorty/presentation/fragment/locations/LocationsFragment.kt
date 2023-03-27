@@ -1,10 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.locations
 
 import android.os.Bundle
-import android.view.View
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -13,7 +9,6 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.recyclerview.location.LocationAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
-import kotlinx.coroutines.launch
 
 private const val EMPTY_VALUE = ""
 private const val SPAN_COUNT = 2
@@ -59,6 +54,7 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
         setArguments()
         swipeToRefreshLayout()
         launchFilterFragment()
+        checkResults()
     }
 
     override fun setupObservers() {
@@ -76,17 +72,18 @@ class LocationsFragment : BaseViewModelFragment<FragmentLocationsBinding, Locati
             locationsRecyclerView.adapter = locationAdapter.withLoadStateFooter(
                 footer = LoaderStateFooterAdapter()
             )
+        }
+    }
 
-            lifecycleScope.launch {
-                locationAdapter.loadStateFlow.collect { loadState ->
-                    val isListEmpty =
-                        loadState.refresh is LoadState.NotLoading && locationAdapter.itemCount == 0
-                    locationsRecyclerView.isVisible = !isListEmpty
-                    locationFilter.isVisible = !isListEmpty
-                    locationsProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                    locationsErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
-                }
-            }
+    private fun checkResults() {
+        with(binding) {
+            checkNoResults(
+                adapter = locationAdapter,
+                recyclerView = locationsRecyclerView,
+                filter = locationFilter,
+                progress = locationsProgressBar,
+                errorMessage = locationsErrorMessage
+            )
         }
     }
 

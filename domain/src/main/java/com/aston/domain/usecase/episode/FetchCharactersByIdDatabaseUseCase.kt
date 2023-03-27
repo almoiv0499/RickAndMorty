@@ -1,6 +1,7 @@
 package com.aston.domain.usecase.episode
 
 import com.aston.domain.repository.EpisodeRepository
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class FetchCharactersByIdDatabaseUseCase @Inject constructor(
@@ -8,6 +9,6 @@ class FetchCharactersByIdDatabaseUseCase @Inject constructor(
 ) {
 
     operator fun invoke(characterIds: List<Int>) =
-        repository.fetchCharactersByIdDatabase(characterIds)
+        repository.fetchCharactersByIdDatabase(characterIds).subscribeOn(Schedulers.io())
 
 }

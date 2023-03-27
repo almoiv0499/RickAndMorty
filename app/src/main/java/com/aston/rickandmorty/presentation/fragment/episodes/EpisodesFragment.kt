@@ -1,10 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.episodes
 
 import android.os.Bundle
-import android.view.View
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -13,7 +9,6 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.episode.EpisodeAdapter
 import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
-import kotlinx.coroutines.launch
 
 private const val SPAN_COUNT = 2
 private const val EPISODE_NAME = "episode name"
@@ -60,6 +55,7 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
         setArguments()
         swipeToRefreshScreen()
         launchFilterFragment()
+        checkResults()
     }
 
     override fun setToolbarTitle(): Int = R.string.episodes_screen_name
@@ -89,17 +85,18 @@ class EpisodesFragment : BaseViewModelFragment<FragmentEpisodesBinding, Episodes
             episodesRecyclerView.adapter = episodeAdapter.withLoadStateFooter(
                 footer = LoaderStateFooterAdapter()
             )
+        }
+    }
 
-            lifecycleScope.launch {
-                episodeAdapter.loadStateFlow.collect { loadState ->
-                    val isListEmpty =
-                        loadState.refresh is LoadState.NotLoading && episodeAdapter.itemCount == 0
-                    episodesRecyclerView.isVisible = !isListEmpty
-                    episodeFilter.isVisible = !isListEmpty
-                    episodesProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                    episodesErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
-                }
-            }
+    private fun checkResults() {
+        with(binding) {
+            checkNoResults(
+                adapter = episodeAdapter,
+                recyclerView = episodesRecyclerView,
+                filter = episodeFilter,
+                progress = episodesProgressBar,
+                errorMessage = episodesErrorMessage
+            )
         }
     }
 

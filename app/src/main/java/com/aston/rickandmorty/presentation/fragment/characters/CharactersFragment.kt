@@ -1,9 +1,6 @@
 package com.aston.rickandmorty.presentation.fragment.characters
 
 import android.os.Bundle
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aston.rickandmorty.R
 import com.aston.rickandmorty.app.App
@@ -12,7 +9,6 @@ import com.aston.rickandmorty.presentation.fragment.base.BaseViewModelFragment
 import com.aston.rickandmorty.presentation.recyclerview.characters.CharacterAdapter
 import com.aston.rickandmorty.presentation.recyclerview.loader_state.LoaderStateFooterAdapter
 import com.aston.rickandmorty.presentation.util.TitleToolbar
-import kotlinx.coroutines.launch
 
 private const val EMPTY_VALUE = ""
 private const val SPAN_COUNT = 2
@@ -64,6 +60,7 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
         setArguments()
         swipeToRefreshScreen()
         launchFilterFragment()
+        checkResults()
     }
 
     override fun setupObservers() {
@@ -81,17 +78,18 @@ class CharactersFragment : BaseViewModelFragment<FragmentCharactersBinding, Char
             characterRecyclerView.adapter = characterAdapter.withLoadStateFooter(
                 footer = LoaderStateFooterAdapter()
             )
+        }
+    }
 
-            lifecycleScope.launch {
-                characterAdapter.loadStateFlow.collect { loadState ->
-                    val isListEmpty =
-                        loadState.refresh is LoadState.NotLoading && characterAdapter.itemCount == 0
-                    charactersProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                    characterRecyclerView.isVisible = !isListEmpty
-                    characterFilter.isVisible = !isListEmpty
-                    charactersErrorMessage.isVisible = loadState.source.refresh is LoadState.Error
-                }
-            }
+    private fun checkResults() {
+        with(binding) {
+            checkNoResults(
+                adapter = characterAdapter,
+                recyclerView = characterRecyclerView,
+                filter = characterFilter,
+                progress = charactersProgressBar,
+                errorMessage = charactersErrorMessage
+            )
         }
     }
 
