@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Rick And Morty</string>
-    <string name="internetConnection_message">Нет инетрнет соединения!\\nВключи его и обнови страницу</string>
+    <string name="internetConnection_message">Нет инетрнет соединения!\nНастрой его и обнови страницу</string>
     <string name="character_filter">Филтры персонажей</string>
-    <string name="errorState_message">Нет результатов.\\nПроверь введеные данные или интернет соединение</string>
-    <string name="choose_character_status">Выберите статус персонажа:</string>
-    <string name="choose_character_gender">Выберите пол персонажа:</string>
-    <string name="character_name">Имя персонажа...</string>
-    <string name="character_species">Тип персонажа...</string>
+    <string name="errorState_message">Нет результата.\nПроверь введеные данные или интернет соединение</string>
+    <string name="choose_character_status">Выбери статус персонажа:</string>
+    <string name="choose_character_gender">Выбери пол персонажа:</string>
+    <string name="character_name">Имя персонажа…</string>
+    <string name="character_species">Тип персонажа…</string>
     <string name="click_confirm">Подтвердить</string>
     <string name="click_clear_filter">Очистить фильтр</string>
-    <string name="episode_name">Название эпизода...</string>
-    <string name="episode_number">Номер эпизода...</string>
-    <string name="location_name">Название локации...</string>
-    <string name="location_type">Тип локации...</string>
-    <string name="location_dimension">Измерение...</string>
+    <string name="episode_name">Название эпизода…</string>
+    <string name="episode_number">Номер эпизода…</string>
+    <string name="location_name">Название локации…</string>
+    <string name="location_type">Тип локации…</string>
+    <string name="location_dimension">Измерение…</string>
     <string name="characters_bottomNavigation">Персонажи</string>
     <string name="locations_bottomNavigation">Локации</string>
     <string name="episodes_bottomNavigation">Эпизоды</string>
