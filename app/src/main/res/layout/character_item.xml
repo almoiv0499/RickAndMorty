@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/character_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/character_cardView_marginStart"
+    android:layout_marginTop="@dimen/character_cardView_marginTop"
+    android:layout_marginEnd="@dimen/character_cardView_marginEnd"
+    android:layout_marginBottom="@dimen/character_cardView_marginBottom"
+    android:clickable="@bool/character_cardView_clickable"
+    android:focusable="@bool/character_cardView_focusable"
+    app:cardCornerRadius="@dimen/character_cardView_cardCornerRadius"
+    app:cardElevation="@dimen/character_cardView_cardElevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_name"
+            style="@style/TitleTextViewStyle"
+            android:background="@drawable/title_background"
+            android:ellipsize="end"
+            android:fontFamily="@font/candal"
+            android:lines="@integer/character_textView_lines"
+            android:textSize="@dimen/characterName_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            style="@style/CharacterDividerStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/character_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_status"
+            style="@style/CharacterTextViewStyle"
+            android:layout_marginTop="@dimen/characterDetail_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/characterDetail_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/character_image"
+            android:layout_width="@dimen/character_imageView_width"
+            android:layout_height="@dimen/character_imageView_height"
+            android:layout_margin="@dimen/character_imageView_margin"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toTopOf="@id/divider_under_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/character_status"
+            app:shapeAppearanceOverlay="@style/CharacterImageViewStyle" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_under_image"
+            style="@style/CharacterDividerStyle"
+            android:layout_marginTop="@dimen/character_divider_marginTop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/character_image" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_species"
+            style="@style/CharacterTextViewStyle"
+            android:layout_marginTop="@dimen/characterDetail_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/characterDetail_textView_textSize"
+            app:layout_constraintEnd_toStartOf="@id/character_gender"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_under_image" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_gender"
+            style="@style/CharacterTextViewStyle"
+            android:layout_marginTop="@dimen/characterDetail_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/characterDetail_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/character_species"
+            app:layout_constraintTop_toBottomOf="@id/divider_under_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

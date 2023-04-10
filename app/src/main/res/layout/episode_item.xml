@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/episode_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/episode_cardView_marginStart"
+    android:layout_marginTop="@dimen/episode_cardView_marginTop"
+    android:layout_marginEnd="@dimen/episode_cardView_marginEnd"
+    android:layout_marginBottom="@dimen/episode_cardView_marginBottom"
+    android:clickable="@bool/episode_cardView_clickable"
+    android:focusable="@bool/episode_cardView_focusable"
+    app:cardCornerRadius="@dimen/episode_cardView_cardCornerRadius"
+    app:cardElevation="@dimen/episode_cardView_cardElevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/episode_name"
+            style="@style/TitleTextViewStyle"
+            android:background="@drawable/title_background"
+            android:ellipsize="end"
+            android:fontFamily="@font/candal"
+            android:lines="@integer/episode_textView_lines"
+            android:padding="@dimen/episodeName_textView_padding"
+            android:textSize="@dimen/episodeName_textView_textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="@dimen/episode_divider_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/episode_divider_marginStart"
+            android:layout_marginEnd="@dimen/episode_divider_marginEnd"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/episode_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/episode_number"
+            style="@style/EpisodeTextViewStyle"
+            android:layout_marginTop="@dimen/episodeNumber_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/episodeNumber_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/episode_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/episode_airDate"
+            style="@style/EpisodeTextViewStyle"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/episodeAirDate_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/episode_number" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

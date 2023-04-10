@@ -1,0 +1,24 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+
+    //Javax Inject
+    implementation 'javax.inject:javax.inject:1'
+
+    //Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+
+    //RxJava3
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    // Paging3
+    implementation 'androidx.paging:paging-common-ktx:3.1.1'
+}

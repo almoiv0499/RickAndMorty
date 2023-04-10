@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/characterDetails_swipeRefreshLayout"
+    style="@style/BackgroundFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.fragment.character_details.CharacterDetailsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/guideline_margin" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/internetConnection_message"
+            style="@style/InternetConnectionMessageStyle"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_details_name"
+            style="@style/DetailsTextViewStyle"
+            android:fontFamily="@font/candal"
+            android:padding="@dimen/characterDetailName_recyclerView_padding"
+            android:textSize="@dimen/characterDetailName_recyclerView_textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/internetConnection_message" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="@dimen/divider_width"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/character_details_name" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/character_details_image"
+            android:layout_width="@dimen/character_imageView_width"
+            android:layout_height="@dimen/character_imageView_height"
+            android:adjustViewBounds="@bool/character_cardView_adjustViewBounds"
+            app:layout_constraintBottom_toTopOf="@id/character_details_species"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:shapeAppearanceOverlay="@style/CharacterImageViewStyle" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_details_status"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/characterDetails_textView_marginTop"
+            android:textSize="@dimen/characterDetails_textView_textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/character_details_image" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_details_species"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/characterDetails_textView_marginTop"
+            android:textSize="@dimen/characterDetails_textView_textSize"
+            app:layout_constraintEnd_toStartOf="@id/character_details_gender"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/character_details_status" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/character_details_gender"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/characterDetails_textView_marginTop"
+            android:textSize="@dimen/characterDetails_textView_textSize"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toEndOf="@id/character_details_species"
+            app:layout_constraintTop_toBottomOf="@id/character_details_status" />
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_marginTop"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/character_details_gender" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location_forCharacterDetails_name"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginEnd="@dimen/characterDetails_textView_marginEnd"
+            android:background="@drawable/location_background"
+            android:elevation="@dimen/characterDetails_textView_elevation"
+            android:padding="@dimen/characterDetails_textView_padding"
+            app:layout_constraintEnd_toStartOf="@id/spacer"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/spacer" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/origin_forCharacterDetails_name"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginStart="@dimen/characterDetails_textView_marginStart"
+            android:background="@drawable/location_background"
+            android:elevation="@dimen/characterDetails_textView_elevation"
+            android:padding="@dimen/characterDetails_textView_padding"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toEndOf="@id/spacer"
+            app:layout_constraintTop_toBottomOf="@id/spacer" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="@dimen/barrier_width"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="location_forCharacterDetails_name,origin_forCharacterDetails_name" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/character_episode_recyclerView"
+            android:layout_width="@dimen/characterDetails_recyclerView_width"
+            android:layout_height="@dimen/characterDetails_recyclerView_height"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/barrier"
+            tools:listitem="@layout/episode_item" />
+
+        <ProgressBar
+            android:id="@+id/charactersDetails_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/barrier" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

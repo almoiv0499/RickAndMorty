@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Character Item -->
+    <bool name="character_cardView_clickable">true</bool>
+    <bool name="character_cardView_focusable">true</bool>
+    <bool name="character_cardView_adjustViewBounds">true</bool>
+
+    <!-- Location Item -->
+    <bool name="location_cardView_clickable">true</bool>
+    <bool name="location_cardView_focusable">true</bool>
+
+    <!-- Episode Item -->
+    <bool name="episode_cardView_clickable">true</bool>
+    <bool name="episode_cardView_focusable">true</bool>
+
+    <!-- Character Filter -->
+    <bool name="character_radioButton_checked">true</bool>
+</resources>
