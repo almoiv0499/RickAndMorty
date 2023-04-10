@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BackgroundFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.fragment.characters_filter.CharactersFilterFragment">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_start"
+        android:layout_width="@dimen/guideline_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="@dimen/guideline_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/guideline_margin" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="@dimen/guideline_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/characterStatus_title"
+        style="@style/CharacterFilterTextViewStyle"
+        android:text="@string/choose_character_status"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toTopOf="@id/guideline_top" />
+
+    <RadioGroup
+        android:id="@+id/character_filter_status"
+        style="@style/CharacterFilterRadioGroupStyle"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/characterStatus_title">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_status_alive"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:checked="@bool/character_radioButton_checked"
+            android:text="@string/characters_status_alive" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_status_dead"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:text="@string/characters_status_dead" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_status_unknown"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:text="@string/characters_status_unknown" />
+    </RadioGroup>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/character_gender_title"
+        style="@style/CharacterFilterTextViewStyle"
+        android:layout_marginTop="@dimen/characterGender_textView_marginTop"
+        android:text="@string/choose_character_gender"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/character_filter_status" />
+
+    <RadioGroup
+        android:id="@+id/character_filter_gender"
+        style="@style/CharacterFilterRadioGroupStyle"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/character_gender_title">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_gender_female"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:checked="@bool/character_radioButton_checked"
+            android:text="@string/characters_gender_female" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_gender_male"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:text="@string/characters_gender_male" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_gender_genderless"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:text="@string/characters_gender_genderless" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/characters_gender_unknown"
+            style="@style/CharacterFilterRadioButtonStyle"
+            android:text="@string/characters_status_unknown" />
+    </RadioGroup>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/character_filter_name"
+        style="@style/CharacterFilterEditTextStyle"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/character_filter_gender">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/character_name"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/character_filter_species"
+        style="@style/CharacterFilterEditTextStyle"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/character_filter_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/character_species"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/character_filter_confirm"
+        style="@style/FilterActionButtonStyle"
+        android:text="@string/click_confirm"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@id/character_filter_species" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/character_filter_clear"
+        style="@style/FilterActionButtonStyle"
+        android:text="@string/click_clear_filter"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/character_filter_species" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

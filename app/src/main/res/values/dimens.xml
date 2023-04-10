@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Activity Main -->
+    <dimen name="toolbar_width">0dp</dimen>
+
+    <dimen name="fragmentContainer_width">0dp</dimen>
+    <dimen name="fragmentContainer_height">0dp</dimen>
+
+    <dimen name="bottomNavigationBar_width">0dp</dimen>
+
+    <!-- Drawable -->
+    <dimen name="errorBackground_radius">5dp</dimen>
+
+    <dimen name="locationBackground_radius">5dp</dimen>
+    <dimen name="locationBackground_stokeWidth">1dp</dimen>
+
+    <!-- Internet Connection -->
+    <dimen name="internetConnection_width">0dp</dimen>
+    <dimen name="internetConnection_margin">5dp</dimen>
+    <dimen name="internetConnection_padding">5dp</dimen>
+    <dimen name="internetConnection_textSize">15sp</dimen>
+
+    <!-- Error message -->
+    <dimen name="errorMessage_width">0dp</dimen>
+    <dimen name="errorMessage_marginStart">5dp</dimen>
+    <dimen name="errorMessage_marginEnd">5dp</dimen>
+    <dimen name="errorMessage_textSize">20sp</dimen>
+
+    <!-- Floating Button -->
+    <dimen name="floatingButton_marginEnd">20dp</dimen>
+    <dimen name="floatingButton_marginBottom">20dp</dimen>
+    <dimen name="floatingButton_borderWidth">0dp</dimen>
+
+    <!-- Guideline -->
+    <dimen name="guideline_width">0dp</dimen>
+    <dimen name="guideline_margin">10dp</dimen>
+
+    <!-- Action Button -->
+    <dimen name="filter_button_marginTop">10dp</dimen>
+
+    <!-- Divider -->
+    <dimen name="divider_width">0dp</dimen>
+
+    <!-- Details TextView -->
+    <dimen name="textView_width">0dp</dimen>
+
+    <!-- Characters Fragment -->
+    <dimen name="character_recyclerView_width">0dp</dimen>
+    <dimen name="character_recyclerView_height">0dp</dimen>
+
+    <!-- Barrier -->
+    <dimen name="barrier_width">0dp</dimen>
+
+    <!-- Space -->
+    <dimen name="space_marginTop">10dp</dimen>
+
+    <!-- Character Item -->
+    <dimen name="character_cardView_marginStart">5dp</dimen>
+    <dimen name="character_cardView_marginEnd">5dp</dimen>
+    <dimen name="character_cardView_marginTop">10dp</dimen>
+    <dimen name="character_cardView_marginBottom">5dp</dimen>
+    <dimen name="character_cardView_cardCornerRadius">10dp</dimen>
+    <dimen name="character_cardView_cardElevation">5dp</dimen>
+
+    <dimen name="character_divider_width">0dp</dimen>
+    <dimen name="character_divider_marginTop">10dp</dimen>
+
+    <dimen name="character_textView_width">0dp</dimen>
+    <dimen name="character_textView_padding">3dp</dimen>
+
+    <dimen name="characterName_textView_textSize">15sp</dimen>
+
+    <dimen name="characterDetail_textView_marginTop">5dp</dimen>
+    <dimen name="characterDetail_textView_textSize">12sp</dimen>
+
+    <dimen name="character_imageView_cornerSize">10dp</dimen>
+    <dimen name="character_imageView_width">100dp</dimen>
+    <dimen name="character_imageView_height">100dp</dimen>
+    <dimen name="character_imageView_margin">10dp</dimen>
+
+    <!-- Character Filter -->
+    <dimen name="characterFilter_radioGroup_width">0dp</dimen>
+    <dimen name="characterFilter_radioGroup_marginTop">10dp</dimen>
+
+    <dimen name="characterFilter_textView_width">0dp</dimen>
+    <dimen name="characterFilter_textView_textSize">25sp</dimen>
+
+    <dimen name="characterGender_textView_marginTop">5dp</dimen>
+
+    <dimen name="characterFilter_editText_width">0dp</dimen>
+    <dimen name="characterFilter_editText_marginTop">10dp</dimen>
+
+    <!-- Character Details -->
+    <dimen name="characterDetails_textView_marginTop">5dp</dimen>
+    <dimen name="characterDetails_textView_textSize">15sp</dimen>
+    <dimen name="characterDetails_textView_elevation">5dp</dimen>
+    <dimen name="characterDetails_textView_padding">5dp</dimen>
+    <dimen name="characterDetails_textView_marginStart">5dp</dimen>
+    <dimen name="characterDetails_textView_marginEnd">5dp</dimen>
+
+    <dimen name="characterDetails_recyclerView_width">0dp</dimen>
+    <dimen name="characterDetails_recyclerView_height">0dp</dimen>
+
+    <dimen name="characterDetailName_recyclerView_padding">3dp</dimen>
+    <dimen name="characterDetailName_recyclerView_textSize">20sp</dimen>
+
+    <!-- Location Item -->
+    <dimen name="location_cardView_marginStart">5dp</dimen>
+    <dimen name="location_cardView_marginEnd">5dp</dimen>
+    <dimen name="location_cardView_marginTop">10dp</dimen>
+    <dimen name="location_cardView_marginBottom">5dp</dimen>
+    <dimen name="location_cardView_cardCornerRadius">10dp</dimen>
+    <dimen name="location_cardView_cardElevation">5dp</dimen>
+
+    <dimen name="location_divider_width">0dp</dimen>
+    <dimen name="location_divider_marginStart">15dp</dimen>
+    <dimen name="location_divider_marginEnd">15dp</dimen>
+
+    <dimen name="location_textView_width">0dp</dimen>
+
+    <dimen name="locationName_textView_padding">4dp</dimen>
+    <dimen name="locationName_textView_textSize">14sp</dimen>
+
+    <dimen name="locationType_textView_marginTop">5dp</dimen>
+    <dimen name="locationType_textView_textSize">12sp</dimen>
+
+    <dimen name="locationDimension_textView_textSize">12sp</dimen>
+
+    <!-- Locations Fragment -->
+    <dimen name="location_recyclerView_width">0dp</dimen>
+    <dimen name="location_recyclerView_height">0dp</dimen>
+
+    <!-- Location Filter -->
+    <dimen name="locationFilter_editText_width">0dp</dimen>
+    <dimen name="locationFilter_editText_marginTop">10dp</dimen>
+
+    <!-- Location Details -->
+    <dimen name="locationDetails_textView_marginTop">5dp</dimen>
+    <dimen name="locationDetails_textView_textSize">15sp</dimen>
+
+    <dimen name="locationDetails_recyclerView_width">0dp</dimen>
+    <dimen name="locationDetails_recyclerView_height">0dp</dimen>
+
+    <dimen name="locationDetailName_textView_padding">3dp</dimen>
+    <dimen name="locationDetailName_textView_textSize">20sp</dimen>
+
+    <!-- Episode Item -->
+    <dimen name="episode_cardView_marginStart">5dp</dimen>
+    <dimen name="episode_cardView_marginEnd">5dp</dimen>
+    <dimen name="episode_cardView_marginTop">10dp</dimen>
+    <dimen name="episode_cardView_marginBottom">5dp</dimen>
+    <dimen name="episode_cardView_cardCornerRadius">10dp</dimen>
+    <dimen name="episode_cardView_cardElevation">5dp</dimen>
+
+    <dimen name="episode_divider_width">0dp</dimen>
+    <dimen name="episode_divider_marginStart">15dp</dimen>
+    <dimen name="episode_divider_marginEnd">15dp</dimen>
+
+    <dimen name="episode_textView_width">0dp</dimen>
+
+    <dimen name="episodeName_textView_padding">4dp</dimen>
+    <dimen name="episodeName_textView_textSize">14sp</dimen>
+
+    <dimen name="episodeNumber_textView_marginTop">5dp</dimen>
+    <dimen name="episodeNumber_textView_textSize">12sp</dimen>
+
+    <dimen name="episodeAirDate_textView_textSize">12sp</dimen>
+
+    <!-- Episodes Fragment -->
+    <dimen name="episode_recyclerView_width">0dp</dimen>
+    <dimen name="episode_recyclerView_height">0dp</dimen>
+
+    <!-- Episode Filter -->
+    <dimen name="episodeFilter_editText_width">0dp</dimen>
+    <dimen name="episodeFilter_editText_marginTop">10dp</dimen>
+
+    <!-- Episode Details -->
+    <dimen name="episodeDetails_textView_marginTop">5dp</dimen>
+    <dimen name="episodeDetails_textView_textSize">15sp</dimen>
+
+    <dimen name="episodeDetails_recyclerView_width">0dp</dimen>
+    <dimen name="episodeDetails_recyclerView_height">0dp</dimen>
+
+    <dimen name="episodeDetailName_textView_padding">3dp</dimen>
+    <dimen name="episodeDetailName_textView_textSize">20sp</dimen>
+
+    <!-- Load State Footer -->
+    <dimen name="loadState_progressBar_padding">8dp</dimen>
+</resources>

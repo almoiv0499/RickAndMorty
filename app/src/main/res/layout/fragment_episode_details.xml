@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/episodeDetails_swipeRefreshLayout"
+    style="@style/BackgroundFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.fragment.episode_details.EpisodeDetailsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/guideline_margin" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="@dimen/guideline_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/guideline_margin" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/internetConnection_message"
+            style="@style/InternetConnectionMessageStyle"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/episode_detail_name"
+            style="@style/DetailsTextViewStyle"
+            android:fontFamily="@font/candal"
+            android:padding="@dimen/episodeDetailName_textView_padding"
+            android:textSize="@dimen/episodeDetailName_textView_textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/internetConnection_message" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="@dimen/divider_width"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/episode_detail_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/episode_detail_number"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/episodeDetails_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/episodeDetails_textView_textSize"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/episode_detail_airDate"
+            style="@style/DetailsTextViewStyle"
+            android:layout_marginTop="@dimen/episodeDetails_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/episodeDetails_textView_textSize"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/episode_detail_number" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/characters_in_episode_recyclerView"
+            android:layout_width="@dimen/episodeDetails_recyclerView_width"
+            android:layout_height="@dimen/episodeDetails_recyclerView_width"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/episode_detail_airDate"
+            tools:listitem="@layout/character_item" />
+
+        <ProgressBar
+            android:id="@+id/episodeDetails_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/episode_detail_airDate" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

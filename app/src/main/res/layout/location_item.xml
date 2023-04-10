@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/location_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/location_cardView_marginStart"
+    android:layout_marginTop="@dimen/location_cardView_marginTop"
+    android:layout_marginEnd="@dimen/location_cardView_marginEnd"
+    android:layout_marginBottom="@dimen/location_cardView_marginBottom"
+    android:clickable="@bool/location_cardView_clickable"
+    android:focusable="@bool/location_cardView_focusable"
+    app:cardCornerRadius="@dimen/location_cardView_cardCornerRadius"
+    app:cardElevation="@dimen/location_cardView_cardElevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location_name"
+            style="@style/TitleTextViewStyle"
+            android:background="@drawable/title_background"
+            android:ellipsize="end"
+            android:fontFamily="@font/candal"
+            android:lines="@integer/location_textView_lines"
+            android:padding="@dimen/locationName_textView_padding"
+            android:textSize="@dimen/locationName_textView_textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="@dimen/location_divider_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/location_divider_marginStart"
+            android:layout_marginEnd="@dimen/location_divider_marginEnd"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/location_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location_type"
+            style="@style/LocationTextViewStyle"
+            android:layout_marginTop="@dimen/locationType_textView_marginTop"
+            android:fontFamily="@font/cambay"
+            android:textSize="@dimen/locationType_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/location_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location_dimension"
+            style="@style/LocationTextViewStyle"
+            android:ellipsize="end"
+            android:fontFamily="@font/cambay"
+            android:lines="@integer/location_textView_lines"
+            android:textSize="@dimen/locationDimension_textView_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/location_type" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

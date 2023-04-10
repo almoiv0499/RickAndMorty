@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">Rick And Morty</string>
+    <string name="contentDescription_splashScreen" translatable="false">Splash Screen Rick and Morty</string>
+    <string name="characters_screen_name">Characters</string>
+    <string name="characterDetails_screen_name">Character Details</string>
+    <string name="locations_screen_name">Locations</string>
+    <string name="locationDetails_screen_name">Location Details</string>
+    <string name="episodes_screen_name">Episodes</string>
+    <string name="episodeDetails_screen_name">Episode Details</string>
+    <string name="fetchData_exceptionMessage">Check internet connection and refresh page!</string>
+
+    <string-array name="character_status">
+        <item>Alive</item>
+        <item>Dead</item>
+        <item>Unknown</item>
+    </string-array>
+
+    <string-array name="character_gender">
+        <item>Female</item>
+        <item>Male</item>
+        <item>Genderless</item>
+        <item>Unknown</item>
+    </string-array>
+
+    <string name="characters_status_alive" translatable="false">Alive</string>
+    <string name="characters_status_dead" translatable="false">Dead</string>
+    <string name="characters_status_unknown" translatable="false">Unknown</string>
+    <string name="characters_gender_female" translatable="false">Female</string>
+    <string name="characters_gender_male" translatable="false">Male</string>
+    <string name="characters_gender_genderless" translatable="false">Genderless</string>
+    <string name="internetConnection_message">No internet connection.\nTurn it On and refresh page!</string>
+    <string name="character_filter">Character Filter</string>
+    <string name="errorState_message">No Results.\nCheck entered data or internet connection!</string>
+    <string name="choose_character_status">Choose characters status:</string>
+    <string name="choose_character_gender">Choose characters gender:</string>
+    <string name="character_name">Character name…</string>
+    <string name="character_species">Character species…</string>
+    <string name="click_confirm">Confirm</string>
+    <string name="click_clear_filter">Clear filter</string>
+    <string name="episode_name">Episode name…</string>
+    <string name="episode_number">Episode number…</string>
+    <string name="location_name">Location name…</string>
+    <string name="location_type">Location type…</string>
+    <string name="location_dimension">Location dimension…</string>
+    <string name="characters_bottomNavigation">Characters</string>
+    <string name="locations_bottomNavigation">Locations</string>
+    <string name="episodes_bottomNavigation">Episodes</string>
 </resources>

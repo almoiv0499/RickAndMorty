@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Character Item -->
+    <integer name="character_textView_lines">2</integer>
+
+    <!-- Episode Item -->
+    <integer name="episode_textView_lines">2</integer>
+
+    <!-- Location Item -->
+    <integer name="location_textView_lines">2</integer>
+
+    <!-- Character Filter -->
+    <integer name="character_radioButton_weight">1</integer>
+
+</resources>
